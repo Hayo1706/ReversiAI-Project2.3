@@ -3,10 +3,13 @@ package reversi.view;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import reversi.controller.Controller;
 import reversi.model.Model;
+import reversi.model.Peg;
 
 
 public class BoardSetup extends Application {
@@ -27,7 +30,7 @@ public class BoardSetup extends Application {
                     peg.setOnAction(
                             actionEvent -> {
                                 Platform.runLater( ()-> {
-                                controller.change_peg(peg);
+                                controller.nextTurn(peg);
                                 } );
                             }
                     );
@@ -40,7 +43,7 @@ public class BoardSetup extends Application {
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.setTitle("Reversi");
-
+        primaryStage.sizeToScene();
         primaryStage.show();
 
     }
