@@ -1,4 +1,4 @@
-package reversi.model;
+package reversi.view;
 
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -19,6 +19,7 @@ public class Peg extends Button {
     public void setPegState(int pegState) {
         this.pegState = pegState;
     }
+    public int getPegState(int pegState) { return pegState; }
     public int getXPosition() {
         return x;
     }
