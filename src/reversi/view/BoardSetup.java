@@ -38,7 +38,6 @@ public class BoardSetup extends Application {
         Scene scene = new Scene(gridPane);
         scene.getStylesheets().add("reversi/view/style/style.css");
         primaryStage.setScene(scene);
-        primaryStage.setMaximized(true);
         primaryStage.setResizable(false);
         primaryStage.setTitle("Reversi");
 
