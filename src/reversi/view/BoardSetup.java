@@ -24,20 +24,18 @@ public class BoardSetup extends Application {
 
 
 
-            for(int i = 0;i < 8;i++) {
-                for (int o = 0; o < 8; o++) {
-                    Peg peg=controller.get_pegs()[i][o];
-                    peg.setOnAction(
-                            actionEvent -> {
-                                Platform.runLater( ()-> {
+        for(int i = 0;i < 8;i++) {
+            for (int o = 0; o < 8; o++) {
+                Peg peg=controller.get_pegs()[i][o];
+                peg.setOnAction(
+                        actionEvent -> {
+                            Platform.runLater( ()-> {
                                 controller.nextTurn(peg);
-                                } );
-                            }
-                    );
+                            } );
+                        });
                     gridPane.add(peg, peg.getXPosition(), peg.getZPosition());
-                }
             }
-
+        }
         Scene scene = new Scene(gridPane);
         scene.getStylesheets().add("reversi/view/style/style.css");
         primaryStage.setScene(scene);
