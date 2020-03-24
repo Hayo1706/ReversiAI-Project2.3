@@ -2,8 +2,6 @@ package reversi.model;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 
 import javafx.scene.control.Button;
 
@@ -12,7 +10,7 @@ public class Peg extends Button {
     //1 == black
     //2 == white
     public int pegState;
-
+    Image image;
     int x;
     int z;
 
@@ -32,8 +30,8 @@ public class Peg extends Button {
     }
 
     public void setBlack(){
-        Image black = new Image("reversi/view/style/black.png");
-        ImageView imageView = new ImageView(black);
+        image = new Image("reversi/view/style/black.png");
+        ImageView imageView = new ImageView(image);
         imageView.smoothProperty().set(true);
         imageView.setFitWidth(80);
         imageView.setFitHeight(80);
@@ -44,12 +42,17 @@ public class Peg extends Button {
 
 
     public void setWhite(){
-        Image white= new Image("reversi/view/style/white.png");
-        ImageView imageView = new ImageView(white);
+        image = new Image("reversi/view/style/white.png");
+        ImageView imageView = new ImageView(image);
         imageView.setFitWidth(80);
         imageView.setFitHeight(80);
         setGraphic(imageView);
         setDisable(true);
         pegState = 2;
+    }
+    public void reset(){
+        setGraphic(null);
+        setDisable(false);
+        pegState = 0;
     }
 }
