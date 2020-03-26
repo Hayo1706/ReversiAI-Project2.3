@@ -7,24 +7,24 @@ import java.io.IOException;
 /**
  * Created by Dylan Hiemstra
  */
-public class NotConnected extends CommunicationState {
-
-    public NotConnected(CommunicationManager communication) {
+public class Connected extends CommunicationState {
+    public Connected(CommunicationManager communication) {
         super(communication);
     }
 
     @Override
     public void connect(String host, Integer port) throws IOException {
-        communication.connect(host, port);
+        System.out.println("Already connected");
     }
 
     @Override
     public void login(String username) {
-        System.out.println("Not connected yet");
+        communication.login(username);
     }
 
     @Override
     public void getGameList() {
-        System.out.println("Not connected yet");
+        System.out.println("Need to login first!"); // Do you?
     }
+
 }
