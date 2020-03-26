@@ -4,7 +4,9 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 import reversi.model.Peg;
-
+/**
+ * Created by Hayo Riem
+ */
 public class Animation{
     Peg[][] pegs;
     public Animation(Peg[][] pegs) {

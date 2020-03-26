@@ -3,14 +3,15 @@ package reversi.view;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import reversi.controller.Controller;
 import reversi.model.Model;
 import reversi.model.Peg;
 
+/**
+ * Created by Hayo Riem
+ */
 
 public class BoardSetup extends Application {
     private GridPane gridPane=new GridPane();
@@ -37,7 +38,7 @@ public class BoardSetup extends Application {
             }
         }
         Scene scene = new Scene(gridPane);
-        scene.getStylesheets().add("reversi/view/style/style.css");
+        scene.getStylesheets().add("style.css");
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.setTitle("Reversi");
