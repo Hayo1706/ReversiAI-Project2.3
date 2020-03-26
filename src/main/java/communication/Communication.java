@@ -3,6 +3,9 @@ package communication;
 import communication.states.CommunicationState;
 import communication.states.NotConnected;
 
+/**
+ * Created by Dylan Hiemstra
+ */
 public class Communication {
     private static Communication instance;
 
