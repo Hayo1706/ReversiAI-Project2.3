@@ -1,10 +1,9 @@
 package reversi.controller;
 
-
-import javafx.application.Platform;
 import reversi.model.Model;
 import reversi.model.Peg;
 import reversi.view.Animation;
+
 
 public class Controller {
     Model model;

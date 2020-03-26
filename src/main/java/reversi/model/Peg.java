@@ -4,7 +4,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import javafx.scene.control.Button;
-
+/**
+ * Created by Hayo Riem
+ */
 public class Peg extends Button {
     //0 == empty
     //1 == black
@@ -30,23 +32,23 @@ public class Peg extends Button {
     }
 
     public void setBlack(){
-//        image = new Image("reversi/view/style/black.png");
-//        ImageView imageView = new ImageView(image);
-//        imageView.smoothProperty().set(true);
-//        imageView.setFitWidth(80);
-//        imageView.setFitHeight(80);
-//        setGraphic(imageView);
+        image = new Image("black.png");
+        ImageView imageView = new ImageView(image);
+        imageView.smoothProperty().set(true);
+        imageView.setFitWidth(80);
+        imageView.setFitHeight(80);
+        setGraphic(imageView);
         setDisable(true);
         pegState = 1;
     }
 
 
     public void setWhite(){
-//        image = new Image("reversi/view/style/white.png");
-//        ImageView imageView = new ImageView(image);
-//        imageView.setFitWidth(80);
-//        imageView.setFitHeight(80);
-//        setGraphic(imageView);
+        image = new Image("white.png");
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(80);
+        imageView.setFitHeight(80);
+        setGraphic(imageView);
         setDisable(true);
         pegState = 2;
     }

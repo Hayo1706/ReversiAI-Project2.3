@@ -1,11 +1,6 @@
 package reversi.model;
 
 
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-
-import java.util.ArrayList;
-
 public class Model  {
     private int turn = 1;
     private Peg[][] pegs=new Peg[8][8];
