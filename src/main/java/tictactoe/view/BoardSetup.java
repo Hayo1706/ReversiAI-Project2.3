@@ -48,7 +48,7 @@ public class BoardSetup extends Application {
         }
 
         Scene scene = new Scene(vBox);
-        scene.getStylesheets().add("tictactoe/view/style/style.css");
+        scene.getStylesheets().add("styleTicTacToe.css");
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.setTitle("TicTacToe");

@@ -1,0 +1,12 @@
+.button{
+    -fx-background-color: #3c8047;
+    -fx-background-radius: 0;
+    -fx-border-color: black;
+    -fx-border-width: 0.2;
+}
+.button:hover{
+    -fx-background-color: #356a35;
+}
+.button:disabled{
+    -fx-opacity: 1;
+}

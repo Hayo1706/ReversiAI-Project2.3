@@ -30,7 +30,7 @@ public class Peg extends Button {
     }
 
     public void setO(){
-        image = new Image("tictactoe/view/style/o.gif");
+        image = new Image("o.gif");
         ImageView imageView = new ImageView(image);
         imageView.smoothProperty().set(true);
         imageView.setFitWidth(80);
@@ -43,7 +43,7 @@ public class Peg extends Button {
 
 
     public void setX(){
-        image = new Image("tictactoe/view/style/x.gif");
+        image = new Image("x.gif");
         ImageView imageView = new ImageView(image);
         imageView.setFitWidth(80);
         imageView.setFitHeight(80);
