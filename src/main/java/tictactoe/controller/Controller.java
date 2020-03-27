@@ -32,8 +32,9 @@ public class Controller {
         if(model.human_vs_ai()){
 
             model.playMove(peg.getXPosition()*3+peg.getZPosition());
-            model.playMove(getBest());
-
+            if(!gameOver()) {
+                model.playMove(getBest());
+            }
 
         }
         else if(model.human_vs_human()){
