@@ -11,7 +11,7 @@ public class Model
     private BoardSetup view;
     private Random random=new Random();
 
-    private int side=0;
+    private int side=1;
 
     //gui board
     private Peg[][] pegs = new Peg[3][3];
@@ -286,9 +286,7 @@ public class Model
     // Play a move, possibly clearing a square
     private void place( int row, int column, int piece )
     {
-        Platform.runLater(()-> {
-                    pegs[row][column].pegState = piece;
-                }
+        Platform.runLater(()-> pegs[row][column].pegState = piece
         );
     }
 

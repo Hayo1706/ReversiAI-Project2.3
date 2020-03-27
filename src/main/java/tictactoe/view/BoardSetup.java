@@ -1,6 +1,5 @@
 package tictactoe.view;
 
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -33,16 +32,10 @@ public class BoardSetup extends Application {
         for(int i = 0;i < 3;i++) {
             for (int o = 0; o < 3; o++) {
                 Peg peg=controller.get_pegs()[i][o];
-
-
-
                 peg.setOnAction(
-                        actionEvent -> {
-                            Platform.runLater( ()-> {
-
-                                controller.nextTurn(peg);
-                            } );
-                        });
+                        actionEvent -> Platform.runLater( ()-> {
+                            controller.nextTurn(peg);
+                        } ));
                     gridPane.add(peg, peg.getZPosition(), peg.getXPosition());
             }
         }
@@ -59,7 +52,6 @@ public class BoardSetup extends Application {
     public void setText(String s){
         this.text.setText(s);
     }
-
 
 
 

@@ -1,8 +1,12 @@
 package reversi.model;
 
 
+import reversi.view.BoardSetup;
+
 public class Model  {
     private int turn = 1;
+    private BoardSetup view;
+
     private Peg[][] pegs=new Peg[8][8];
     public void fill_pegs(){
         for(int i = 0;i < 8;i++){
@@ -19,8 +23,10 @@ public class Model  {
         turn += 1;
         return t;
     }
-    public Model(){
+    public Model(BoardSetup view){
+
         fill_pegs();
+        this.view=view;
     }
 
     public Peg[][] get_pegs(){
