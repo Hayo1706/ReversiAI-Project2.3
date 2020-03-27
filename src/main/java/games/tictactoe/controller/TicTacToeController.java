@@ -5,15 +5,17 @@ package games.tictactoe.controller;
 import controller.Controller;
 import games.tictactoe.model.TicTactToePeg;
 import games.tictactoe.model.TicTacToeModel;
+import model.Model;
+import model.Peg;
 
 
 public class TicTacToeController implements Controller {
 
 
-    TicTacToeModel model;
+    Model model;
 
 
-    public TicTacToeController(TicTacToeModel model)
+    public TicTacToeController(Model model)
 
     {
 
@@ -65,9 +67,9 @@ public class TicTacToeController implements Controller {
         }
     }
 
-    public TicTactToePeg[][] get_pegs(){
+    public Peg[][] get_pegs(){
 
-        return (TicTactToePeg[][]) model.get_pegs();
+        return  model.get_pegs();
     }
     public boolean gameOver(){
         return model.gameOver();

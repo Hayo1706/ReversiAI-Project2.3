@@ -2,15 +2,14 @@ package games.reversi.controller;
 
 import model.Model;
 import model.Peg;
-import games.reversi.model.ReversiModel;
 import games.reversi.model.ReversiPeg;
 import games.reversi.view.Animation;
 
 
 public class ReversiController implements controller.Controller{
-    ReversiModel model;
+    Model model;
 
-    public ReversiController(ReversiModel model){
+    public ReversiController(Model model){
         this.model=model;
         startupAnimation();
         model.switch_gamemode(Model.HUMAN_VS_HUMAN);
@@ -59,9 +58,9 @@ public class ReversiController implements controller.Controller{
         }
     }
 
-    public ReversiPeg[][] get_pegs(){
+    public Peg[][] get_pegs(){
 
-        return (ReversiPeg[][]) model.get_pegs();
+        return  model.get_pegs();
 
     }
     public boolean gameOver(){

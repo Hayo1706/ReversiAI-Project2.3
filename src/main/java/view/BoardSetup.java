@@ -24,7 +24,7 @@ public class BoardSetup extends Application implements View {
     static int whatGame;
 
     public void start(Stage primaryStage){
-        whatGame = 1;
+        whatGame = 0;
         //0 = Reversi
         //1 = TictacToe
         if(whatGame == 0) {
