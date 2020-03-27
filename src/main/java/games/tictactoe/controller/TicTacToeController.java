@@ -27,7 +27,9 @@ public class TicTacToeController implements Controller {
 
     }
 
+    public void setupBoard(){
 
+    }
 
 
 
@@ -65,19 +67,13 @@ public class TicTacToeController implements Controller {
 
     public TicTactToePeg[][] get_pegs(){
 
-        return model.get_pegs();
+        return (TicTactToePeg[][]) model.get_pegs();
     }
     public boolean gameOver(){
         return model.gameOver();
     }
     public void disable_pegs(){
         model.disable_pegs();
-    }
-    public void enable_pegs(){
-        model.enable_pegs();
-    }
-    public void clear_board(){
-        model.clearBoard();
     }
     public int getBest(){
         return model.calculateBest();

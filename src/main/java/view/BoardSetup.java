@@ -15,7 +15,7 @@ import games.tictactoe.controller.TicTacToeController;
 import games.tictactoe.model.TicTacToeModel;
 
 
-public class BoardSetup extends Application {
+public class BoardSetup extends Application implements View {
     private GridPane gridPane=new GridPane();
     private Label text=new Label();
     private VBox vBox=new VBox(text,gridPane);

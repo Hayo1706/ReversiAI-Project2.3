@@ -1,7 +1,8 @@
 package games.tictactoe.model;
 import javafx.application.Platform;
 import model.Model;
-import view.BoardSetup;
+import model.Peg;
+import view.View;
 
 import java.util.Random;
 
@@ -9,10 +10,10 @@ public class TicTacToeModel implements Model
         //The games.tictactoe logic
 {
     private TicTacToeAI AI=new TicTacToeAI();
-    private BoardSetup view;
+    private View view;
     private Random random=new Random();
 
-    private int side=1;
+    private int side=0;
 
     //gui board
     private TicTactToePeg[][] pegs = new TicTactToePeg[3][3];
@@ -23,7 +24,8 @@ public class TicTacToeModel implements Model
                 TicTactToePeg peg = new TicTactToePeg(i, o);
                 peg.setMinSize(100, 100);
                 pegs[i][o] = peg;
-
+                //i = row
+                //o=column
 
             }
         }
@@ -95,7 +97,7 @@ public class TicTacToeModel implements Model
     }
 
     //Model
-    public TicTacToeModel(BoardSetup view) {
+    public TicTacToeModel(View view) {
         this.view=view;
         fill_pegs();
         clearBoard( );
@@ -118,32 +120,15 @@ public class TicTacToeModel implements Model
 
     }
 
-    public TicTactToePeg[][] get_pegs() {
+    public Peg[][] get_pegs() {
         return pegs;
     }
-
-
-
-    private static final int PLAYER1        = 0;
-    private static final int PLAYER2     = 1;
-    public  static final int EMPTY        = 2;
 
 
     //name to be logged in with
     String player1_name="";
     String player2_name="";
 
-    public  static final int PLAYER1_WIN    = 0;
-    public  static final int DRAW         = 1;
-    public  static final int UNCLEAR      = 2;
-    public  static final int PLAYER2_WIN = 3;
-
-    //state vor mode
-    public  static final int IDLE  = -1;
-    public  static final int HUMAN_VS_HUMAN   = 0;
-    public  static final int HUMAN_VS_AI         = 1;
-    public  static final int AI_VS_SERVER      = 2;
-    public  static final int HUMAN_VS_SERVER         = 3;
 
     public int mode=IDLE;
 
@@ -219,7 +204,7 @@ public class TicTacToeModel implements Model
         }
     }
 
-    private boolean pegsIsFull( )
+    public boolean pegsIsFull( )
     {
 
         for(int row=0;row<3;row++) {
@@ -232,7 +217,7 @@ public class TicTacToeModel implements Model
     }
 
     // Returns whether 'side' has won in this position
-    private boolean isAWin( int side )
+    public boolean isAWin( int side )
     {
         //sides:
         //top
@@ -285,19 +270,19 @@ public class TicTacToeModel implements Model
     }
 
     // Play a move, possibly clearing a square
-    private void place( int row, int column, int piece )
+    public void place( int row, int column, int piece )
     {
         Platform.runLater(()-> pegs[row][column].pegState = piece
         );
     }
 
-    private boolean squareIsEmpty( int row, int column )
+    public boolean squareIsEmpty( int row, int column )
     {
         return pegs[ row ][ column ].pegState == EMPTY;
     }
 
     // Compute static value of current position (win, draw, etc.)
-    private int positionValue( )
+    public int positionValue( )
     {
 
         boolean player1_win=isAWin(PLAYER1);
@@ -319,7 +304,6 @@ public class TicTacToeModel implements Model
 
 
     }
-
 
 
     public void disable_pegs(){

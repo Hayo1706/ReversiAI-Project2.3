@@ -1,17 +1,9 @@
 package games.tictactoe.model;
 
-public class TicTacToeAI {
+import ai.AI;
 
+public class TicTacToeAI implements AI {
 
-
-    private static final int PLAYER        = 0;
-    private static final int AI     = 1;
-    public  static final int EMPTY        = 2;
-
-    public  static final int PLAYER_WIN   = 0;
-    public  static final int DRAW         = 1;
-    public  static final int UNCLEAR      = 2;
-    public  static final int AI_WIN = 3;
 
     private int [ ] [ ] board = new int[ 3 ][ 3 ];
 
@@ -21,8 +13,6 @@ public class TicTacToeAI {
 
 
     }
-
-
 
 
     //Method to convert the GUI pegs to a board array
@@ -38,7 +28,6 @@ public class TicTacToeAI {
 
 
     }
-
 
 
     public int chooseMove()
@@ -236,7 +225,6 @@ public class TicTacToeAI {
 
 
     }
-
 
     private class Best
     {
