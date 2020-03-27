@@ -10,7 +10,7 @@ public abstract class Peg extends Button {
     int x;
     int z;
 
-    public Peg(int z, int x){
+    public Peg(int x, int z){
         this.x = x;
         this.z = z;
         pegState = 2;
