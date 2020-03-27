@@ -2,11 +2,12 @@ package games.tictactoe.controller;
 
 
 
+import controller.Controller;
 import games.tictactoe.model.TicTactToePeg;
 import games.tictactoe.model.TicTacToeModel;
 
 
-public class TicTacToeController implements controller.Controller{
+public class TicTacToeController implements Controller {
 
 
     TicTacToeModel model;
