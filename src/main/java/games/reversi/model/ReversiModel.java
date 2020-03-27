@@ -1,9 +1,10 @@
 package games.reversi.model;
 
 
+import model.Model;
 import view.BoardSetup;
 
-public class ReversiModel {
+public class ReversiModel implements Model {
     private int turn = 1;
     private BoardSetup view;
 

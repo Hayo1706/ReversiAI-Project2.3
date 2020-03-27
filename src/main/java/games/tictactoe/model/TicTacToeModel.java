@@ -1,10 +1,11 @@
 package games.tictactoe.model;
 import javafx.application.Platform;
+import model.Model;
 import view.BoardSetup;
 
 import java.util.Random;
 
-public class TicTacToeModel
+public class TicTacToeModel implements Model
         //The games.tictactoe logic
 {
     private TicTacToeAI AI=new TicTacToeAI();
