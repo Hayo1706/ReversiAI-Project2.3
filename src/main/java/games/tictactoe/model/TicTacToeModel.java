@@ -1,33 +1,20 @@
 package games.tictactoe.model;
 import javafx.application.Platform;
 import model.Model;
+import model.Peg;
 import view.BoardSetup;
 
 import java.util.Random;
 
-public class TicTacToeModel implements Model
+public class TicTacToeModel extends Model
         //The games.tictactoe logic
 {
     private TicTacToeAI AI=new TicTacToeAI();
-    private BoardSetup view;
     private Random random=new Random();
 
     private int side=1;
 
     //gui board
-    private TicTactToePeg[][] pegs = new TicTactToePeg[3][3];
-
-    public void fill_pegs() {
-        for (int i = 0; i < 3; i++) {
-            for (int o = 0; o < 3; o++) {
-                TicTactToePeg peg = new TicTactToePeg(i, o);
-                peg.setMinSize(100, 100);
-                pegs[i][o] = peg;
-
-
-            }
-        }
-    }
 
     public void initSide(){
 
@@ -95,10 +82,8 @@ public class TicTacToeModel implements Model
     }
 
     //Model
-    public TicTacToeModel(BoardSetup view) {
-        this.view=view;
-        fill_pegs();
-        clearBoard( );
+    public TicTacToeModel(int sizeX,int sizeY,BoardSetup view){
+        super(sizeX,sizeY,view);
 
     }
 
@@ -118,12 +103,6 @@ public class TicTacToeModel implements Model
 
     }
 
-    public TicTactToePeg[][] get_pegs() {
-        return pegs;
-    }
-
-
-
     private static final int PLAYER1        = 0;
     private static final int PLAYER2     = 1;
     public  static final int EMPTY        = 2;
@@ -137,40 +116,9 @@ public class TicTacToeModel implements Model
     public  static final int DRAW         = 1;
     public  static final int UNCLEAR      = 2;
     public  static final int PLAYER2_WIN = 3;
-
-    //state vor mode
-    public  static final int IDLE  = -1;
-    public  static final int HUMAN_VS_HUMAN   = 0;
-    public  static final int HUMAN_VS_AI         = 1;
-    public  static final int AI_VS_SERVER      = 2;
-    public  static final int HUMAN_VS_SERVER         = 3;
-
-    public int mode=IDLE;
-
-
     private int position=UNCLEAR;
 
 
-    //return true if there will be no match
-    public boolean idle(){
-        return mode==IDLE;
-    }
-    //return true if human plays vs (local) ai
-    public boolean human_vs_ai(){
-        return mode==HUMAN_VS_AI;
-    }
-    //return true if human plays vs human
-    public boolean human_vs_human(){
-        return mode==HUMAN_VS_HUMAN;
-    }
-    //return true if ai plays vs server
-    public boolean ai_vs_server(){
-        return mode==AI_VS_SERVER;
-    }
-    //return true if human plays vs server
-    public boolean human_vs_server(){
-        return mode==HUMAN_VS_SERVER;
-    }
     public int calculateBest(){
 
         AI.pegs_to_board(pegs);
@@ -181,7 +129,7 @@ public class TicTacToeModel implements Model
 
     public void playMove(int move){
 
-        TicTactToePeg peg=pegs[move/3 ][ move%3 ];
+        Peg peg=pegs[move/3 ][ move%3 ];
 
         if(side==PLAYER2){
 

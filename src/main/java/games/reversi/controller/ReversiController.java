@@ -7,14 +7,10 @@ import games.reversi.model.ReversiPeg;
 import games.reversi.view.Animation;
 
 
-public class ReversiController implements Controller {
-
-
-    ReversiModel model;
-
+public class ReversiController extends Controller {
 
     public ReversiController(ReversiModel model){
-        this.model=model;
+        super(model);
         startupAnimation();
     }
     public void startupAnimation(){
@@ -34,12 +30,7 @@ public class ReversiController implements Controller {
 
 
     public void nextTurn(Peg peg){
-        if(model.nextTurn() % 2 == 0){
-            peg.setTile(0);
-        }
-        else {
-            peg.setTile(1);
-        }
+        peg.setTile(1);
     }
 
     public ReversiPeg[][] get_pegs(){

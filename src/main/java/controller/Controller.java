@@ -1,9 +1,16 @@
 package controller;
 
+import model.Model;
 import model.Peg;
 
-public interface Controller {
-    Peg[][] get_pegs();
+public abstract class Controller {
+    protected Model model;
+    public Peg[][] get_pegs(){
+        return model.get_pegs();
+    }
+    public Controller(Model model){
+        this.model = model;
+    }
 
-    void nextTurn(Peg peg);
+    public abstract void nextTurn(Peg peg);
 }

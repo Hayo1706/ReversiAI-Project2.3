@@ -4,12 +4,14 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 import games.reversi.model.ReversiPeg;
+import model.Peg;
+
 /**
  * Created by Hayo Riem
  */
 public class Animation{
-    ReversiPeg[][] pegs;
-    public Animation(ReversiPeg[][] pegs) {
+    Peg[][] pegs;
+    public Animation(Peg[][] pegs) {
         this.pegs = pegs;
     }
 

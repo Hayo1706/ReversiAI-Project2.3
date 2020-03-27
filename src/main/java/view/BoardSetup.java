@@ -29,14 +29,20 @@ public class BoardSetup extends Application {
         //1 = TictacToe
         if(whatGame == 0) {
             this.size = 8;
-            controller=new ReversiController(new ReversiModel(this));
+            controller=new ReversiController(new ReversiModel(size,size,this));
             primaryStage.setTitle("Reversi");
         }
         else if(whatGame == 1) {
             this.size = 3;
-            controller = new TicTacToeController(new TicTacToeModel(this));
+            controller = new TicTacToeController(new TicTacToeModel(size,size,this));
             primaryStage.setTitle("TicTacToe");
         }
+        else if(whatGame == 2) {
+            this.size = 10;
+            controller = new TicTacToeController(new TicTacToeModel(size,size,this));
+            primaryStage.setTitle("TicTacToe");
+        }
+
 
         for(int i = 0;i < size;i++) {
             for (int o = 0; o < size; o++) {
