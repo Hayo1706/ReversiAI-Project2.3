@@ -1,5 +1,6 @@
-package reversi.view;
+package view;
 
+import controller.Controller;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -7,36 +8,42 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import reversi.controller.Controller;
-import reversi.model.Model;
-import reversi.model.Peg;
+import model.Peg;
+import games.reversi.controller.ReversiController;
+import games.reversi.model.ReversiModel;
+import games.tictactoe.controller.TicTacToeController;
+import games.tictactoe.model.TicTacToeModel;
 
-/**
- * Created by Hayo Riem
- */
 
 public class BoardSetup extends Application {
     private GridPane gridPane=new GridPane();
     private Label text=new Label();
     private VBox vBox=new VBox(text,gridPane);
     private Controller controller;
-
+    private int size;
+    static int whatGame;
 
     public void start(Stage primaryStage){
+        whatGame = 1;
+        //0 = Reversi
+        //1 = TictacToe
+        if(whatGame == 0) {
+            this.size = 8;
+            controller=new ReversiController(new ReversiModel(this));
+        }
+        else if(whatGame == 1) {
+            this.size = 3;
+            controller = new TicTacToeController(new TicTacToeModel(this));
+        }
 
-
-        controller=new Controller(new Model(this));
-
-
-
-        for(int i = 0;i < 8;i++) {
-            for (int o = 0; o < 8; o++) {
+        for(int i = 0;i < size;i++) {
+            for (int o = 0; o < size; o++) {
                 Peg peg=controller.get_pegs()[i][o];
                 peg.setOnAction(
                         actionEvent -> Platform.runLater( ()-> {
                             controller.nextTurn(peg);
                         } ));
-                    gridPane.add(peg, peg.getXPosition(), peg.getZPosition());
+                    gridPane.add(peg, peg.getZPosition(), peg.getXPosition());
             }
         }
 
@@ -44,7 +51,10 @@ public class BoardSetup extends Application {
         scene.getStylesheets().add("style.css");
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
-        primaryStage.setTitle("Reversi");
+        if(whatGame == 0)
+            primaryStage.setTitle("Reversi");
+        else if(whatGame == 1)
+            primaryStage.setTitle("TicTacToe");
         primaryStage.sizeToScene();
         primaryStage.show();
 
@@ -54,6 +64,5 @@ public class BoardSetup extends Application {
     }
 
 
+
 }
-
-

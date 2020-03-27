@@ -1,6 +1,4 @@
-package tictactoe.model;
-
-import java.util.Arrays;
+package games.tictactoe.model;
 
 public class TicTacToeAI {
 
@@ -28,7 +26,7 @@ public class TicTacToeAI {
 
 
     //Method to convert the GUI pegs to a board array
-    public void pegs_to_board(Peg[][] pegs){
+    public void pegs_to_board(TicTactToePeg[][] pegs){
 
         clearBoard();
         for(int row=0;row<3;row++) {

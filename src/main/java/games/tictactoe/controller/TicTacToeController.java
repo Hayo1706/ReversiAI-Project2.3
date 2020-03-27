@@ -1,18 +1,20 @@
-package tictactoe.controller;
+package games.tictactoe.controller;
 
 
 
-import tictactoe.model.Peg;
-import tictactoe.model.Model;
+import games.tictactoe.model.TicTactToePeg;
+import games.tictactoe.model.TicTacToeModel;
 
 
-public class Controller {
+public class TicTacToeController implements controller.Controller{
 
 
-    Model model;
+    TicTacToeModel model;
 
 
-    public Controller(Model model) {
+    public TicTacToeController(TicTacToeModel model)
+
+    {
 
         this.model = model;
         //At startup no square can be filled
@@ -20,7 +22,7 @@ public class Controller {
         //human vs human
         //model.switch_gamemode(Model.HUMAN_VS_HUMAN);
         //human vs ai
-        model.switch_gamemode(Model.HUMAN_VS_AI);
+        model.switch_gamemode(TicTacToeModel.HUMAN_VS_AI);
 
     }
 
@@ -28,7 +30,7 @@ public class Controller {
 
 
 
-    public void nextTurn(Peg peg){
+    public void nextTurn(model.Peg peg){
         if(model.human_vs_ai()){
 
             model.playMove(peg.getXPosition()*3+peg.getZPosition());
@@ -60,7 +62,7 @@ public class Controller {
         }
     }
 
-    public Peg[][] get_pegs(){
+    public TicTactToePeg[][] get_pegs(){
 
         return model.get_pegs();
     }

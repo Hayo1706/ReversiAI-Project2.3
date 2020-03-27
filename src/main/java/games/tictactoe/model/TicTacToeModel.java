@@ -1,11 +1,11 @@
-package tictactoe.model;
+package games.tictactoe.model;
 import javafx.application.Platform;
-import tictactoe.view.BoardSetup;
+import view.BoardSetup;
 
 import java.util.Random;
 
-public class Model
-        //The tictactoe logic
+public class TicTacToeModel
+        //The games.tictactoe logic
 {
     private TicTacToeAI AI=new TicTacToeAI();
     private BoardSetup view;
@@ -14,12 +14,12 @@ public class Model
     private int side=1;
 
     //gui board
-    private Peg[][] pegs = new Peg[3][3];
+    private TicTactToePeg[][] pegs = new TicTactToePeg[3][3];
 
     public void fill_pegs() {
         for (int i = 0; i < 3; i++) {
             for (int o = 0; o < 3; o++) {
-                Peg peg = new Peg(i, o);
+                TicTactToePeg peg = new TicTactToePeg(i, o);
                 peg.setMinSize(100, 100);
                 pegs[i][o] = peg;
 
@@ -94,7 +94,7 @@ public class Model
     }
 
     //Model
-    public Model(BoardSetup view) {
+    public TicTacToeModel(BoardSetup view) {
         this.view=view;
         fill_pegs();
         clearBoard( );
@@ -117,7 +117,7 @@ public class Model
 
     }
 
-    public Peg[][] get_pegs() {
+    public TicTactToePeg[][] get_pegs() {
         return pegs;
     }
 
@@ -180,17 +180,17 @@ public class Model
 
     public void playMove(int move){
 
-        Peg peg=pegs[move/3 ][ move%3 ];
+        TicTactToePeg peg=pegs[move/3 ][ move%3 ];
 
         if(side==PLAYER2){
 
-                peg.setX();
+                peg.setTile(1);
 
 
         }
         else {
 
-            peg.setO();
+            peg.setTile(0);
         }
 
         if (side==PLAYER1){
