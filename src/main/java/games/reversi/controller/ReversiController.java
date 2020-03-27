@@ -1,13 +1,17 @@
 package games.reversi.controller;
 
+import controller.Controller;
 import model.Peg;
 import games.reversi.model.ReversiModel;
 import games.reversi.model.ReversiPeg;
 import games.reversi.view.Animation;
 
 
-public class ReversiController implements controller.Controller{
+public class ReversiController implements Controller {
+
+
     ReversiModel model;
+
 
     public ReversiController(ReversiModel model){
         this.model=model;

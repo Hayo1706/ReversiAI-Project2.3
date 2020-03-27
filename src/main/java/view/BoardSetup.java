@@ -30,10 +30,12 @@ public class BoardSetup extends Application {
         if(whatGame == 0) {
             this.size = 8;
             controller=new ReversiController(new ReversiModel(this));
+            primaryStage.setTitle("Reversi");
         }
         else if(whatGame == 1) {
             this.size = 3;
             controller = new TicTacToeController(new TicTacToeModel(this));
+            primaryStage.setTitle("TicTacToe");
         }
 
         for(int i = 0;i < size;i++) {
@@ -51,10 +53,6 @@ public class BoardSetup extends Application {
         scene.getStylesheets().add("style.css");
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
-        if(whatGame == 0)
-            primaryStage.setTitle("Reversi");
-        else if(whatGame == 1)
-            primaryStage.setTitle("TicTacToe");
         primaryStage.sizeToScene();
         primaryStage.show();
 
