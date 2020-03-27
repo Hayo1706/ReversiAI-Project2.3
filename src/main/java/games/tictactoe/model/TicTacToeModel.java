@@ -313,6 +313,8 @@ public class TicTacToeModel implements Model
             }
         }
     }
+
+
     public void enable_pegs(){
         for(int row=0;row<3;row++) {
             for(int col=0;col<3;col++) {
