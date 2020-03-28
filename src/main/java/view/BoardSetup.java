@@ -1,6 +1,8 @@
 package view;
 
 import controller.Controller;
+import games.reversi.model.ReversiAI;
+import games.tictactoe.model.TicTacToeAI;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -24,17 +26,17 @@ public class BoardSetup extends Application implements View {
     static int whatGame;
 
     public void start(Stage primaryStage){
-        whatGame = 0;
+        whatGame = 1;
         //0 = Reversi
         //1 = TictacToe
         if(whatGame == 0) {
             this.size = 8;
-            controller=new ReversiController(new ReversiModel(size,this));
+            controller=new ReversiController(new ReversiModel(size,this,new ReversiAI()));
             primaryStage.setTitle("Reversi");
         }
         else if(whatGame == 1) {
             this.size = 3;
-            controller = new TicTacToeController(new TicTacToeModel(size,this));
+            controller = new TicTacToeController(new TicTacToeModel(size,this,new TicTacToeAI()));
             primaryStage.setTitle("TicTacToe");
         }
 

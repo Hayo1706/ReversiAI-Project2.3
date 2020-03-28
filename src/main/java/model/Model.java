@@ -1,5 +1,6 @@
 package model;
 
+import ai.AI;
 import games.reversi.model.ReversiPeg;
 import games.tictactoe.model.TicTactToePeg;
 import javafx.application.Platform;
@@ -9,11 +10,12 @@ import java.util.Random;
 
 public abstract class Model {
 
-    public Model(int boardsize,View view){
+    public Model(int boardsize, View view, AI AI){
         pegs=new Peg[boardsize][boardsize];
         this.boardsize=boardsize;
         this.view=view;
         fill_pegs();
+        this.AI=AI;
     }
 
 
@@ -25,16 +27,20 @@ public abstract class Model {
     protected int side=0;
     protected Random random=new Random();
     protected View view;
+    protected AI AI;
     //boardstate
     protected static int PLAYER1        = 0;
     protected static int PLAYER2     = 1;
     protected static int EMPTY        = 2;
 
     //winstate
+
     protected static int PLAYER1_WIN    = 0;
     protected static int DRAW         = 1;
     protected static int UNCLEAR      = 2;
     protected static int PLAYER2_WIN = 3;
+    //current position of the game
+    protected int position=UNCLEAR;
     //state vor mode
     public static int IDLE  = -1;
     public static int HUMAN_VS_HUMAN   = 0;
@@ -42,38 +48,192 @@ public abstract class Model {
     public static int AI_VS_SERVER      = 2;
     public static int HUMAN_VS_SERVER         = 3;
 
-
+    //name to be logged in with
+    protected String player1_name="";
+    protected String player2_name="";
 
     protected abstract void fill_pegs();
 
-    public abstract void initSide();
+    protected void initSide(){
+
+        if(mode==HUMAN_VS_AI){
+            side=random.nextInt(2);
+            player1_name="Player";
+            player2_name="Computer";
+            if(side==PLAYER2){
+                setText(player2_name+ "'s turn!");
+
+                int best=calculateBest();
+                Platform.runLater( ()-> {
+                    playMove(best);
+                });
+
+
+            }else{
+                setText(player1_name+ "'s turn!");
+            }
+        }
+        else if(mode==HUMAN_VS_SERVER){
+            //check who begins
+            //update names
+            //update side
+            //if side==opponent(player2): play the move on the model
+        }
+        else if(mode==AI_VS_SERVER){
+            play_ai_vs_server();
+
+        }
+        else if(mode==HUMAN_VS_HUMAN){
+            side=random.nextInt(2);
+            player1_name="Player";
+            player2_name="Guest";
+            if(side==PLAYER1){
+                setText(player1_name+ " 's turn!");
+            }
+            else {
+                setText(player2_name+ " 's turn!");
+            }
+        }
+        //nothing: game is idle
+        else{
+
+        }
+
+    }
+
     public abstract void play_ai_vs_server();
-    public abstract void switch_gamemode(int gamemode);
-    public abstract Peg[][] get_pegs();
+
+    public void switch_gamemode(int gamemode){
+
+        mode=gamemode;
+        //check if board can be enabled
+        if(mode==IDLE || mode==AI_VS_SERVER){
+            disable_pegs();
+        }
+
+        initSide();
+
+
+    }
+    public Peg[][] get_pegs() {
+        return pegs;
+    }
     public boolean is_mode(int gamemode){ return gamemode==mode;}
+    public void playMove(int move){
+
+        Peg peg=pegs[move/boardsize ][ move%boardsize ];
+
+        if(side==PLAYER2){
+
+            peg.setTile(1);
+
+        }
+        else {
+
+            peg.setTile(0);
+        }
+
+        if (side==PLAYER1){
+            this.side=PLAYER2;
+            setText(player2_name+ "'s turn!");
+
+        }
+        else {this.side=PLAYER1;
+            setText(player1_name+ "'s turn!");
+        }
+    }
+
+
 
     public abstract int calculateBest();
 
-    public abstract void playMove(int move);
 
-    // Simple supporting routines
-    public abstract void clearBoard( );
 
-    public abstract boolean pegsIsFull( );
+
+    protected boolean pegsIsFull( )
+    {
+
+        for(int row=0;row<boardsize;row++) {
+            for(int col=0;col<boardsize;col++) {
+                if(squareIsEmpty(row,col))
+                    return false;
+            }
+        }
+        return true;
+    }
 
     // Returns whether 'side' has won in this position
     public abstract boolean isAWin( int side );
 
     // Play a move, possibly clearing a square
-    public abstract void place( int row, int column, int piece );
+    // Play a move, possibly clearing a square
+   protected void place( int row, int column, int piece )
+    {
+        Platform.runLater(()-> pegs[row][column].pegState = piece
+        );
+    }
 
-    public abstract boolean squareIsEmpty( int row, int column );
-
+    public boolean squareIsEmpty( int row, int column )
+    {
+        return pegs[ row ][ column ].pegState == EMPTY;
+    }
     // Compute static value of current position (win, draw, etc.)
-    public abstract int positionValue( );
-    public abstract void setText(String text);
+    protected int positionValue( )
+    {
 
-    public abstract void disable_pegs();
-    public abstract void enable_pegs();
-    public abstract boolean gameOver();
+        boolean player1_win=isAWin(PLAYER1);
+        boolean player2_win=isAWin(PLAYER2);
+        boolean is_full=pegsIsFull();
+        if ((is_full && !player1_win) && (!player2_win)){
+            return DRAW;
+        }
+        else if(player2_win){
+            return PLAYER2_WIN;
+        }
+        else if(player1_win){
+            return PLAYER1_WIN;
+        } else {
+            return UNCLEAR;
+        }
+
+    }
+    protected void setText(String text){
+        view.setText(text);
+    }
+
+    public void disable_pegs(){
+        for(int row=0;row<boardsize;row++) {
+            for(int col=0;col<boardsize;col++) {
+                pegs[row][col].setDisable(true);
+            }
+        }
+    }
+    public void enable_pegs(){
+        for(int row=0;row<boardsize;row++) {
+            for(int col=0;col<boardsize;col++) {
+                pegs[row][col].setDisable(false);
+            }
+        }
+    }
+    public boolean gameOver()
+    {
+        this.position=positionValue();
+        if(position!=UNCLEAR){
+            Platform.runLater(()-> {
+                if (position == DRAW) {
+
+                    setText(" It's a draw, " + winner() + " wins!");
+                } else {
+                    setText(" Match over, " + winner() + " wins!");
+                }
+            } );
+        }
+        return this.position!=UNCLEAR;
+    }
+    protected String winner()
+    {
+        if      (this.position==PLAYER1_WIN) return player1_name;
+        else if (this.position==PLAYER2_WIN   ) return player2_name;
+        else                                  return "nobody";
+    }
 }
