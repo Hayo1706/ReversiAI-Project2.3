@@ -23,9 +23,10 @@ public class BoardSetup extends Application implements View {
     private VBox vBox=new VBox(text,gridPane);
     private Controller controller;
     private int size;
-    static int whatGame = 1;
+    static int whatGame;
 
     public void start(Stage primaryStage){
+        whatGame = 1;
         //0 = Reversi
         //1 = TictacToe
         if(whatGame == 0) {
@@ -58,12 +59,7 @@ public class BoardSetup extends Application implements View {
         primaryStage.show();
 
     }
-
-
     public void setText(String s){
         this.text.setText(s);
     }
-
-
-
 }
