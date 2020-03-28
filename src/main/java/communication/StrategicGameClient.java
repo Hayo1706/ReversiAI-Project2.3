@@ -95,6 +95,9 @@ public class StrategicGameClient {
         setState(new LoggedIn(this));
     }
 
+    /**
+     * Logout of the server
+     */
     public void logout() {
         executeCommand(new Logout());
     }
