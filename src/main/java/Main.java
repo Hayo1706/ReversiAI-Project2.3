@@ -1,8 +1,8 @@
 import javafx.application.Application;
-import view.BoardSetup;
+import view.GameClient;
 
 public class Main {
     public static void main(String[] args) {
-        Application.launch(BoardSetup.class);
+        Application.launch(GameClient.class);
     }
 }

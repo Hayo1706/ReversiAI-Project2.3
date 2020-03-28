@@ -21,8 +21,8 @@ public class ReversiPeg extends Peg {
         if(i == 0) {
             Image image = new Image("white.png");
             ImageView imageView = new ImageView(image);
-            imageView.setFitWidth(80);
-            imageView.setFitHeight(80);
+            imageView.setFitWidth(40);
+            imageView.setFitHeight(40);
             setGraphic(imageView);
             setDisable(true);
             pegState = 2;
@@ -32,8 +32,8 @@ public class ReversiPeg extends Peg {
             Image image = new Image("black.png");
             ImageView imageView = new ImageView(image);
             imageView.smoothProperty().set(true);
-            imageView.setFitWidth(80);
-            imageView.setFitHeight(80);
+            imageView.setFitWidth(40);
+            imageView.setFitHeight(40);
             setGraphic(imageView);
             setDisable(true);
             pegState = 1;
