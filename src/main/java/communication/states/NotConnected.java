@@ -1,6 +1,6 @@
 package communication.states;
 
-import communication.CommunicationManager;
+import communication.StrategicGameClient;
 import org.json.JSONArray;
 
 import java.io.IOException;
@@ -10,13 +10,13 @@ import java.io.IOException;
  */
 public class NotConnected extends CommunicationState {
 
-    public NotConnected(CommunicationManager communication) {
-        super(communication);
+    public NotConnected(StrategicGameClient client) {
+        super(client);
     }
 
     @Override
     public void connect(String host, Integer port) throws IOException {
-        communication.connect(host, port);
+        client.connect(host, port);
     }
 
     @Override

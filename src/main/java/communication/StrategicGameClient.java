@@ -9,10 +9,7 @@ import communication.states.Connected;
 import communication.states.LoggedIn;
 import communication.states.NotConnected;
 import org.json.JSONArray;
-import org.json.JSONObject;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -20,11 +17,11 @@ import java.net.Socket;
 /**
  * Created by Dylan Hiemstra
  */
-public class CommunicationManager {
+public class StrategicGameClient {
     /**
-     * The instance of CommunicationManager (singleton)
+     * The instance of StrategicGameClient (singleton)
      */
-    private static CommunicationManager instance;
+    private static StrategicGameClient instance;
 
     /**
      * The state of the communication
@@ -42,20 +39,20 @@ public class CommunicationManager {
     private Connection connection;
 
     /**
-     * Get the instance of the CommunicationManager
+     * Get the instance of the StrategicGameClient
      *
      * @return CommunicationManager
      */
-    public static CommunicationManager getInstance() {
+    public static StrategicGameClient getInstance() {
         if(instance == null) {
-            instance = new CommunicationManager();
+            instance = new StrategicGameClient();
         }
 
         return instance;
     }
 
 
-    private CommunicationManager() {
+    private StrategicGameClient() {
          setState(new NotConnected(this));
     }
 

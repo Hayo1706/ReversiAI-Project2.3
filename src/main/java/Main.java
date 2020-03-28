@@ -1,4 +1,4 @@
-import communication.CommunicationManager;
+import communication.StrategicGameClient;
 import javafx.application.Application;
 import org.json.JSONArray;
 import view.BoardSetup;
@@ -8,15 +8,15 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) {
         try {
-            CommunicationManager.getInstance().connect("localhost", 7789);
-            CommunicationManager.getInstance().login("Dylan");
-            JSONArray gameList = CommunicationManager.getInstance().getGameList();
+            StrategicGameClient.getInstance().connect("localhost", 7789);
+            StrategicGameClient.getInstance().login("Dylan");
+            JSONArray gameList = StrategicGameClient.getInstance().getGameList();
 
             for(Object game : gameList) {
                 System.out.println((String) game);
             }
 
-            JSONArray playerList = CommunicationManager.getInstance().getPlayerList();
+            JSONArray playerList = StrategicGameClient.getInstance().getPlayerList();
 
             for(Object player : playerList) {
                 System.out.println((String) player);

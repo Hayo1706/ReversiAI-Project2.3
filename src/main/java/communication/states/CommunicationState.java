@@ -1,6 +1,6 @@
 package communication.states;
 
-import communication.CommunicationManager;
+import communication.StrategicGameClient;
 import org.json.JSONArray;
 
 import java.io.IOException;
@@ -9,10 +9,10 @@ import java.io.IOException;
  * Created by Dylan Hiemstra
  */
 public abstract class CommunicationState {
-    protected CommunicationManager communication;
+    protected StrategicGameClient client;
 
-    public CommunicationState(CommunicationManager communication) {
-        this.communication = communication;
+    public CommunicationState(StrategicGameClient client) {
+        this.client = client;
     }
 
     public abstract void connect(String host, Integer port) throws IOException;
