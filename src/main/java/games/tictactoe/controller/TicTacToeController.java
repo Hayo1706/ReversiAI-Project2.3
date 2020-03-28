@@ -36,7 +36,7 @@ public class TicTacToeController implements Controller {
 
 
     public void nextTurn(model.Peg peg){
-        if(model.human_vs_ai()){
+        if(model.is_mode(Model.HUMAN_VS_AI)){
 
             model.playMove(peg.getXPosition()*3+peg.getZPosition());
             if(!gameOver()) {
@@ -44,10 +44,10 @@ public class TicTacToeController implements Controller {
             }
 
         }
-        else if(model.human_vs_human()){
+        else if(model.is_mode(Model.HUMAN_VS_HUMAN)){
             model.playMove(peg.getXPosition()*3+peg.getZPosition());
         }
-        else if(model.human_vs_server()){
+        else if(model.is_mode(Model.HUMAN_VS_SERVER)){
 
             //play on the server
             //update model

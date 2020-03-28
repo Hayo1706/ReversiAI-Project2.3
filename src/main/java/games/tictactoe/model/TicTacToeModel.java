@@ -1,4 +1,5 @@
 package games.tictactoe.model;
+import ai.AI;
 import javafx.application.Platform;
 import model.Model;
 import model.Peg;
@@ -6,22 +7,20 @@ import view.View;
 
 import java.util.Random;
 
-public class TicTacToeModel implements Model
+public class TicTacToeModel extends Model
         //The games.tictactoe logic
 {
-    private TicTacToeAI AI=new TicTacToeAI();
-    private View view;
-    private Random random=new Random();
+    public TicTacToeModel(int boardsize,View view){
+        super(boardsize,view);
+    }
 
-    private int side=0;
 
-    //gui board
-    private TicTactToePeg[][] pegs = new TicTactToePeg[3][3];
 
+    private ai.AI AI=new TicTacToeAI();
     public void fill_pegs() {
-        for (int i = 0; i < 3; i++) {
-            for (int o = 0; o < 3; o++) {
-                TicTactToePeg peg = new TicTactToePeg(i, o);
+        for (int i = 0; i < boardsize; i++) {
+            for (int o = 0; o < boardsize; o++) {
+                Peg peg = new TicTactToePeg(i, o);
                 peg.setMinSize(100, 100);
                 pegs[i][o] = peg;
                 //i = row
@@ -30,6 +29,8 @@ public class TicTacToeModel implements Model
             }
         }
     }
+
+
 
     public void initSide(){
 
@@ -77,6 +78,10 @@ public class TicTacToeModel implements Model
         }
 
     }
+
+
+
+
     public void play_ai_vs_server(){
         //update the names
         //check who begins and update side
@@ -96,13 +101,6 @@ public class TicTacToeModel implements Model
 
     }
 
-    //Model
-    public TicTacToeModel(View view) {
-        this.view=view;
-        fill_pegs();
-        clearBoard( );
-
-    }
 
     public void switch_gamemode(int gamemode){
 
@@ -130,7 +128,7 @@ public class TicTacToeModel implements Model
     String player2_name="";
 
 
-    public int mode=IDLE;
+
 
 
     private int position=UNCLEAR;
@@ -166,7 +164,7 @@ public class TicTacToeModel implements Model
 
     public void playMove(int move){
 
-        TicTactToePeg peg=pegs[move/3 ][ move%3 ];
+       Peg peg=pegs[move/3 ][ move%3 ];
 
         if(side==PLAYER2){
 

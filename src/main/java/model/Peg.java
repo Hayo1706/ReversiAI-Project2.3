@@ -9,7 +9,9 @@ public abstract class Peg extends Button {
     public int pegState;
     int x; //row
     int z; //column
+    public Peg(){
 
+    }
     public Peg(int x, int z){
         this.x = x;
         this.z = z;

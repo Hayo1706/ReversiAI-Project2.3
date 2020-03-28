@@ -15,7 +15,7 @@ public class ReversiController implements controller.Controller{
         model.switch_gamemode(Model.HUMAN_VS_HUMAN);
     }
     public void startupAnimation(){
-        Animation animation = new Animation((ReversiPeg[][]) model.get_pegs());
+        Animation animation = new Animation(model.get_pegs());
         animation.start();
         setupBoard();
     }

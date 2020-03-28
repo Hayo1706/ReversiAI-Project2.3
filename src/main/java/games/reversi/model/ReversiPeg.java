@@ -15,6 +15,7 @@ public class ReversiPeg extends Peg {
         super(x, z);
     }
 
+
     public void setTile(int i){
         //white
         if(i == 0) {

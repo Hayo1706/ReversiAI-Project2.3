@@ -1,36 +1,32 @@
 package games.reversi.model;
-
-
 import javafx.application.Platform;
 import model.Model;
 import model.Peg;
-import view.BoardSetup;
 import view.View;
 
-import java.util.Random;
 
-public class ReversiModel implements Model {
 
-    private View view;
-    private Random random=new Random();
+public class ReversiModel extends Model {
 
-    private int side=0;
+    //Model
+    public ReversiModel(int boardsize,View view) {
+        super(boardsize,view);
 
-    //gui board
-    private ReversiPeg[][] pegs = new ReversiPeg[8][8];
-
+    }
     public void fill_pegs() {
-        for (int i = 0; i < 8; i++) {
-            for (int o = 0; o < 8; o++) {
-                ReversiPeg peg = new ReversiPeg(i, o);
+        for (int i = 0; i < boardsize; i++) {
+            for (int o = 0; o < boardsize; o++) {
+                Peg peg = new ReversiPeg(i, o);
                 peg.setMinSize(100, 100);
                 pegs[i][o] = peg;
-
                 //i = row
                 //o=column
+
             }
         }
     }
+
+
 
     public void initSide(){
 
@@ -64,13 +60,7 @@ public class ReversiModel implements Model {
         view.setText(text);
     }
 
-    //Model
-    public ReversiModel(BoardSetup view) {
-        this.view=view;
-        fill_pegs();
-        clearBoard( );
 
-    }
 
     public void switch_gamemode(int gamemode){
         mode=gamemode;
@@ -86,31 +76,12 @@ public class ReversiModel implements Model {
     String player1_name="";
     String player2_name="";
 
-    public int mode=IDLE;
+
 
     private int position=UNCLEAR;
 
 
-    //return true if there will be no match
-    public boolean idle(){
-        return mode==IDLE;
-    }
-    //return true if human plays vs (local) ai
-    public boolean human_vs_ai(){
-        return mode==HUMAN_VS_AI;
-    }
-    //return true if human plays vs human
-    public boolean human_vs_human(){
-        return mode==HUMAN_VS_HUMAN;
-    }
-    //return true if ai plays vs server
-    public boolean ai_vs_server(){
-        return mode==AI_VS_SERVER;
-    }
-    //return true if human plays vs server
-    public boolean human_vs_server(){
-        return mode==HUMAN_VS_SERVER;
-    }
+
     public int calculateBest(){
         //to do
     return 0;
@@ -118,7 +89,7 @@ public class ReversiModel implements Model {
 
     public void playMove(int move){
 
-        ReversiPeg peg=pegs[move/8 ][ move%8 ];
+        Peg peg=pegs[move/8 ][ move%8 ];
 
         if(side==PLAYER2){
 

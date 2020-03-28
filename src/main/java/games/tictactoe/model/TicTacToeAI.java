@@ -1,6 +1,7 @@
 package games.tictactoe.model;
 
 import ai.AI;
+import model.Peg;
 
 public class TicTacToeAI implements AI {
 
@@ -16,7 +17,7 @@ public class TicTacToeAI implements AI {
 
 
     //Method to convert the GUI pegs to a board array
-    public void pegs_to_board(TicTactToePeg[][] pegs){
+    public void pegs_to_board(Peg[][] pegs){
 
         clearBoard();
         for(int row=0;row<3;row++) {

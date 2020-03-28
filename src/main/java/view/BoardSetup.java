@@ -29,12 +29,12 @@ public class BoardSetup extends Application implements View {
         //1 = TictacToe
         if(whatGame == 0) {
             this.size = 8;
-            controller=new ReversiController(new ReversiModel(this));
+            controller=new ReversiController(new ReversiModel(size,this));
             primaryStage.setTitle("Reversi");
         }
         else if(whatGame == 1) {
             this.size = 3;
-            controller = new TicTacToeController(new TicTacToeModel(this));
+            controller = new TicTacToeController(new TicTacToeModel(size,this));
             primaryStage.setTitle("TicTacToe");
         }
 
