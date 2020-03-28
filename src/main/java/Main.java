@@ -1,3 +1,4 @@
+import communication.DebugBar;
 import communication.StrategicGameClient;
 import javafx.application.Application;
 import org.json.JSONArray;
@@ -22,12 +23,14 @@ public class Main {
                 System.out.println((String) player);
             }
 
-            StrategicGameClient.getInstance().getState().logout();
+            StrategicGameClient.getInstance().getState().startWaiting();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        Application.launch(DebugBar.class);
 
-        Application.launch(BoardSetup.class);
+        //Application.launch(BoardSetup.class);
     }
 }

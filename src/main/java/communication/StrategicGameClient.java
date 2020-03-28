@@ -1,15 +1,15 @@
 package communication;
 
 import communication.commands.*;
-import communication.states.CommunicationState;
-import communication.states.Connected;
-import communication.states.LoggedIn;
-import communication.states.NotConnected;
+import communication.events.Event;
+import communication.states.*;
 import org.json.JSONArray;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * Created by Dylan Hiemstra
@@ -35,6 +35,8 @@ public class StrategicGameClient {
      */
     private Connection connection;
 
+    private BlockingQueue<Event> eventBus = new LinkedBlockingDeque<>(1);
+
     /**
      * Get the instance of the StrategicGameClient
      *
@@ -47,7 +49,6 @@ public class StrategicGameClient {
 
         return instance;
     }
-
 
     private StrategicGameClient() {
          setState(new NotConnected(this));
@@ -137,6 +138,41 @@ public class StrategicGameClient {
         }
 
         return new JSONArray(result);
+    }
+
+    public void startWaitingMode() {
+        setState(new WaitingMode(this));
+        connection.startListening();
+    }
+
+    public void challenge(String player, String game) {
+        connection.stopListening();
+        executeCommand(new SendChallenge(player, game));
+
+        try {
+            connection.expectOK();
+        } catch (NotOKResponseException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        setState(new ChallengeSent(this));
+        connection.startListening();
+    }
+
+    public void subscribe(String game) {
+        connection.stopListening();
+        executeCommand(new Subscribe(game));
+
+        try {
+            connection.expectOK();
+        } catch (NotOKResponseException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        setState(new Subscribed(this));
+        connection.startListening();
     }
 
     /**

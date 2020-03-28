@@ -20,4 +20,8 @@ public abstract class CommunicationState {
     public abstract void logout();
     public abstract JSONArray getGameList();
     public abstract JSONArray getPlayerList();
+
+    public abstract void startWaiting();
+    public abstract void subscribe(String game);
+    public abstract void challenge(String player, String game);
 }

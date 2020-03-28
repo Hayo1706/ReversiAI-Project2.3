@@ -39,4 +39,19 @@ public class NotConnected extends CommunicationState {
         System.out.println("Not connected yet");
         return new JSONArray();
     }
+
+    @Override
+    public void startWaiting() {
+        System.out.println("Need to login first!");
+    }
+
+    @Override
+    public void subscribe(String game) {
+        System.out.println("Need to login first!");
+    }
+
+    @Override
+    public void challenge(String player, String game) {
+        System.out.println("Need to login first!");
+    }
 }

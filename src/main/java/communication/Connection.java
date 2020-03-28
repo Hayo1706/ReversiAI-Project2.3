@@ -13,7 +13,7 @@ import java.util.Arrays;
 public class Connection {
     private DataInputStream inputStream;
     private DataOutputStream outputStream;
-
+    private Thread listeningThread = null;
 
     public Connection(Socket socket) throws IOException {
         inputStream = new DataInputStream(socket.getInputStream());
@@ -36,7 +36,7 @@ public class Connection {
      *
      * @return the Line
      */
-    private String readLine() {
+    public String readLine() {
         StringBuilder line = new StringBuilder();
         int incomingByte;
 
@@ -104,5 +104,28 @@ public class Connection {
         }
 
         throw new NoSVRResponseException(line);
+    }
+
+    public void startListening() {
+        if(listeningThread == null) {
+            listeningThread = new Thread(new ListeningThread(this));
+            listeningThread.start();
+        }
+    }
+
+    public void stopListening() {
+        if(listeningThread != null) {
+            listeningThread.interrupt();
+            listeningThread = null;
+        }
+    }
+
+    public boolean hasBytesToRead() {
+        try {
+            return inputStream.available() > 0;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

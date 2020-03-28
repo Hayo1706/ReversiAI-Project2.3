@@ -5,11 +5,17 @@ import java.io.IOException;
 /**
  * Created by Dylan Hiemstra
  */
-public class Logout extends Command {
+public class Subscribe extends Command {
+    String game;
+
+    public Subscribe(String game) {
+        this.game = game;
+    }
+
     @Override
     public void execute() {
         try {
-            sendCommand("quit");
+            sendCommand("subscribe", game);
         } catch (IOException e) {
             e.printStackTrace();
         }

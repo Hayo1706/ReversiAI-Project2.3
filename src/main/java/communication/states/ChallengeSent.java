@@ -8,8 +8,8 @@ import java.io.IOException;
 /**
  * Created by Dylan Hiemstra
  */
-public class LoggedIn extends CommunicationState {
-    public LoggedIn(StrategicGameClient client) {
+public class ChallengeSent extends CommunicationState {
+    public ChallengeSent(StrategicGameClient client) {
         super(client);
     }
 
@@ -24,28 +24,34 @@ public class LoggedIn extends CommunicationState {
     }
 
     @Override
-    public void logout() { client.logout(); }
-
-    @Override
-    public JSONArray getGameList() {
-        return client.getGameList();
+    public void logout() {
+        System.out.println("Need to be in normal mode first!");
     }
 
     @Override
-    public JSONArray getPlayerList() { return client.getPlayerList(); }
+    public JSONArray getGameList() {
+        System.out.println("Need to be in normal mode first!");
+        return null;
+    }
+
+    @Override
+    public JSONArray getPlayerList() {
+        System.out.println("Need to be in normal mode first!");
+        return null;
+    }
 
     @Override
     public void startWaiting() {
-        client.startWaitingMode();
+        System.out.println("Already in listening mode!");
     }
 
     @Override
     public void subscribe(String game) {
-        System.out.println("Need to be in waiting mode first!");
+        System.out.println("Cannot subscribe, challenge sent!");
     }
 
     @Override
     public void challenge(String player, String game) {
-        System.out.println("Need to be in waiting mode first!");
+        System.out.println("Already sent challenge!");
     }
 }
