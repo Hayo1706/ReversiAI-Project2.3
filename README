@@ -1,0 +1,6 @@
+Add to library (Project Structure -> Libraries)
+
+- https://repo1.maven.org/maven2/org/json/json/20190722/json-20190722.jar
+- https://gluonhq.com/download/javafx-14-sdk-linux/ OR https://gluonhq.com/download/javafx-14-sdk-windows/
+
+Make sure you use JAVA 14

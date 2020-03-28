@@ -1,8 +1,8 @@
 package communication.commands;
 
-import java.io.DataOutputStream;
+import communication.NotOKResponseException;
+
 import java.io.IOException;
-import java.net.Socket;
 
 /**
  * Created by Dylan Hiemstra
@@ -10,8 +10,8 @@ import java.net.Socket;
 public class Login extends Command {
     private String username;
 
-    public Login(DataOutputStream outputStream, String username) {
-        super(outputStream);
+    public Login(String username) {
+        super();
         this.username = username;
     }
 

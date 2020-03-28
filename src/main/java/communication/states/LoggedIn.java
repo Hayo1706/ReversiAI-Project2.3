@@ -1,6 +1,7 @@
 package communication.states;
 
-import communication.CommunicationManager;
+import communication.StrategicGameClient;
+import org.json.JSONArray;
 
 import java.io.IOException;
 
@@ -8,8 +9,8 @@ import java.io.IOException;
  * Created by Dylan Hiemstra
  */
 public class LoggedIn extends CommunicationState {
-    public LoggedIn(CommunicationManager communication) {
-        super(communication);
+    public LoggedIn(StrategicGameClient client) {
+        super(client);
     }
 
     @Override
@@ -23,7 +24,10 @@ public class LoggedIn extends CommunicationState {
     }
 
     @Override
-    public void getGameList() {
-
+    public JSONArray getGameList() {
+        return client.getGameList();
     }
+
+    @Override
+    public JSONArray getPlayerList() { return client.getPlayerList(); }
 }
