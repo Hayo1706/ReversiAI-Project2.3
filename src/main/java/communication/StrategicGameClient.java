@@ -1,14 +1,15 @@
 package communication;
 
 import communication.commands.Command;
+import communication.commands.GetGameList;
+import communication.commands.GetPlayerList;
 import communication.commands.Login;
 import communication.states.CommunicationState;
 import communication.states.Connected;
 import communication.states.LoggedIn;
 import communication.states.NotConnected;
+import org.json.JSONArray;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -16,11 +17,11 @@ import java.net.Socket;
 /**
  * Created by Dylan Hiemstra
  */
-public class CommunicationManager {
+public class StrategicGameClient {
     /**
-     * The instance of CommunicationManager (singleton)
+     * The instance of StrategicGameClient (singleton)
      */
-    private static CommunicationManager instance;
+    private static StrategicGameClient instance;
 
     /**
      * The state of the communication
@@ -38,32 +39,30 @@ public class CommunicationManager {
     private Connection connection;
 
     /**
-     * Get the instance of the CommunicationManager
+     * Get the instance of the StrategicGameClient
      *
      * @return CommunicationManager
      */
-    public static CommunicationManager getInstance() {
+    public static StrategicGameClient getInstance() {
         if(instance == null) {
-            instance = new CommunicationManager();
+            instance = new StrategicGameClient();
         }
 
         return instance;
     }
 
 
-    private CommunicationManager() {
+    private StrategicGameClient() {
          setState(new NotConnected(this));
     }
 
     /**
-     * Execute a command. Expects the response of the server to be "OK"
+     * Execute a command
      *
      * @param command The command to be executed
-     * @throws NotOKResponseException If the response is not "OK"
      */
-    private void executeCommand(Command command) throws NotOKResponseException {
+    private void executeCommand(Command command) {
         command.execute();
-        connection.expectOK();
     }
 
     /**
@@ -87,16 +86,61 @@ public class CommunicationManager {
      * @param username The username
      */
     public void login(String username) {
+        executeCommand(new Login(username));
+
         try {
-            executeCommand(new Login(username));
-            setState(new LoggedIn(this));
+            connection.expectOK();
         } catch (NotOKResponseException e) {
             System.out.println("Login failed! " + e.getMessage());
+            return;
         }
+
+        setState(new LoggedIn(this));
     }
 
+    /**
+     * Get game list
+     * @return the games as json array
+     */
+    public JSONArray getGameList() {
+        executeCommand(new GetGameList());
 
+        String result = "[]";
+        try {
+            connection.expectOK();
+            result = connection.getSVRResponse("GAMELIST");
+        } catch (NoSVRResponseException | NotOKResponseException e) {
+            e.printStackTrace();
+        }
+
+        return new JSONArray(result);
+    }
+
+    /**
+     * Get player list
+     *
+     * @return the player list as json array
+     */
+    public JSONArray getPlayerList() {
+        executeCommand(new GetPlayerList());
+
+        String result = "[]";
+        try {
+            connection.expectOK();
+            result = connection.getSVRResponse("PLAYERLIST");
+        } catch (NoSVRResponseException | NotOKResponseException e) {
+            e.printStackTrace();
+        }
+
+        return new JSONArray(result);
+    }
+
+    /**
+     * Update the state
+     * @param state The new communication state
+     */
     public void setState(CommunicationState state) {
+        System.out.println("Communication State: " + state.getClass().getSimpleName());
         communicationState = state;
     }
 
