@@ -18,7 +18,7 @@ public class ReversiModel extends Model {
         for (int i = 0; i < boardsize; i++) {
             for (int o = 0; o < boardsize; o++) {
                 Peg peg = new ReversiPeg(i, o);
-                peg.setMinSize(100, 100);
+                peg.setMinSize(60, 60);
                 pegs[i][o] = peg;
                 //i = row
                 //o=column

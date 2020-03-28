@@ -1,3 +1,7 @@
+.root{
+-fx-background-color: linear-gradient(from 34px 41px to 50px 50px, reflect,  #9a9a9a 30%, #bcbcbc  47%);
+}
+
 .button{
     -fx-background-color: #3c8047;
     -fx-background-radius: 0;
@@ -9,4 +13,40 @@
 }
 .button:disabled{
     -fx-opacity: 1;
+}
+
+.image{
+    -fx-padding: 0;
+    -fx-margin: 0;
+}
+
+.Client-button{
+    -fx-background-color: linear-gradient(#fff484, #b5a70c);
+    -fx-background-radius: 40;
+
+    -fx-border-color: #dbdbdb;
+    -fx-border-radius: 20;
+    -fx-border-width: 10;
+
+    -fx-font: 15px Arial-Nova;
+    -fx-text-alignment: center;
+}
+.Client-button:hover{
+    -fx-background-color: linear-gradient(#fff9bc, #ffee3d);
+    -fx-border-color: #ffffff;
+}
+
+.start-game-title{
+    -fx-text-fill: #000000;
+
+    -fx-background-color: linear-gradient(to bottom right, #0000ff,  #00ff00,  #faff00, #ff0000);
+    -fx-background-radius: 10;
+
+    -fx-border-color: #dbdbdb;
+    -fx-border-width: 5;
+    -fx-border-radius: 5;
+
+    -fx-font: 18px Algerian;
+    -fx-text-alignment: center;
+
 }

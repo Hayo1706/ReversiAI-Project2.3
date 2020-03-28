@@ -2,7 +2,7 @@ import communication.DebugBar;
 import communication.StrategicGameClient;
 import javafx.application.Application;
 import org.json.JSONArray;
-import view.BoardSetup;
+import view.GameClient;
 
 import java.io.IOException;
 
@@ -31,6 +31,6 @@ public class Main {
 //
 //        Application.launch(DebugBar.class);
 
-        Application.launch(BoardSetup.class);
+        Application.launch(GameClient.class);
     }
 }
