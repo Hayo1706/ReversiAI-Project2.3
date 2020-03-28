@@ -1,6 +1,7 @@
 package communication.states;
 
 import communication.CommunicationManager;
+import org.json.JSONArray;
 
 import java.io.IOException;
 
@@ -16,5 +17,6 @@ public abstract class CommunicationState {
 
     public abstract void connect(String host, Integer port) throws IOException;
     public abstract void login(String username);
-    public abstract void getGameList();
+    public abstract JSONArray getGameList();
+    public abstract JSONArray getPlayerList();
 }

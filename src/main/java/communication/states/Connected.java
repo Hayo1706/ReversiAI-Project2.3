@@ -1,6 +1,7 @@
 package communication.states;
 
 import communication.CommunicationManager;
+import org.json.JSONArray;
 
 import java.io.IOException;
 
@@ -23,8 +24,8 @@ public class Connected extends CommunicationState {
     }
 
     @Override
-    public void getGameList() {
-        System.out.println("Need to login first!"); // Do you?
-    }
+    public JSONArray getGameList() { return communication.getGameList(); }
 
+    @Override
+    public JSONArray getPlayerList() { return communication.getPlayerList(); }
 }

@@ -1,6 +1,7 @@
 package communication.states;
 
 import communication.CommunicationManager;
+import org.json.JSONArray;
 
 import java.io.IOException;
 
@@ -23,7 +24,10 @@ public class LoggedIn extends CommunicationState {
     }
 
     @Override
-    public void getGameList() {
-
+    public JSONArray getGameList() {
+        return communication.getGameList();
     }
+
+    @Override
+    public JSONArray getPlayerList() { return communication.getPlayerList(); }
 }

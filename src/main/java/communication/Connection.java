@@ -87,4 +87,22 @@ public class Connection {
             throw new NotOKResponseException(line.substring(3).stripLeading());
         }
     }
+
+    /**
+     * Get a SVR Response
+     *
+     * @param type the type of SVR
+     * @return the result of the SVR response
+     * @throws NoSVRResponseException If the expected result was not returned
+     */
+    public String getSVRResponse(String type) throws NoSVRResponseException {
+        String line = readLine();
+        String expected = "SVR " + type;
+
+        if(line.substring(0, expected.length()).equals(expected)) {
+            return line.substring(expected.length()).stripLeading();
+        }
+
+        throw new NoSVRResponseException(line);
+    }
 }

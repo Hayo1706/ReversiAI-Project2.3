@@ -1,6 +1,7 @@
 package communication.states;
 
 import communication.CommunicationManager;
+import org.json.JSONArray;
 
 import java.io.IOException;
 
@@ -24,7 +25,14 @@ public class NotConnected extends CommunicationState {
     }
 
     @Override
-    public void getGameList() {
+    public JSONArray getGameList() {
         System.out.println("Not connected yet");
+        return new JSONArray();
+    }
+
+    @Override
+    public JSONArray getPlayerList() {
+        System.out.println("Not connected yet");
+        return new JSONArray();
     }
 }
