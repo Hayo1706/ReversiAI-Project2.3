@@ -24,6 +24,9 @@ public class Connected extends CommunicationState {
     }
 
     @Override
+    public void logout() { System.out.println("Not logged in!"); }
+
+    @Override
     public JSONArray getGameList() { return client.getGameList(); }
 
     @Override

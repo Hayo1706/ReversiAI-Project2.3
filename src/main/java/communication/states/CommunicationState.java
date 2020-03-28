@@ -17,6 +17,7 @@ public abstract class CommunicationState {
 
     public abstract void connect(String host, Integer port) throws IOException;
     public abstract void login(String username);
+    public abstract void logout();
     public abstract JSONArray getGameList();
     public abstract JSONArray getPlayerList();
 }

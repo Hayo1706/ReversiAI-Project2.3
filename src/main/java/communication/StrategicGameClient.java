@@ -1,9 +1,6 @@
 package communication;
 
-import communication.commands.Command;
-import communication.commands.GetGameList;
-import communication.commands.GetPlayerList;
-import communication.commands.Login;
+import communication.commands.*;
 import communication.states.CommunicationState;
 import communication.states.Connected;
 import communication.states.LoggedIn;
@@ -96,6 +93,10 @@ public class StrategicGameClient {
         }
 
         setState(new LoggedIn(this));
+    }
+
+    public void logout() {
+        executeCommand(new Logout());
     }
 
     /**
