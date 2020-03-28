@@ -24,8 +24,26 @@ public class Connected extends CommunicationState {
     }
 
     @Override
+    public void logout() { System.out.println("Not logged in!"); }
+
+    @Override
     public JSONArray getGameList() { return client.getGameList(); }
 
     @Override
     public JSONArray getPlayerList() { return client.getPlayerList(); }
+
+    @Override
+    public void startWaiting() {
+        System.out.println("Need to login first!");
+    }
+
+    @Override
+    public void subscribe(String game) {
+        System.out.println("Need to login first!");
+    }
+
+    @Override
+    public void challenge(String player, String game) {
+        System.out.println("Need to login first!");
+    }
 }

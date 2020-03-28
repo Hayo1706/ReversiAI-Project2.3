@@ -5,11 +5,11 @@ import java.io.IOException;
 /**
  * Created by Dylan Hiemstra
  */
-public class GetPlayerList extends Command {
+public class Logout extends Command {
     @Override
     public void execute() {
         try {
-            sendCommand("get", "playerlist");
+            sendCommand("quit");
         } catch (IOException e) {
             e.printStackTrace();
         }
