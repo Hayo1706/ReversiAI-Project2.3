@@ -1,7 +1,6 @@
 import communication.StrategicGameClient;
 import javafx.application.Application;
 import org.json.JSONArray;
-import view.BoardSetup;
 import view.GameClient;
 
 import java.io.IOException;
