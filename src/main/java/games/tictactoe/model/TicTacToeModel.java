@@ -10,13 +10,13 @@ import java.util.Random;
 public class TicTacToeModel extends Model
         //The games.tictactoe logic
 {
-    public TicTacToeModel(int boardsize,View view){
-        super(boardsize,view);
+    public TicTacToeModel(int boardsize,View view,AI ai){
+        super(boardsize,view,ai);
     }
 
 
 
-    private ai.AI AI=new TicTacToeAI();
+
     public void fill_pegs() {
         for (int i = 0; i < boardsize; i++) {
             for (int o = 0; o < boardsize; o++) {
@@ -32,57 +32,11 @@ public class TicTacToeModel extends Model
 
 
 
-    public void initSide(){
-
-        if(mode==HUMAN_VS_AI){
-            side=random.nextInt(2);
-            player1_name="Player";
-            player2_name="Computer";
-            if(side==PLAYER2){
-                setText(player2_name+ "'s turn!");
-
-                int best=calculateBest();
-                Platform.runLater( ()-> {
-                    playMove(best);
-                });
-
-
-            }else{
-                setText(player1_name+ "'s turn!");
-            }
-        }
-        else if(mode==HUMAN_VS_SERVER){
-            //check who begins
-            //update names
-            //update side
-            //if side==opponent(player2): play the move on the model
-        }
-        else if(mode==AI_VS_SERVER){
-           play_ai_vs_server();
-
-        }
-        else if(mode==HUMAN_VS_HUMAN){
-            side=random.nextInt(2);
-            player1_name="Player";
-            player2_name="Guest";
-            if(side==PLAYER1){
-                setText(player1_name+ " 's turn!");
-            }
-            else {
-                setText(player2_name+ " 's turn!");
-            }
-        }
-        //nothing: game is idle
-        else{
-
-        }
-
-    }
-
 
 
 
     public void play_ai_vs_server(){
+        // TODO: 28/03/2020
         //update the names
         //check who begins and update side
         //while !gameover():
@@ -98,62 +52,20 @@ public class TicTacToeModel extends Model
          */
         //if game over: update winner label
 
-
     }
 
 
-    public void switch_gamemode(int gamemode){
-
-        mode=gamemode;
-        clearBoard();
-        //check if board can be enabled
-        if(mode==IDLE || mode==AI_VS_SERVER){
-            disable_pegs();
-        }
-        else {
-            enable_pegs();
-        }
-        initSide();
-
-
-    }
-
-    public Peg[][] get_pegs() {
-        return pegs;
-    }
-
-
-    //name to be logged in with
-    String player1_name="";
-    String player2_name="";
 
 
 
 
 
-    private int position=UNCLEAR;
 
 
-    //return true if there will be no match
-    public boolean idle(){
-        return mode==IDLE;
-    }
-    //return true if human plays vs (local) ai
-    public boolean human_vs_ai(){
-        return mode==HUMAN_VS_AI;
-    }
-    //return true if human plays vs human
-    public boolean human_vs_human(){
-        return mode==HUMAN_VS_HUMAN;
-    }
-    //return true if ai plays vs server
-    public boolean ai_vs_server(){
-        return mode==AI_VS_SERVER;
-    }
-    //return true if human plays vs server
-    public boolean human_vs_server(){
-        return mode==HUMAN_VS_SERVER;
-    }
+
+
+
+
     public int calculateBest(){
 
         AI.pegs_to_board(pegs);
@@ -162,57 +74,10 @@ public class TicTacToeModel extends Model
         return best;
     }
 
-    public void playMove(int move){
-
-       Peg peg=pegs[move/3 ][ move%3 ];
-
-        if(side==PLAYER2){
-
-                peg.setTile(1);
-
-
-        }
-        else {
-
-            peg.setTile(0);
-        }
-
-        if (side==PLAYER1){
-            this.side=PLAYER2;
-            setText(player2_name+ "'s turn!");
-        }
-        else {this.side=PLAYER1;
-            setText(player1_name+ "'s turn!");
-        }
-    }
 
 
 
 
-
-
-    // Simple supporting routines
-    public void clearBoard( )
-    {
-        for(int row=0;row<3;row++) {
-            for(int col=0;col<3;col++) {
-                place(row,col,EMPTY);
-                pegs[row][col].setDisable(false);
-            }
-        }
-    }
-
-    public boolean pegsIsFull( )
-    {
-
-        for(int row=0;row<3;row++) {
-            for(int col=0;col<3;col++) {
-                if(squareIsEmpty(row,col))
-                    return false;
-            }
-        }
-        return true;
-    }
 
     // Returns whether 'side' has won in this position
     public boolean isAWin( int side )
@@ -265,87 +130,6 @@ public class TicTacToeModel extends Model
         }
 
         return false;
-    }
-
-    // Play a move, possibly clearing a square
-    public void place( int row, int column, int piece )
-    {
-        Platform.runLater(()-> pegs[row][column].pegState = piece
-        );
-    }
-
-    public boolean squareIsEmpty( int row, int column )
-    {
-        return pegs[ row ][ column ].pegState == EMPTY;
-    }
-
-    // Compute static value of current position (win, draw, etc.)
-    public int positionValue( )
-    {
-
-        boolean player1_win=isAWin(PLAYER1);
-        boolean player2_win=isAWin(PLAYER2);
-        boolean is_full=pegsIsFull();
-        if ((is_full && !player1_win) && (!player2_win)){
-            return DRAW;
-        }
-        else if(player2_win){
-            return PLAYER2_WIN;
-        }
-        else if(player1_win){
-            return PLAYER1_WIN;
-        } else {
-            return UNCLEAR;
-        }
-
-
-
-
-    }
-
-
-    public void disable_pegs(){
-        for(int row=0;row<3;row++) {
-            for(int col=0;col<3;col++) {
-                pegs[row][col].setDisable(true);
-            }
-        }
-    }
-
-
-    public void enable_pegs(){
-        for(int row=0;row<3;row++) {
-            for(int col=0;col<3;col++) {
-                pegs[row][col].setDisable(false);
-            }
-        }
-    }
-    public void setText(String text){
-        view.setText(text);
-    }
-
-
-    public boolean gameOver()
-    {
-        this.position=positionValue();
-        if(position!=UNCLEAR){
-            Platform.runLater(()-> {
-                if (position == DRAW) {
-
-                    setText(" It's a draw, " + winner() + " wins!");
-                } else {
-                    setText(" Match over, " + winner() + " wins!");
-                }
-            } );
-        }
-        return this.position!=UNCLEAR;
-    }
-
-    public String winner()
-    {
-        if      (this.position==PLAYER1_WIN) return player1_name;
-        else if (this.position==PLAYER2_WIN   ) return player2_name;
-        else                                  return "nobody";
     }
 
 
