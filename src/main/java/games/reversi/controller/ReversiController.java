@@ -32,23 +32,23 @@ public class ReversiController implements controller.Controller{
 
     public void nextTurn(Peg peg){
 
-        if(model.human_vs_ai()){
-
-
-
-        }
-        else if(model.human_vs_human()){
-
-            model.playMove(peg.getXPosition()*8+peg.getZPosition());
-        }
-        else if(model.human_vs_server()){
-
-
-        }
-        //game is idle and cannot reach this whole method
-        else{
-
-        }
+//        if(model.human_vs_ai()){
+//
+//
+//
+//        }
+//        else if(model.human_vs_human()){
+//
+//            model.playMove(peg.getXPosition()*8+peg.getZPosition());
+//        }
+//        else if(model.human_vs_server()){
+//
+//
+//        }
+//        //game is idle and cannot reach this whole method
+//        else{
+//
+//        }
 
 
         if(gameOver()){

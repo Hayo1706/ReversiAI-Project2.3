@@ -12,20 +12,36 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by Dylan Hiemstra
  */
 public class CommunicationManager {
+    /**
+     * The instance of CommunicationManager (singleton)
+     */
     private static CommunicationManager instance;
 
+    /**
+     * The state of the communication
+     */
     private CommunicationState communicationState;
+
+    /**
+     * The socket to the server
+     */
     private Socket socket = new Socket();
 
-    private DataInputStream socketIn;
-    private DataOutputStream socketOut;
+    /**
+     * The connection
+     */
+    private Connection connection;
 
+    /**
+     * Get the instance of the CommunicationManager
+     *
+     * @return CommunicationManager
+     */
     public static CommunicationManager getInstance() {
         if(instance == null) {
             instance = new CommunicationManager();
@@ -34,58 +50,51 @@ public class CommunicationManager {
         return instance;
     }
 
+
     private CommunicationManager() {
-        communicationState = new NotConnected(this);
+         setState(new NotConnected(this));
     }
 
-    private void executeCommand(Command command) {
+    /**
+     * Execute a command. Expects the response of the server to be "OK"
+     *
+     * @param command The command to be executed
+     * @throws NotOKResponseException If the response is not "OK"
+     */
+    private void executeCommand(Command command) throws NotOKResponseException {
         command.execute();
-
-        // TODO: Wait for command result
+        connection.expectOK();
     }
 
-    private void readInputStream() {
-        new Thread(() -> {
-            while (true) {
-                try {
-                    int incomingByte = socketIn.read();
-
-                    if(incomingByte == -1) {
-                        System.out.println("Disconnected");
-                        break;
-                    } else if(incomingByte != 10) {
-                        System.out.print((char) incomingByte);
-                    } else {
-                        System.out.println();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-    }
-
+    /**
+     * Connect to the server
+     *
+     * @param host The host of the server
+     * @param port The port of the server
+     * @throws IOException If the connection could not be made
+     */
     public void connect(String host, Integer port) throws IOException {
         socket.connect(new InetSocketAddress(host, port), 1000);
-
-        socketIn = new DataInputStream(socket.getInputStream());
-        socketOut = new DataOutputStream(socket.getOutputStream());
-
-        readInputStream();
-
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        connection = new Connection(socket);
+        connection.skipLines(2);
 
         setState(new Connected(this));
     }
 
+    /**
+     * Login on the server
+     *
+     * @param username The username
+     */
     public void login(String username) {
-        executeCommand(new Login(socketOut, username));
-        setState(new LoggedIn(this));
+        try {
+            executeCommand(new Login(username));
+            setState(new LoggedIn(this));
+        } catch (NotOKResponseException e) {
+            System.out.println("Login failed! " + e.getMessage());
+        }
     }
+
 
     public void setState(CommunicationState state) {
         communicationState = state;
@@ -93,5 +102,9 @@ public class CommunicationManager {
 
     public CommunicationState getState() {
         return communicationState;
+    }
+
+    public Connection getConnection() {
+        return connection;
     }
 }
