@@ -32,16 +32,16 @@ public class ReversiController implements controller.Controller{
 
     public void nextTurn(Peg peg){
 
-        if(model.human_vs_ai()){
+        if(model.is_mode(Model.HUMAN_VS_AI)){
 
 
 
         }
-        else if(model.human_vs_human()){
+        else if(model.is_mode(Model.HUMAN_VS_HUMAN)){
 
             model.playMove(peg.getXPosition()*8+peg.getZPosition());
         }
-        else if(model.human_vs_server()){
+        else if(model.is_mode(Model.HUMAN_VS_SERVER)){
 
 
         }
