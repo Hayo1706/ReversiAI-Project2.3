@@ -10,8 +10,8 @@ import java.io.IOException;
 /**
  * Created by Dylan Hiemstra
  */
-public class ChallengeSent extends CommunicationState {
-    public ChallengeSent(StrategicGameClient client) {
+public class Challenged extends CommunicationState {
+    public Challenged(StrategicGameClient client) {
         super(client);
     }
 
@@ -44,31 +44,31 @@ public class ChallengeSent extends CommunicationState {
 
     @Override
     public void startWaiting() {
-        System.out.println("Already in listening mode!");
+        System.out.println("Already waiting");
     }
 
     @Override
     public void subscribe(String game) {
-        System.out.println("Cannot subscribe, challenge sent!");
+        System.out.println("Can't subscribe! Already challenged by someone else!");
     }
 
     @Override
     public void challenge(String player, String game) {
-        System.out.println("Already sent challenge!");
+        System.out.println("Can't challenge! Already challenged by someone else!");
     }
 
     @Override
     public void challenged(JSONObject data) {
-        System.out.println("Already sent a challenged. Can't be challenged by someone now!");
+        System.out.println("Already challenged by someone else!");
     }
 
     @Override
     public void acceptChallenge(ReceivedChallenge event) {
-        System.out.println("Need to be challenged!");
+        client.acceptChallenge(event);
     }
 
     @Override
     public void denyChallenge(ReceivedChallenge event) {
-        System.out.println("Need to be challenged!");
+        client.denyChallenge(event);
     }
 }

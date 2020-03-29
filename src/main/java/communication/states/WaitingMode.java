@@ -1,7 +1,9 @@
 package communication.states;
 
 import communication.StrategicGameClient;
+import communication.events.ReceivedChallenge;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -53,5 +55,20 @@ public class WaitingMode extends CommunicationState {
     @Override
     public void challenge(String player, String game) {
         client.challenge(player, game);
+    }
+
+    @Override
+    public void challenged(JSONObject data) {
+        client.challenged(data);
+    }
+
+    @Override
+    public void acceptChallenge(ReceivedChallenge event) {
+        System.out.println("Need to be challenged!");
+    }
+
+    @Override
+    public void denyChallenge(ReceivedChallenge event) {
+        System.out.println("Need to be challenged!");
     }
 }

@@ -1,6 +1,11 @@
 package communication;
 
+import communication.events.Event;
+import communication.events.ReceivedChallenge;
+import org.json.JSONObject;
+
 import java.io.DataInputStream;
+import java.util.Arrays;
 
 /**
  * Created by Dylan Hiemstra
@@ -18,7 +23,22 @@ public class ListeningThread implements Runnable {
         do {
             if(connection.hasBytesToRead()) {
                 String line = connection.readLine();
-                // Parse line
+                String[] command = line.split(" ");
+                System.out.println("Received command: " + Arrays.toString(command));
+
+                if(command.length > 3 && command[0].equals("SVR") && command[1].equals("GAME")) {
+                    switch (command[2]) {
+                        case "CHALLENGE":
+                            if(command[3].equals("CANCELLED")) {
+                                System.out.println("sent challenge canceled"); // THIS IS NEVER SENT!!!!!
+                            } else {
+                                JSONObject data = new JSONObject(line.substring(line.indexOf('{')));
+                                StrategicGameClient.getInstance().getState().challenged(data);
+                            }
+
+                            break;
+                    }
+                }
 
                 /**
                  * TODO:
@@ -28,8 +48,5 @@ public class ListeningThread implements Runnable {
                  */
             }
         } while (!Thread.interrupted());
-
-
-        System.out.println("STOP");
     }
 }

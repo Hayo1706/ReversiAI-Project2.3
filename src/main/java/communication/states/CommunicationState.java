@@ -1,7 +1,9 @@
 package communication.states;
 
 import communication.StrategicGameClient;
+import communication.events.ReceivedChallenge;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -24,4 +26,7 @@ public abstract class CommunicationState {
     public abstract void startWaiting();
     public abstract void subscribe(String game);
     public abstract void challenge(String player, String game);
+    public abstract void challenged(JSONObject data);
+    public abstract void acceptChallenge(ReceivedChallenge event);
+    public abstract void denyChallenge(ReceivedChallenge event);
 }

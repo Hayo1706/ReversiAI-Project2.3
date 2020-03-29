@@ -2,8 +2,10 @@ package communication;
 
 import communication.commands.*;
 import communication.events.Event;
+import communication.events.ReceivedChallenge;
 import communication.states.*;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -35,7 +37,7 @@ public class StrategicGameClient {
      */
     private Connection connection;
 
-    private BlockingQueue<Event> eventBus = new LinkedBlockingDeque<>(1);
+    private BlockingQueue<Event> eventBus = new LinkedBlockingDeque<>();
 
     /**
      * Get the instance of the StrategicGameClient
@@ -101,6 +103,30 @@ public class StrategicGameClient {
      */
     public void logout() {
         executeCommand(new Logout());
+    }
+
+    public void challenged(JSONObject data) {
+        setState(new Challenged(this));
+        Event receivedChallenge = new ReceivedChallenge(data);
+        eventBus.add(receivedChallenge);
+    }
+
+    public void acceptChallenge(ReceivedChallenge event) {
+        connection.stopListening();
+
+        executeCommand(new AcceptChallenge(event.getChallengeNumber()));
+
+        try {
+            connection.expectOK();
+        } catch (NotOKResponseException e) {
+            e.printStackTrace();
+        }
+
+        connection.startListening();
+    }
+
+    public void denyChallenge(ReceivedChallenge event) {
+        setState(new WaitingMode(this));
     }
 
     /**
@@ -190,5 +216,9 @@ public class StrategicGameClient {
 
     public Connection getConnection() {
         return connection;
+    }
+
+    public BlockingQueue<Event> getEventBus() {
+        return eventBus;
     }
 }
