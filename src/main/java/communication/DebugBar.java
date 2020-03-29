@@ -1,11 +1,17 @@
 package communication;
 
+import communication.events.Event;
+import communication.events.ReceivedChallenge;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import java.util.Optional;
 
 /**
  * Created by Dylan Hiemstra
@@ -29,6 +35,33 @@ public class DebugBar extends Application {
             });
         });
 
+        new Thread(() -> {
+           while (true) {
+               Event event = null;
+               try {
+                   event = StrategicGameClient.getInstance().getEventBus().take();
+               } catch (InterruptedException e) {
+                   e.printStackTrace();
+                   return;
+               }
+
+               if(event instanceof ReceivedChallenge) {
+                   ReceivedChallenge finalEvent = (ReceivedChallenge) event;
+                   Platform.runLater(() -> {
+                       Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                       alert.setTitle("Confirmation Dialog");
+                       alert.setContentText("Accept challenge from " + finalEvent.getChallenger() + " to play " + finalEvent.getGameType());
+
+                       Optional<ButtonType> result = alert.showAndWait();
+                       if (result.get() == ButtonType.OK){
+                           finalEvent.acceptChallenge();
+                       } else {
+                           finalEvent.denyChallenge();
+                       }
+                   });
+               }
+           }
+        }).start();
 
         VBox vbox = new VBox(button1, button2);
 
