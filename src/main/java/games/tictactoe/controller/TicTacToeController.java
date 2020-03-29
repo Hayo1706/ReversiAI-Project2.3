@@ -1,14 +1,12 @@
 package games.tictactoe.controller;
-
-
-
 import controller.Controller;
-import games.tictactoe.model.TicTactToePeg;
-import games.tictactoe.model.TicTacToeModel;
 import model.Model;
 import model.Peg;
+import view.GameClient;
 
-
+/**
+ * Created by Singh van Offeren
+ */
 public class TicTacToeController implements Controller {
 
 
@@ -25,7 +23,7 @@ public class TicTacToeController implements Controller {
         //human vs human
         //model.switch_gamemode(Model.HUMAN_VS_HUMAN);
         //human vs ai
-        model.switch_gamemode(TicTacToeModel.HUMAN_VS_AI);
+        model.switch_gamemode(GameClient.gameMode);
 
     }
 

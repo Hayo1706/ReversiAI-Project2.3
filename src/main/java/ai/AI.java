@@ -1,7 +1,9 @@
 package ai;
 
 import model.Peg;
-
+/**
+ * Created by Singh van Offeren
+ */
 public interface AI {
     public static final int PLAYER        = 0;
     public static final int AI     = 1;

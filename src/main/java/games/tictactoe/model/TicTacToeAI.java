@@ -2,7 +2,9 @@ package games.tictactoe.model;
 
 import ai.AI;
 import model.Peg;
-
+/**
+ * Created by Singh van Offeren
+ */
 public class TicTacToeAI implements AI {
 
 

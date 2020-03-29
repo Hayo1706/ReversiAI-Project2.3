@@ -1,11 +1,12 @@
 package games.tictactoe.model;
 import ai.AI;
-import javafx.application.Platform;
 import model.Model;
 import model.Peg;
 import view.View;
 
-import java.util.Random;
+/**
+ * Created by Singh van Offeren
+ */
 
 public class TicTacToeModel extends Model
         //The games.tictactoe logic

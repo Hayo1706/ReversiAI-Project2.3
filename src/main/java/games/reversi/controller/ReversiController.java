@@ -2,8 +2,8 @@ package games.reversi.controller;
 
 import model.Model;
 import model.Peg;
-import games.reversi.model.ReversiPeg;
 import games.reversi.view.Animation;
+import view.GameClient;
 
 
 public class ReversiController implements controller.Controller{
@@ -12,7 +12,7 @@ public class ReversiController implements controller.Controller{
     public ReversiController(Model model){
         this.model=model;
         startupAnimation();
-        model.switch_gamemode(Model.HUMAN_VS_HUMAN);
+        model.switch_gamemode(GameClient.gameMode);
     }
     public void startupAnimation(){
         Animation animation = new Animation(model.get_pegs());

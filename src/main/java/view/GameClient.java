@@ -19,6 +19,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import model.Model;
 import model.Peg;
 
 public class GameClient extends Application implements View {
@@ -26,6 +27,8 @@ public class GameClient extends Application implements View {
     private Stage stage;
     private GridPane gridPane=new GridPane();
     private Label gameLabel=new Label();
+    public static int gameMode= Model.HUMAN_VS_HUMAN;
+    public static String username="Pietje";
 
     private Scene StartScene;
     private Scene GameScene;

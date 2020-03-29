@@ -1,13 +1,16 @@
 package model;
 
 import ai.AI;
-import games.reversi.model.ReversiPeg;
-import games.tictactoe.model.TicTactToePeg;
 import javafx.application.Platform;
+import player.LocalPlayer;
+import player.Player;
+import view.GameClient;
 import view.View;
 
 import java.util.Random;
-
+/**
+ * Created by Singh van Offeren
+ */
 public abstract class Model {
 
     public Model(int boardsize, View view, AI AI){
@@ -49,19 +52,21 @@ public abstract class Model {
     public static int HUMAN_VS_SERVER         = 3;
 
     //name to be logged in with
-    protected String player1_name="";
-    protected String player2_name="";
+    protected Player player1;
+    protected Player player2;
 
     protected abstract void fill_pegs();
 
     protected void initSide(){
 
         if(mode==HUMAN_VS_AI){
+            player1=new LocalPlayer(GameClient.username);
+            player2=new LocalPlayer("Computer");
+
+
             side=random.nextInt(2);
-            player1_name="Player";
-            player2_name="Computer";
             if(side==PLAYER2){
-                setText(player2_name+ "'s turn!");
+                setText(player2.getName()+ "'s turn!");
 
                 int best=calculateBest();
                 Platform.runLater( ()-> {
@@ -70,7 +75,7 @@ public abstract class Model {
 
 
             }else{
-                setText(player1_name+ "'s turn!");
+                setText(player1.getName()+ "'s turn!");
             }
         }
         else if(mode==HUMAN_VS_SERVER){
@@ -85,13 +90,13 @@ public abstract class Model {
         }
         else if(mode==HUMAN_VS_HUMAN){
             side=random.nextInt(2);
-            player1_name="Player";
-            player2_name="Guest";
+            player1=new LocalPlayer(GameClient.username);
+            player2=new LocalPlayer("Guest");
             if(side==PLAYER1){
-                setText(player1_name+ " 's turn!");
+                setText(player1.getName()+ " 's turn!");
             }
             else {
-                setText(player2_name+ " 's turn!");
+                setText(player2.getName()+ " 's turn!");
             }
         }
         //nothing: game is idle
@@ -135,11 +140,11 @@ public abstract class Model {
 
         if (side==PLAYER1){
             this.side=PLAYER2;
-            setText(player2_name+ "'s turn!");
+            setText(player2.getName()+ "'s turn!");
 
         }
         else {this.side=PLAYER1;
-            setText(player1_name+ "'s turn!");
+            setText(player1.getName()+ "'s turn!");
         }
     }
 
@@ -232,8 +237,8 @@ public abstract class Model {
     }
     protected String winner()
     {
-        if      (this.position==PLAYER1_WIN) return player1_name;
-        else if (this.position==PLAYER2_WIN   ) return player2_name;
+        if      (this.position==PLAYER1_WIN) return player1.getName();
+        else if (this.position==PLAYER2_WIN   ) return player2.getName();
         else                                  return "nobody";
     }
 }
