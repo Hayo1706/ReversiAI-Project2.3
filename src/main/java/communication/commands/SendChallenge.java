@@ -1,5 +1,8 @@
 package communication.commands;
 
+import communication.GameClient;
+import communication.StrategicGameClient;
+
 import java.io.IOException;
 
 /**
@@ -9,7 +12,8 @@ public class SendChallenge extends Command {
     String player;
     String game;
 
-    public SendChallenge(String player, String game) {
+    public SendChallenge(GameClient client, String player, String game) {
+        super(client);
         this.player = player;
         this.game = game;
     }

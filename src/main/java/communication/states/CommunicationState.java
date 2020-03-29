@@ -28,5 +28,5 @@ public abstract class CommunicationState {
     public abstract void challenge(String player, String game);
     public abstract void challenged(JSONObject data);
     public abstract void acceptChallenge(ReceivedChallenge event);
-    public abstract void denyChallenge(ReceivedChallenge event);
+    public abstract void denyChallenge();
 }

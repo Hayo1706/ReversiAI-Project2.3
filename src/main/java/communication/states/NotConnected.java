@@ -68,7 +68,7 @@ public class NotConnected extends CommunicationState {
     }
 
     @Override
-    public void denyChallenge(ReceivedChallenge event) {
+    public void denyChallenge() {
         System.out.println("Need to be challenged!");
     }
 }

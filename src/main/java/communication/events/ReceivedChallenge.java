@@ -19,7 +19,7 @@ public class ReceivedChallenge extends Event {
     }
 
     public void denyChallenge() {
-        StrategicGameClient.getInstance().getState().denyChallenge(this);
+        StrategicGameClient.getInstance().denyChallenge();
     }
 
     public String getChallenger() {

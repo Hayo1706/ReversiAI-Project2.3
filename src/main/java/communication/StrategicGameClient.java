@@ -16,11 +16,11 @@ import java.util.concurrent.LinkedBlockingDeque;
 /**
  * Created by Dylan Hiemstra
  */
-public class StrategicGameClient {
+public class StrategicGameClient implements GameClient {
     /**
      * The instance of StrategicGameClient (singleton)
      */
-    private static StrategicGameClient instance;
+    private static GameClient instance;
 
     /**
      * The state of the communication
@@ -44,9 +44,9 @@ public class StrategicGameClient {
      *
      * @return CommunicationManager
      */
-    public static StrategicGameClient getInstance() {
+    public static GameClient getInstance() {
         if(instance == null) {
-            instance = new StrategicGameClient();
+            instance = new StrategicGameClientProxy(new StrategicGameClient());
         }
 
         return instance;
@@ -86,7 +86,7 @@ public class StrategicGameClient {
      * @param username The username
      */
     public void login(String username) {
-        executeCommand(new Login(username));
+        executeCommand(new Login(this, username));
 
         try {
             connection.expectOK();
@@ -102,31 +102,7 @@ public class StrategicGameClient {
      * Logout of the server
      */
     public void logout() {
-        executeCommand(new Logout());
-    }
-
-    public void challenged(JSONObject data) {
-        setState(new Challenged(this));
-        Event receivedChallenge = new ReceivedChallenge(data);
-        eventBus.add(receivedChallenge);
-    }
-
-    public void acceptChallenge(ReceivedChallenge event) {
-        connection.stopListening();
-
-        executeCommand(new AcceptChallenge(event.getChallengeNumber()));
-
-        try {
-            connection.expectOK();
-        } catch (NotOKResponseException e) {
-            e.printStackTrace();
-        }
-
-        connection.startListening();
-    }
-
-    public void denyChallenge(ReceivedChallenge event) {
-        setState(new WaitingMode(this));
+        executeCommand(new Logout(this));
     }
 
     /**
@@ -134,7 +110,7 @@ public class StrategicGameClient {
      * @return the games as json array
      */
     public JSONArray getGameList() {
-        executeCommand(new GetGameList());
+        executeCommand(new GetGameList(this));
 
         String result = "[]";
         try {
@@ -153,7 +129,7 @@ public class StrategicGameClient {
      * @return the player list as json array
      */
     public JSONArray getPlayerList() {
-        executeCommand(new GetPlayerList());
+        executeCommand(new GetPlayerList(this));
 
         String result = "[]";
         try {
@@ -166,14 +142,23 @@ public class StrategicGameClient {
         return new JSONArray(result);
     }
 
-    public void startWaitingMode() {
-        setState(new WaitingMode(this));
+    /**
+     * Start listening for events
+     */
+    public void startWaiting() {
+        setState(new Waiting(this));
         connection.startListening();
     }
 
+    /**
+     * Challenge someone
+     *
+     * @param player the player
+     * @param game the game
+     */
     public void challenge(String player, String game) {
         connection.stopListening();
-        executeCommand(new SendChallenge(player, game));
+        executeCommand(new SendChallenge(this, player, game));
 
         try {
             connection.expectOK();
@@ -186,9 +171,14 @@ public class StrategicGameClient {
         connection.startListening();
     }
 
+    /**
+     * Subscribe to a game
+     *
+     * @param game the game
+     */
     public void subscribe(String game) {
         connection.stopListening();
-        executeCommand(new Subscribe(game));
+        executeCommand(new Subscribe(this, game));
 
         try {
             connection.expectOK();
@@ -202,10 +192,47 @@ public class StrategicGameClient {
     }
 
     /**
+     * Challenged by someone
+     *
+     * @param data event data
+     */
+    public void challenged(JSONObject data) {
+        setState(new Challenged(this));
+        Event receivedChallenge = new ReceivedChallenge(data);
+        eventBus.add(receivedChallenge);
+    }
+
+    /**
+     * Accept the challenge
+     *
+     * @param event
+     */
+    public void acceptChallenge(ReceivedChallenge event) {
+        connection.stopListening();
+
+        executeCommand(new AcceptChallenge(this, event.getChallengeNumber()));
+
+        try {
+            connection.expectOK();
+        } catch (NotOKResponseException e) {
+            e.printStackTrace();
+        }
+
+        connection.startListening();
+    }
+
+    /**
+     * Deny the challenge (there is not command for this)
+     */
+    public void denyChallenge() {
+        setState(new Waiting(this));
+    }
+
+    /**
      * Update the state
      * @param state The new communication state
      */
-    public void setState(CommunicationState state) {
+    private void setState(CommunicationState state) {
         System.out.println("Communication State: " + state.getClass().getSimpleName());
         communicationState = state;
     }

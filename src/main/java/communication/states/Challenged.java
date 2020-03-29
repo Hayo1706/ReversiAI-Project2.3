@@ -68,7 +68,7 @@ public class Challenged extends CommunicationState {
     }
 
     @Override
-    public void denyChallenge(ReceivedChallenge event) {
-        client.denyChallenge(event);
+    public void denyChallenge() {
+        client.denyChallenge();
     }
 }

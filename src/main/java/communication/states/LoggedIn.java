@@ -38,7 +38,7 @@ public class LoggedIn extends CommunicationState {
 
     @Override
     public void startWaiting() {
-        client.startWaitingMode();
+        client.startWaiting();
     }
 
     @Override
@@ -62,7 +62,7 @@ public class LoggedIn extends CommunicationState {
     }
 
     @Override
-    public void denyChallenge(ReceivedChallenge event) {
+    public void denyChallenge() {
         System.out.println("Need to be challenged!");
     }
 }

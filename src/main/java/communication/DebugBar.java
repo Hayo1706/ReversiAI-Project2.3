@@ -23,7 +23,7 @@ public class DebugBar extends Application {
 
         button1.setOnAction((event) -> {
             Platform.runLater(() -> {
-                StrategicGameClient.getInstance().getState().challenge("Piet", "Reversi");
+                StrategicGameClient.getInstance().challenge("Piet", "Reversi");
             });
         });
 
@@ -31,7 +31,7 @@ public class DebugBar extends Application {
 
         button2.setOnAction((event) -> {
             Platform.runLater(() -> {
-                StrategicGameClient.getInstance().getState().subscribe("Reversi");
+                StrategicGameClient.getInstance().subscribe("Reversi");
             });
         });
 

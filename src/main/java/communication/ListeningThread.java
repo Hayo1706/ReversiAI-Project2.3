@@ -30,22 +30,24 @@ public class ListeningThread implements Runnable {
                     switch (command[2]) {
                         case "CHALLENGE":
                             if(command[3].equals("CANCELLED")) {
-                                System.out.println("sent challenge canceled"); // THIS IS NEVER SENT!!!!!
+                                System.out.println("sent challenge canceled"); // THIS IS NOT ALWAYS SENT!!!!!
+                                StrategicGameClient.getInstance().denyChallenge();
                             } else {
                                 JSONObject data = new JSONObject(line.substring(line.indexOf('{')));
-                                StrategicGameClient.getInstance().getState().challenged(data);
+                                StrategicGameClient.getInstance().challenged(data);
                             }
+
+                            break;
+                        case "MATCH":
+                            /**
+                             * TODO:
+                             *  - Sent event over event bus when we are in a match and update state
+                             *  - Go back to listeningMode after game ends
+                             */
 
                             break;
                     }
                 }
-
-                /**
-                 * TODO:
-                 *  - Send event over event bus when someone challenged the player and update state
-                 *  - Sent event over event bus when we are in a match and update state
-                 *  - Go back to listeningMode after game ends
-                 */
             }
         } while (!Thread.interrupted());
     }
