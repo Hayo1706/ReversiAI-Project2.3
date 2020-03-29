@@ -1,8 +1,6 @@
 package communication.commands;
 
 import communication.GameClient;
-import communication.NotOKResponseException;
-import communication.StrategicGameClient;
 
 import java.io.IOException;
 

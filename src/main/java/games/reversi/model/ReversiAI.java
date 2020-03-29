@@ -1,6 +1,5 @@
 package games.reversi.model;
 
-import ai.AI;
 import model.Peg;
 
 public class ReversiAI implements ai.AI {

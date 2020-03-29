@@ -39,21 +39,21 @@ public class StrategicGameClient implements GameClient {
 
     private BlockingQueue<Event> eventBus = new LinkedBlockingDeque<>();
 
+    private StrategicGameClient() {
+        setState(new NotConnected(this));
+    }
+
     /**
      * Get the instance of the StrategicGameClient
      *
      * @return CommunicationManager
      */
     public static GameClient getInstance() {
-        if(instance == null) {
+        if (instance == null) {
             instance = new StrategicGameClientProxy(new StrategicGameClient());
         }
 
         return instance;
-    }
-
-    private StrategicGameClient() {
-         setState(new NotConnected(this));
     }
 
     /**
@@ -114,6 +114,7 @@ public class StrategicGameClient implements GameClient {
 
     /**
      * Get game list
+     *
      * @return the games as json array
      */
     public JSONArray getGameList() {
@@ -161,7 +162,7 @@ public class StrategicGameClient implements GameClient {
      * Challenge someone
      *
      * @param player the player
-     * @param game the game
+     * @param game   the game
      */
     public void challenge(String player, String game) {
         connection.stopListening();
@@ -235,17 +236,18 @@ public class StrategicGameClient implements GameClient {
         setState(new Waiting(this));
     }
 
+    public CommunicationState getState() {
+        return communicationState;
+    }
+
     /**
      * Update the state
+     *
      * @param state The new communication state
      */
     private void setState(CommunicationState state) {
         System.out.println("Communication State: " + state.getClass().getSimpleName());
         communicationState = state;
-    }
-
-    public CommunicationState getState() {
-        return communicationState;
     }
 
     public Connection getConnection() {

@@ -15,8 +15,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.Model;
@@ -24,12 +22,11 @@ import model.Peg;
 
 public class GameClient extends Application implements View {
 
+    public static int gameMode = Model.HUMAN_VS_HUMAN;
+    public static String username = "Pietje";
     private Stage stage;
-    private GridPane gridPane=new GridPane();
-    private Label gameLabel=new Label();
-    public static int gameMode= Model.HUMAN_VS_HUMAN;
-    public static String username="Pietje";
-
+    private GridPane gridPane = new GridPane();
+    private Label gameLabel = new Label();
     private Scene StartScene;
     private Scene GameScene;
 
@@ -53,7 +50,7 @@ public class GameClient extends Application implements View {
         LoadMainMenu();
     }
 
-    private Scene CreateStartScene(){
+    private Scene CreateStartScene() {
         Button RButton = CreateButton("Play Othello (reversi)");
         RButton.setOnMouseClicked((e) -> {
             StartGame(0);
@@ -65,45 +62,45 @@ public class GameClient extends Application implements View {
         });
 
         RButton.setWrapText(true);
-        RButton.setMinSize(50,50);
-        RButton.setMaxSize(200,50);
+        RButton.setMinSize(50, 50);
+        RButton.setMaxSize(200, 50);
 
         TTTButton.setWrapText(true);
-        TTTButton.setMinSize(50,50);
-        TTTButton.setMaxSize(200,50);
+        TTTButton.setMinSize(50, 50);
+        TTTButton.setMaxSize(200, 50);
 
 
         Label title = new Label("Choose your game!");
         title.getStyleClass().add("start-game-title");
-        title.setMinSize(50,50);
-        title.setMaxSize(200,50);
+        title.setMinSize(50, 50);
+        title.setMaxSize(200, 50);
 
-        VBox alignBox = new VBox(title,  TTTButton, RButton);
+        VBox alignBox = new VBox(title, TTTButton, RButton);
         alignBox.setSpacing(10);
         alignBox.setMaxWidth(200);
 
         VBox vBox = new VBox(alignBox);
         vBox.setAlignment(Pos.TOP_CENTER);
 
-        Scene scene= new Scene(vBox, 500, 500);
+        Scene scene = new Scene(vBox, 500, 500);
         scene.getStylesheets().add("style.css");
 
-        return  scene;
+        return scene;
     }
 
-    private Scene CreateGameScene(){
+    private Scene CreateGameScene() {
         Button backButton = CreateButton("Ga back to Main menu");
-        backButton.setOnMouseClicked((e)->{
+        backButton.setOnMouseClicked((e) -> {
             LoadMainMenu();
         });
 
-        VBox vBox = new VBox(gameLabel, gridPane,backButton);
+        VBox vBox = new VBox(gameLabel, gridPane, backButton);
         vBox.setAlignment(Pos.TOP_CENTER);
 
-        Scene scene= new Scene(vBox);
+        Scene scene = new Scene(vBox);
         scene.getStylesheets().add("style.css");
 
-        return  scene;
+        return scene;
     }
 
     private Button CreateButton(String text) {
@@ -115,40 +112,39 @@ public class GameClient extends Application implements View {
         return button;
     }
 
-    private void StartGame(int GameToPlay){
+    private void StartGame(int GameToPlay) {
         gridPane.getChildren().clear();
 
-        if(GameToPlay == 0) {
-            SetUpGame(8, new ReversiController(new ReversiModel(8,this,new ReversiAI())));
+        if (GameToPlay == 0) {
+            SetUpGame(8, new ReversiController(new ReversiModel(8, this, new ReversiAI())));
             stage.setTitle("Reversi");
-        }
-        else if(GameToPlay == 1) {
-            SetUpGame(3, new TicTacToeController(new TicTacToeModel(3,this,new TicTacToeAI())));
+        } else if (GameToPlay == 1) {
+            SetUpGame(3, new TicTacToeController(new TicTacToeModel(3, this, new TicTacToeAI())));
             stage.setTitle("TicTacToe");
         }
 
-        stage.setScene( GameScene);
+        stage.setScene(GameScene);
         stage.sizeToScene();
     }
 
-    private void SetUpGame(int size, Controller controller){
-        for(int i = 0;i < size;i++) {
+    private void SetUpGame(int size, Controller controller) {
+        for (int i = 0; i < size; i++) {
             for (int o = 0; o < size; o++) {
-                Peg peg=controller.get_pegs()[i][o];
+                Peg peg = controller.get_pegs()[i][o];
                 peg.setOnAction(
-                        actionEvent -> Platform.runLater( ()-> {
+                        actionEvent -> Platform.runLater(() -> {
                             controller.nextTurn(peg);
-                        } ));
+                        }));
                 gridPane.add(peg, peg.getZPosition(), peg.getXPosition());
             }
         }
     }
 
-    private void LoadMainMenu(){
+    private void LoadMainMenu() {
         stage.setScene(StartScene);
     }
 
-    public void setText(String s){
+    public void setText(String s) {
         this.gameLabel.setText(s);
     }
 }

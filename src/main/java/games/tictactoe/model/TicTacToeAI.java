@@ -2,30 +2,31 @@ package games.tictactoe.model;
 
 import ai.AI;
 import model.Peg;
+
 /**
  * Created by Singh van Offeren
  */
 public class TicTacToeAI implements AI {
 
 
-    private int [ ] [ ] board = new int[ 3 ][ 3 ];
+    private int[][] board = new int[3][3];
 
 
     // Constructor
-    public TicTacToeAI( ) {
+    public TicTacToeAI() {
 
 
     }
 
 
     //Method to convert the GUI pegs to a board array
-    public void pegs_to_board(Peg[][] pegs){
+    public void pegs_to_board(Peg[][] pegs) {
 
         clearBoard();
-        for(int row=0;row<3;row++) {
-            for(int col=0;col<3;col++) {
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 3; col++) {
 
-              board[row][col]=pegs[row][col].pegState;
+                board[row][col] = pegs[row][col].pegState;
             }
         }
 
@@ -33,11 +34,10 @@ public class TicTacToeAI implements AI {
     }
 
 
-    public int chooseMove()
-    {
+    public int chooseMove() {
 
-        Best best=chooseMove(AI);
-        return best.row*3+best.column;
+        Best best = chooseMove(AI);
+        return best.row * 3 + best.column;
 
 
     }
@@ -47,8 +47,7 @@ public class TicTacToeAI implements AI {
     //012
     //345
     //678
-    private Best chooseMove( int side )
-    {
+    private Best chooseMove(int side) {
         int opp;              // The other side
         Best reply;           // Opponent's best reply
         int simpleEval;       // Result of an immediate evaluation
@@ -56,54 +55,53 @@ public class TicTacToeAI implements AI {
         int bestColumn = 0;
         int value;
 
-        if( ( simpleEval = positionValue( ) ) != UNCLEAR )
-            return new Best( simpleEval );
+        if ((simpleEval = positionValue()) != UNCLEAR)
+            return new Best(simpleEval);
 
-        if(side==AI){
-            opp=PLAYER;
-            value=-1000;
-            for(int row=0;row<3;row++) {
-                for(int col=0;col<3;col++) {
-                    if(squareIsEmpty(row,col)){
-                        place(row,col,side);
-                        reply=chooseMove(opp);
-                        place(row,col,EMPTY);
-                        if(reply.val>value){
-                            value=reply.val;
-                            bestRow=row;
-                            bestColumn=col;
+        if (side == AI) {
+            opp = PLAYER;
+            value = -1000;
+            for (int row = 0; row < 3; row++) {
+                for (int col = 0; col < 3; col++) {
+                    if (squareIsEmpty(row, col)) {
+                        place(row, col, side);
+                        reply = chooseMove(opp);
+                        place(row, col, EMPTY);
+                        if (reply.val > value) {
+                            value = reply.val;
+                            bestRow = row;
+                            bestColumn = col;
                         }
                     }
                 }
             }
-            return new Best(value,bestRow,bestColumn);
+            return new Best(value, bestRow, bestColumn);
         } else {
-            opp=AI;
-            value=1000;
-            for(int row=0;row<3;row++) {
-                for(int col=0;col<3;col++) {
-                    if(squareIsEmpty(row,col)){
-                        place(row,col,side);
-                        reply=chooseMove(opp);
-                        place(row,col,EMPTY);
-                        if(reply.val<value){
-                            value=reply.val;
-                            bestRow=row;
-                            bestColumn=col;
+            opp = AI;
+            value = 1000;
+            for (int row = 0; row < 3; row++) {
+                for (int col = 0; col < 3; col++) {
+                    if (squareIsEmpty(row, col)) {
+                        place(row, col, side);
+                        reply = chooseMove(opp);
+                        place(row, col, EMPTY);
+                        if (reply.val < value) {
+                            value = reply.val;
+                            bestRow = row;
+                            bestColumn = col;
                         }
                     }
                 }
             }
-            return new Best(value,bestRow,bestColumn);
+            return new Best(value, bestRow, bestColumn);
         }
 
     }
 
 
     //check if move ok
-    public boolean moveOk(int move)
-    {
-        return ( move>=0 && move <=8 && board[move/3 ][ move%3 ] == EMPTY );
+    public boolean moveOk(int move) {
+        return (move >= 0 && move <= 8 && board[move / 3][move % 3] == EMPTY);
 
     }
 
@@ -114,29 +112,27 @@ public class TicTacToeAI implements AI {
             for (int col = 0; col < 3; col++) {
                 s += board[row][col];
             }
-            s+="\r\n";
+            s += "\r\n";
         }
 
     }
 
 
     // Simple supporting routines
-    private void clearBoard( )
-    {
-        for(int row=0;row<3;row++) {
-            for(int col=0;col<3;col++) {
-                place(row,col,EMPTY);
+    private void clearBoard() {
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 3; col++) {
+                place(row, col, EMPTY);
             }
         }
     }
 
 
-    private boolean boardIsFull( )
-    {
+    private boolean boardIsFull() {
 
-        for(int row=0;row<3;row++) {
-            for(int col=0;col<3;col++) {
-                if(squareIsEmpty(row,col))
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 3; col++) {
+                if (squareIsEmpty(row, col))
                     return false;
             }
         }
@@ -144,26 +140,25 @@ public class TicTacToeAI implements AI {
     }
 
     // Returns whether 'side' has won in this position
-    private boolean isAWin( int side )
-    {
+    private boolean isAWin(int side) {
         //sides:
         //top
-        if ((side == board[0][0]) && (side == board[0][1])&& (side == board[0][2])) {
+        if ((side == board[0][0]) && (side == board[0][1]) && (side == board[0][2])) {
             return true;
 
         }
         //bottom
-        if ((side == board[2][0]) && (side == board[2][1])&& (side == board[2][2])) {
+        if ((side == board[2][0]) && (side == board[2][1]) && (side == board[2][2])) {
             return true;
 
         }
         //left
-        if ((side == board[0][0]) && (side == board[1][0])&& (side == board[2][0])) {
+        if ((side == board[0][0]) && (side == board[1][0]) && (side == board[2][0])) {
             return true;
 
         }
         //right
-        if ((side == board[0][2]) && (side == board[1][2])&& (side == board[2][2])) {
+        if ((side == board[0][2]) && (side == board[1][2]) && (side == board[2][2])) {
             return true;
 
         }
@@ -171,24 +166,24 @@ public class TicTacToeAI implements AI {
 
         //middle:
         //horizontal
-        if ((side == board[1][0]) && (side == board[1][1])&& (side == board[1][2])) {
+        if ((side == board[1][0]) && (side == board[1][1]) && (side == board[1][2])) {
             return true;
 
         }
         //vertical
-        if ((side == board[0][1]) && (side == board[1][1])&& (side == board[2][1])) {
+        if ((side == board[0][1]) && (side == board[1][1]) && (side == board[2][1])) {
             return true;
 
         }
 
 
         //diagonal bottom left corner to top right
-        if ((side == board[2][0]) && (side == board[1][1])&& (side == board[0][2])) {
+        if ((side == board[2][0]) && (side == board[1][1]) && (side == board[0][2])) {
             return true;
 
         }
         //diagonal bottom right corner to top left
-        if ((side == board[2][2]) && (side == board[1][1])&& (side == board[0][0])) {
+        if ((side == board[2][2]) && (side == board[1][1]) && (side == board[0][0])) {
 
             return true;
         }
@@ -197,30 +192,25 @@ public class TicTacToeAI implements AI {
     }
 
     // Play a move, possibly clearing a square
-    private void place( int row, int column, int piece )
-    {
-        board[ row ][ column ] = piece;
+    private void place(int row, int column, int piece) {
+        board[row][column] = piece;
     }
 
-    private boolean squareIsEmpty( int row, int column )
-    {
-        return board[ row ][ column ] == EMPTY;
+    private boolean squareIsEmpty(int row, int column) {
+        return board[row][column] == EMPTY;
     }
 
     // Compute static value of current position (win, draw, etc.)
-    private int positionValue( )
-    {
+    private int positionValue() {
 
-        boolean player_win=isAWin(PLAYER);
-        boolean computer_win=isAWin(AI);
-        boolean is_full=boardIsFull();
-        if ((is_full && !computer_win) && (!player_win)){
+        boolean player_win = isAWin(PLAYER);
+        boolean computer_win = isAWin(AI);
+        boolean is_full = boardIsFull();
+        if ((is_full && !computer_win) && (!player_win)) {
             return DRAW;
-        }
-        else if(computer_win){
+        } else if (computer_win) {
             return AI_WIN;
-        }
-        else if(player_win){
+        } else if (player_win) {
             return PLAYER_WIN;
         } else {
             return UNCLEAR;
@@ -229,17 +219,20 @@ public class TicTacToeAI implements AI {
 
     }
 
-    private class Best
-    {
+    private class Best {
         int row;
         int column;
         int val;
 
-        public Best( int v )
-        { this( v, 0, 0 ); }
+        public Best(int v) {
+            this(v, 0, 0);
+        }
 
-        public Best( int v, int r, int c )
-        { val = v; row = r; column = c; }
+        public Best(int v, int r, int c) {
+            val = v;
+            row = r;
+            column = c;
+        }
     }
 
 }

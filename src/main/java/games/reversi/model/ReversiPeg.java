@@ -2,7 +2,6 @@ package games.reversi.model;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-
 import model.Peg;
 
 /**
@@ -16,9 +15,9 @@ public class ReversiPeg extends Peg {
     }
 
 
-    public void setTile(int i){
+    public void setTile(int i) {
         //white
-        if(i == 0) {
+        if (i == 0) {
             Image image = new Image("white.png");
             ImageView imageView = new ImageView(image);
             imageView.setFitWidth(40);
@@ -28,7 +27,7 @@ public class ReversiPeg extends Peg {
             pegState = 2;
         }
         //black
-        else{
+        else {
             Image image = new Image("black.png");
             ImageView imageView = new ImageView(image);
             imageView.smoothProperty().set(true);

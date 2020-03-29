@@ -1,7 +1,6 @@
 package communication.commands;
 
 import communication.GameClient;
-import communication.StrategicGameClient;
 
 import java.io.IOException;
 

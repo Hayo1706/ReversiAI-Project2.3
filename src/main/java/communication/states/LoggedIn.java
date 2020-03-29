@@ -26,7 +26,9 @@ public class LoggedIn extends CommunicationState {
     }
 
     @Override
-    public void logout() { client.logout(); }
+    public void logout() {
+        client.logout();
+    }
 
     @Override
     public JSONArray getGameList() {
@@ -34,7 +36,9 @@ public class LoggedIn extends CommunicationState {
     }
 
     @Override
-    public JSONArray getPlayerList() { return client.getPlayerList(); }
+    public JSONArray getPlayerList() {
+        return client.getPlayerList();
+    }
 
     @Override
     public void startWaiting() {

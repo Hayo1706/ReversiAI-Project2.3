@@ -1,6 +1,5 @@
 package communication;
 
-import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -26,7 +25,7 @@ public class Connection {
      * @param lines The amount of line to be skipped
      */
     public void skipLines(int lines) {
-        for(int i = 0; i < lines; i++) {
+        for (int i = 0; i < lines; i++) {
             readLine();
         }
     }
@@ -41,9 +40,9 @@ public class Connection {
         int incomingByte;
 
         try {
-            while((incomingByte = inputStream.read()) != 10) {
-                if(incomingByte == -1) break; // disconnected
-                if(incomingByte == 13) continue; // skip carriage return
+            while ((incomingByte = inputStream.read()) != 10) {
+                if (incomingByte == -1) break; // disconnected
+                if (incomingByte == 13) continue; // skip carriage return
                 line.append((char) incomingByte);
             }
         } catch (IOException e) {
@@ -64,8 +63,8 @@ public class Connection {
     public void sendCommand(String... arguments) throws IOException {
         System.out.println("Executing: " + Arrays.toString(arguments));
 
-        for(String argument : arguments) {
-            for(char letter : argument.toCharArray()) {
+        for (String argument : arguments) {
+            for (char letter : argument.toCharArray()) {
                 outputStream.writeByte((byte) letter);
             }
 
@@ -83,7 +82,7 @@ public class Connection {
     public void expectOK() throws NotOKResponseException {
         String line = readLine();
 
-        if(!line.equals("OK")) {
+        if (!line.equals("OK")) {
             throw new NotOKResponseException(line.substring(3).stripLeading());
         }
     }
@@ -99,7 +98,7 @@ public class Connection {
         String line = readLine();
         String expected = "SVR " + type;
 
-        if(line.substring(0, expected.length()).equals(expected)) {
+        if (line.substring(0, expected.length()).equals(expected)) {
             return line.substring(expected.length()).stripLeading();
         }
 
@@ -107,14 +106,14 @@ public class Connection {
     }
 
     public void startListening() {
-        if(listeningThread == null) {
+        if (listeningThread == null) {
             listeningThread = new Thread(new ListeningThread(this));
             listeningThread.start();
         }
     }
 
     public void stopListening() {
-        if(listeningThread != null) {
+        if (listeningThread != null) {
             listeningThread.interrupt();
             listeningThread = null;
         }

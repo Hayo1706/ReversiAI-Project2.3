@@ -28,7 +28,9 @@ public class NotConnected extends CommunicationState {
 
 
     @Override
-    public void logout() { System.out.println("Not connected!"); }
+    public void logout() {
+        System.out.println("Not connected!");
+    }
 
     @Override
     public JSONArray getGameList() {

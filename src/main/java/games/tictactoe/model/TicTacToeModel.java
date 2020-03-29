@@ -1,4 +1,5 @@
 package games.tictactoe.model;
+
 import ai.AI;
 import model.Model;
 import model.Peg;
@@ -11,11 +12,9 @@ import view.View;
 public class TicTacToeModel extends Model
         //The games.tictactoe logic
 {
-    public TicTacToeModel(int boardsize,View view,AI ai){
-        super(boardsize,view,ai);
+    public TicTacToeModel(int boardsize, View view, AI ai) {
+        super(boardsize, view, ai);
     }
-
-
 
 
     public void fill_pegs() {
@@ -32,11 +31,7 @@ public class TicTacToeModel extends Model
     }
 
 
-
-
-
-
-    public void play_ai_vs_server(){
+    public void play_ai_vs_server() {
         // TODO: 28/03/2020
         //update the names
         //check who begins and update side
@@ -56,51 +51,35 @@ public class TicTacToeModel extends Model
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-    public int calculateBest(){
+    public int calculateBest() {
 
         AI.pegs_to_board(pegs);
-        int best=AI.chooseMove();
+        int best = AI.chooseMove();
 
         return best;
     }
 
 
-
-
-
-
     // Returns whether 'side' has won in this position
-    public boolean isAWin( int side )
-    {
+    public boolean isAWin(int side) {
         //sides:
         //top
-        if ((side == pegs[0][0].pegState) && (side == pegs[0][1].pegState)&& (side == pegs[0][2].pegState)) {
+        if ((side == pegs[0][0].pegState) && (side == pegs[0][1].pegState) && (side == pegs[0][2].pegState)) {
             return true;
 
         }
         //bottom
-        if ((side == pegs[2][0].pegState) && (side == pegs[2][1].pegState)&& (side == pegs[2][2].pegState)) {
+        if ((side == pegs[2][0].pegState) && (side == pegs[2][1].pegState) && (side == pegs[2][2].pegState)) {
             return true;
 
         }
         //left
-        if ((side == pegs[0][0].pegState) && (side == pegs[1][0].pegState)&& (side == pegs[2][0].pegState)) {
+        if ((side == pegs[0][0].pegState) && (side == pegs[1][0].pegState) && (side == pegs[2][0].pegState)) {
             return true;
 
         }
         //right
-        if ((side == pegs[0][2].pegState) && (side == pegs[1][2].pegState)&& (side == pegs[2][2].pegState)) {
+        if ((side == pegs[0][2].pegState) && (side == pegs[1][2].pegState) && (side == pegs[2][2].pegState)) {
             return true;
 
         }
@@ -108,33 +87,30 @@ public class TicTacToeModel extends Model
 
         //middle:
         //horizontal
-        if ((side == pegs[1][0].pegState) && (side == pegs[1][1].pegState)&& (side == pegs[1][2].pegState)) {
+        if ((side == pegs[1][0].pegState) && (side == pegs[1][1].pegState) && (side == pegs[1][2].pegState)) {
             return true;
 
         }
         //vertical
-        if ((side == pegs[0][1].pegState) && (side == pegs[1][1].pegState)&& (side == pegs[2][1].pegState)) {
+        if ((side == pegs[0][1].pegState) && (side == pegs[1][1].pegState) && (side == pegs[2][1].pegState)) {
             return true;
 
         }
 
 
         //diagonal bottom left corner to top right
-        if ((side == pegs[2][0].pegState) && (side == pegs[1][1].pegState)&& (side == pegs[0][2].pegState)) {
+        if ((side == pegs[2][0].pegState) && (side == pegs[1][1].pegState) && (side == pegs[0][2].pegState)) {
             return true;
 
         }
         //diagonal bottom right corner to top left
-        if ((side == pegs[2][2].pegState) && (side == pegs[1][1].pegState)&& (side == pegs[0][0].pegState)) {
+        if ((side == pegs[2][2].pegState) && (side == pegs[1][1].pegState) && (side == pegs[0][0].pegState)) {
 
             return true;
         }
 
         return false;
     }
-
-
-
 
 
 }

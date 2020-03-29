@@ -1,4 +1,5 @@
 package games.tictactoe.controller;
+
 import controller.Controller;
 import model.Model;
 import model.Peg;
@@ -13,9 +14,7 @@ public class TicTacToeController implements Controller {
     Model model;
 
 
-    public TicTacToeController(Model model)
-
-    {
+    public TicTacToeController(Model model) {
 
         this.model = model;
         //At startup no square can be filled
@@ -27,55 +26,55 @@ public class TicTacToeController implements Controller {
 
     }
 
-    public void setupBoard(){
+    public void setupBoard() {
 
     }
 
 
+    public void nextTurn(model.Peg peg) {
+        if (model.is_mode(Model.HUMAN_VS_AI)) {
 
-    public void nextTurn(model.Peg peg){
-        if(model.is_mode(Model.HUMAN_VS_AI)){
-
-            model.playMove(peg.getXPosition()*3+peg.getZPosition());
-            if(!gameOver()) {
+            model.playMove(peg.getXPosition() * 3 + peg.getZPosition());
+            if (!gameOver()) {
                 model.playMove(getBest());
             }
 
-        }
-        else if(model.is_mode(Model.HUMAN_VS_HUMAN)){
-            model.playMove(peg.getXPosition()*3+peg.getZPosition());
-        }
-        else if(model.is_mode(Model.HUMAN_VS_SERVER)){
+        } else if (model.is_mode(Model.HUMAN_VS_HUMAN)) {
+            model.playMove(peg.getXPosition() * 3 + peg.getZPosition());
+        } else if (model.is_mode(Model.HUMAN_VS_SERVER)) {
 
             //play on the server
             //update model
-            model.playMove(peg.getXPosition()*3+peg.getZPosition());
+            model.playMove(peg.getXPosition() * 3 + peg.getZPosition());
             //receive opponents result and play the same move on the model
         }
         //game is idle and cannot reach this whole method
-        else{
+        else {
 
         }
 
 
-        if(gameOver()){
+        if (gameOver()) {
 
             disable_pegs();
 
         }
     }
 
-    public Peg[][] get_pegs(){
+    public Peg[][] get_pegs() {
 
-        return  model.get_pegs();
+        return model.get_pegs();
     }
-    public boolean gameOver(){
+
+    public boolean gameOver() {
         return model.gameOver();
     }
-    public void disable_pegs(){
+
+    public void disable_pegs() {
         model.disable_pegs();
     }
-    public int getBest(){
+
+    public int getBest() {
         return model.calculateBest();
     }
 }
