@@ -4,12 +4,14 @@ import communication.events.Event;
 import communication.events.ReceivedChallenge;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.util.Optional;
 
@@ -33,6 +35,12 @@ public class DebugBar extends Application {
             Platform.runLater(() -> {
                 StrategicGameClient.getInstance().subscribe("Reversi");
             });
+        });
+
+        stage.setOnCloseRequest(e -> {
+            StrategicGameClient.getInstance().logout();
+            Platform.exit();
+            System.exit(0);
         });
 
         new Thread(() -> {

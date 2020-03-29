@@ -102,7 +102,14 @@ public class StrategicGameClient implements GameClient {
      * Logout of the server
      */
     public void logout() {
+        connection.stopListening();
         executeCommand(new Logout(this));
+
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
