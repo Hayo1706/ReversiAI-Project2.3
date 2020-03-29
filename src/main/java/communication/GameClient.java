@@ -9,6 +9,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 
+/**
+ * Created by Dylan Hiemstra
+ */
 public interface GameClient {
     void connect(String host, Integer port) throws IOException;
     void login(String username);

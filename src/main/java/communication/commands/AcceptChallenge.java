@@ -4,6 +4,9 @@ import communication.GameClient;
 
 import java.io.IOException;
 
+/**
+ * Created by Dylan Hiemstra
+ */
 public class AcceptChallenge extends Command {
     private int challengeNumber;
 

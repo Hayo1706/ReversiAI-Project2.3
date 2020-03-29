@@ -17,6 +17,8 @@ import java.util.Optional;
 
 /**
  * Created by Dylan Hiemstra
+ *
+ * FOR TESTING PURPOSES!
  */
 public class DebugBar extends Application {
     @Override

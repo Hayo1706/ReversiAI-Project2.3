@@ -9,6 +9,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 
+/**
+ * Created by Dylan Hiemstra
+ */
 public class StrategicGameClientProxy implements GameClient {
     private GameClient realGameClient;
 
