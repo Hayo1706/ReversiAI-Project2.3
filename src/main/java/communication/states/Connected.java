@@ -26,13 +26,19 @@ public class Connected extends CommunicationState {
     }
 
     @Override
-    public void logout() { System.out.println("Not logged in!"); }
+    public void logout() {
+        System.out.println("Not logged in!");
+    }
 
     @Override
-    public JSONArray getGameList() { return client.getGameList(); }
+    public JSONArray getGameList() {
+        return client.getGameList();
+    }
 
     @Override
-    public JSONArray getPlayerList() { return client.getPlayerList(); }
+    public JSONArray getPlayerList() {
+        return client.getPlayerList();
+    }
 
     @Override
     public void startWaiting() {
@@ -60,7 +66,7 @@ public class Connected extends CommunicationState {
     }
 
     @Override
-    public void denyChallenge(ReceivedChallenge event) {
+    public void denyChallenge() {
         System.out.println("Need to be challenged!");
     }
 }

@@ -26,7 +26,9 @@ public class LoggedIn extends CommunicationState {
     }
 
     @Override
-    public void logout() { client.logout(); }
+    public void logout() {
+        client.logout();
+    }
 
     @Override
     public JSONArray getGameList() {
@@ -34,11 +36,13 @@ public class LoggedIn extends CommunicationState {
     }
 
     @Override
-    public JSONArray getPlayerList() { return client.getPlayerList(); }
+    public JSONArray getPlayerList() {
+        return client.getPlayerList();
+    }
 
     @Override
     public void startWaiting() {
-        client.startWaitingMode();
+        client.startWaiting();
     }
 
     @Override
@@ -62,7 +66,7 @@ public class LoggedIn extends CommunicationState {
     }
 
     @Override
-    public void denyChallenge(ReceivedChallenge event) {
+    public void denyChallenge() {
         System.out.println("Need to be challenged!");
     }
 }

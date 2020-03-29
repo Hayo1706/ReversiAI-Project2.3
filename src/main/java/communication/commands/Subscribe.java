@@ -1,5 +1,7 @@
 package communication.commands;
 
+import communication.GameClient;
+
 import java.io.IOException;
 
 /**
@@ -8,7 +10,8 @@ import java.io.IOException;
 public class Subscribe extends Command {
     String game;
 
-    public Subscribe(String game) {
+    public Subscribe(GameClient client, String game) {
+        super(client);
         this.game = game;
     }
 

@@ -28,7 +28,9 @@ public class NotConnected extends CommunicationState {
 
 
     @Override
-    public void logout() { System.out.println("Not connected!"); }
+    public void logout() {
+        System.out.println("Not connected!");
+    }
 
     @Override
     public JSONArray getGameList() {
@@ -68,7 +70,7 @@ public class NotConnected extends CommunicationState {
     }
 
     @Override
-    public void denyChallenge(ReceivedChallenge event) {
+    public void denyChallenge() {
         System.out.println("Need to be challenged!");
     }
 }

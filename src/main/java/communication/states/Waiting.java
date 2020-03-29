@@ -10,8 +10,8 @@ import java.io.IOException;
 /**
  * Created by Dylan Hiemstra
  */
-public class WaitingMode extends CommunicationState {
-    public WaitingMode(StrategicGameClient client) {
+public class Waiting extends CommunicationState {
+    public Waiting(StrategicGameClient client) {
         super(client);
     }
 
@@ -68,7 +68,7 @@ public class WaitingMode extends CommunicationState {
     }
 
     @Override
-    public void denyChallenge(ReceivedChallenge event) {
+    public void denyChallenge() {
         System.out.println("Need to be challenged!");
     }
 }

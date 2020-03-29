@@ -1,11 +1,17 @@
 package communication.commands;
 
+import communication.GameClient;
+
 import java.io.IOException;
 
+/**
+ * Created by Dylan Hiemstra
+ */
 public class AcceptChallenge extends Command {
     private int challengeNumber;
 
-    public AcceptChallenge(int challengeNumber) {
+    public AcceptChallenge(GameClient client, int challengeNumber) {
+        super(client);
         this.challengeNumber = challengeNumber;
     }
 

@@ -1,6 +1,6 @@
 package communication.commands;
 
-import communication.NotOKResponseException;
+import communication.GameClient;
 
 import java.io.IOException;
 
@@ -10,8 +10,8 @@ import java.io.IOException;
 public class Login extends Command {
     private String username;
 
-    public Login(String username) {
-        super();
+    public Login(GameClient client, String username) {
+        super(client);
         this.username = username;
     }
 

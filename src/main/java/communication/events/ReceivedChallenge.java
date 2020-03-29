@@ -3,6 +3,9 @@ package communication.events;
 import communication.StrategicGameClient;
 import org.json.JSONObject;
 
+/**
+ * Created by Dylan Hiemstra
+ */
 public class ReceivedChallenge extends Event {
     private String challenger;
     private int challengeNumber;
@@ -15,11 +18,11 @@ public class ReceivedChallenge extends Event {
     }
 
     public void acceptChallenge() {
-        StrategicGameClient.getInstance().getState().acceptChallenge(this);
+        StrategicGameClient.getInstance().acceptChallenge(this);
     }
 
     public void denyChallenge() {
-        StrategicGameClient.getInstance().getState().denyChallenge(this);
+        StrategicGameClient.getInstance().denyChallenge();
     }
 
     public String getChallenger() {

@@ -1,11 +1,18 @@
 package communication.commands;
 
+import communication.GameClient;
+
 import java.io.IOException;
 
 /**
  * Created by Dylan Hiemstra
  */
 public class Logout extends Command {
+
+    public Logout(GameClient client) {
+        super(client);
+    }
+
     @Override
     public void execute() {
         try {
