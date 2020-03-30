@@ -17,7 +17,7 @@ public class ReversiController implements controller.Controller {
         setupBoard();
         startupAnimation();
         model.switch_gamemode(GameClient.gameMode);
-        setValidMoves();
+        checkMovesCloseby();
 
 
     }
@@ -51,7 +51,7 @@ public class ReversiController implements controller.Controller {
         if (gameOver()) {
             disable_pegs();
         }
-        setValidMoves();
+        checkMovesCloseby();
     }
 
 
@@ -100,7 +100,7 @@ public class ReversiController implements controller.Controller {
     //black == 1
     //player1 = 0
 
-    public void setValidMoves() {
+    public void checkMovesCloseby() {
         int side = model.getSide();
         System.out.println(side);
         model.disable_pegs();
@@ -111,7 +111,7 @@ public class ReversiController implements controller.Controller {
                     if ((pegs[i][o].getPegState() == 0 && side == 0) || (side == 1 && pegs[i][o].getPegState() == 1)) {
                         for (int q= -1; q <= 1 && q+i < 8; q++) {
                             for (int w= -1; w <= 1 && w+o < 8; w++) {
-                                if((pegs[abs(q + i)][abs(w + o)].getPegState() == 2)) {
+                                if((pegs[abs(q + i)][abs(w + o)].getPegState() == 2) && (checkHorizontal(abs(q + i),abs(w + o))|| checkVertical(abs(q + i),abs(w + o)) || checkDiagonal(abs(q + i),abs(w + o)))) {
                                     pegs[abs(q + i)][abs(w + o)].setDisable(false);
                                     pegs[abs(q + i)][abs(w + o)].setStyle("-fx-background-color: #3c8e55");
 
@@ -123,14 +123,14 @@ public class ReversiController implements controller.Controller {
             }
     }
     private boolean checkHorizontal(int posZ,int posX){
-        return false;
+        return true;
     }
 
     private boolean checkVertical(int posX,int posZ){
-        return false;
+        return true;
     }
     private boolean checkDiagonal(int posX,int posZ){
-        return false;
+        return true;
     }
 
 
