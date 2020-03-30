@@ -1,6 +1,7 @@
 package games.tictactoe.model;
 
 import ai.AI;
+import communication.StrategicGameClient;
 import model.Model;
 import model.Peg;
 import view.View;
@@ -38,7 +39,6 @@ public class TicTacToeModel extends Model
             peg.setTile(1);
 
         } else {
-
             peg.setTile(0);
         }
 

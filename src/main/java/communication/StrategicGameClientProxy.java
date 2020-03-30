@@ -1,13 +1,12 @@
 package communication;
 
-import communication.events.Event;
-import communication.events.ReceivedChallenge;
+import communication.events.*;
 import communication.states.CommunicationState;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.concurrent.BlockingQueue;
+
 
 /**
  * Created by Dylan Hiemstra
@@ -80,12 +79,45 @@ public class StrategicGameClientProxy implements GameClient {
     }
 
     @Override
+    public void matchStarted(MatchStarted event) { realGameClient.getState().matchStarted(event); }
+
+    @Override
+    public void yourTurn(YourTurn event) {
+        realGameClient.getState().yourTurn(event);
+    }
+
+    @Override
+    public void move(Move event) {
+        realGameClient.getState().move(event);
+    }
+
+    @Override
+    public void win(Win event) {
+        realGameClient.getState().win(event);
+    }
+
+    @Override
+    public void draw(Draw event) {
+        realGameClient.getState().draw(event);
+    }
+
+    @Override
+    public void loss(Loss event) {
+        realGameClient.getState().loss(event);
+    }
+
+    @Override
+    public void doMove(int index) {
+        realGameClient.getState().doMove(index);
+    }
+
+    @Override
     public Connection getConnection() {
         return null;
     }
 
     @Override
-    public BlockingQueue<Event> getEventBus() {
+    public Observable<Event> getEventBus() {
         return realGameClient.getEventBus();
     }
 }

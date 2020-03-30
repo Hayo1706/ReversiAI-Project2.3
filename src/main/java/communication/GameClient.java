@@ -1,13 +1,11 @@
 package communication;
 
-import communication.events.Event;
-import communication.events.ReceivedChallenge;
-import communication.states.CommunicationState;
+import communication.events.*;
+import communication.states.CommunicationState;;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.concurrent.BlockingQueue;
 
 /**
  * Created by Dylan Hiemstra
@@ -35,9 +33,23 @@ public interface GameClient {
 
     void denyChallenge();
 
+    void matchStarted(MatchStarted event);
+
+    void yourTurn(YourTurn event);
+
+    void move(Move event);
+
+    void win(Win event);
+
+    void draw(Draw event);
+
+    void loss(Loss event);
+
+    void doMove(int index);
+
     CommunicationState getState();
 
     Connection getConnection();
 
-    BlockingQueue<Event> getEventBus();
+    Observable<Event> getEventBus();
 }

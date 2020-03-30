@@ -1,5 +1,6 @@
 package communication;
 
+import communication.events.*;
 import org.json.JSONObject;
 
 import java.util.Arrays;
@@ -17,11 +18,19 @@ public class ListeningThread implements Runnable {
 
     @Override
     public void run() {
-        do {
+        while (!Thread.interrupted()) {
             if (connection.hasBytesToRead()) {
                 String line = connection.readLine();
                 String[] command = line.split(" ");
                 System.out.println("Received command: " + Arrays.toString(command));
+
+                /**
+                 * TODO:
+                 *  - Sent event over event bus when we are in a match and update state
+                 *  - Go back to listeningMode after game ends
+                 */
+
+                JSONObject data;
 
                 if (command.length > 3 && command[0].equals("SVR") && command[1].equals("GAME")) {
                     switch (command[2]) {
@@ -30,22 +39,38 @@ public class ListeningThread implements Runnable {
                                 System.out.println("sent challenge canceled"); // THIS IS NOT ALWAYS SENT!!!!!
                                 StrategicGameClient.getInstance().denyChallenge();
                             } else {
-                                JSONObject data = new JSONObject(line.substring(line.indexOf('{')));
+                                data = new JSONObject(line.substring(line.indexOf('{')));
                                 StrategicGameClient.getInstance().challenged(data);
                             }
 
                             break;
                         case "MATCH":
-                            /**
-                             * TODO:
-                             *  - Sent event over event bus when we are in a match and update state
-                             *  - Go back to listeningMode after game ends
-                             */
-
+                            data = new JSONObject(line.substring(line.indexOf('{')));
+                            StrategicGameClient.getInstance().matchStarted(new MatchStarted(data));
+                            break;
+                        case "YOURTURN":
+                             data = new JSONObject(line.substring(line.indexOf('{')));
+                             StrategicGameClient.getInstance().yourTurn(new YourTurn(data));
+                            break;
+                        case "MOVE":
+                            data = new JSONObject(line.substring(line.indexOf('{')));
+                            StrategicGameClient.getInstance().move(new Move(data));
+                            break;
+                        case "WIN":
+                            data = new JSONObject(line.substring(line.indexOf('{')));
+                            StrategicGameClient.getInstance().win(new Win(data));
+                            break;
+                        case "DRAW":
+                            data = new JSONObject(line.substring(line.indexOf('{')));
+                            StrategicGameClient.getInstance().draw(new Draw(data));
+                            break;
+                        case "LOSS":
+                            data = new JSONObject(line.substring(line.indexOf('{')));
+                            StrategicGameClient.getInstance().loss(new Loss(data));
                             break;
                     }
                 }
             }
-        } while (!Thread.interrupted());
+        }
     }
 }

@@ -1,9 +1,16 @@
 package games.tictactoe.controller;
 
+import communication.StrategicGameClient;
+import communication.events.*;
 import controller.Controller;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import model.Model;
 import model.Peg;
 import view.GameClient;
+
+import java.util.Optional;
 
 /**
  * Created by Singh van Offeren
@@ -15,7 +22,16 @@ public class TicTacToeController implements Controller {
 
 
     public TicTacToeController(Model model) {
+        this.model = model;
+        //At startup no square can be filled
+        //model.switch_gamemode(Model.IDLE);
+        //human vs human
+        //model.switch_gamemode(Model.HUMAN_VS_HUMAN);
+        //human vs ai
+        model.switch_gamemode(GameClient.gameMode);
+    }
 
+    public TicTacToeController(Model model, MatchStarted start) {
         this.model = model;
         //At startup no square can be filled
         //model.switch_gamemode(Model.IDLE);
@@ -24,7 +40,23 @@ public class TicTacToeController implements Controller {
         //human vs ai
         model.switch_gamemode(GameClient.gameMode);
 
+        // start -> determine who starts, name opponent
+
+        StrategicGameClient.getInstance().getEventBus().addObserver(event -> {
+            if(event instanceof YourTurn) {
+                // event.doMove or  StrategicGameClient.getInstance().doMove(index);
+            } else if(event instanceof Move) {
+                // event.getPlayer and event.getMove()
+            } else if(event instanceof Win) {
+                // we won!
+            } else if(event instanceof Loss) {
+                // We lost
+            } else if(event instanceof Draw) {
+                // Draw!
+            }
+        });
     }
+
 
     public void setupBoard() {
 

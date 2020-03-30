@@ -1,8 +1,7 @@
 package communication;
 
 import communication.commands.*;
-import communication.events.Event;
-import communication.events.ReceivedChallenge;
+import communication.events.*;
 import communication.states.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -37,7 +36,7 @@ public class StrategicGameClient implements GameClient {
      */
     private Connection connection;
 
-    private BlockingQueue<Event> eventBus = new LinkedBlockingDeque<>();
+    private Observable<Event> eventBus = new Observable<>();
 
     private StrategicGameClient() {
         setState(new NotConnected(this));
@@ -207,7 +206,7 @@ public class StrategicGameClient implements GameClient {
     public void challenged(JSONObject data) {
         setState(new Challenged(this));
         Event receivedChallenge = new ReceivedChallenge(data);
-        eventBus.add(receivedChallenge);
+        eventBus.notifyObservers(receivedChallenge);
     }
 
     /**
@@ -236,6 +235,51 @@ public class StrategicGameClient implements GameClient {
         setState(new Waiting(this));
     }
 
+    public void matchStarted(MatchStarted event) {
+        setState(new InGame(this));
+        eventBus.notifyObservers(event);
+
+    }
+
+    @Override
+    public void doMove(int index)  {
+        connection.stopListening();
+
+        executeCommand(new DoMove(this, index));
+
+        try {
+            connection.expectOK();
+        } catch (NotOKResponseException e) {
+            e.printStackTrace();
+        }
+
+        connection.startListening();
+    }
+
+
+    @Override
+    public void yourTurn(YourTurn event) { eventBus.notifyObservers(event); }
+
+    @Override
+    public void move(Move event) {
+        eventBus.notifyObservers(event);
+    }
+
+    @Override
+    public void win(Win event) {
+        eventBus.notifyObservers(event);
+    }
+
+    @Override
+    public void draw(Draw event) {
+        eventBus.notifyObservers(event);
+    }
+
+    @Override
+    public void loss(Loss event) {
+        eventBus.notifyObservers(event);
+    }
+
     public CommunicationState getState() {
         return communicationState;
     }
@@ -254,7 +298,7 @@ public class StrategicGameClient implements GameClient {
         return connection;
     }
 
-    public BlockingQueue<Event> getEventBus() {
+    public Observable<Event> getEventBus() {
         return eventBus;
     }
 }

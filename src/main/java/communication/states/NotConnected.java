@@ -1,7 +1,7 @@
 package communication.states;
 
 import communication.StrategicGameClient;
-import communication.events.ReceivedChallenge;
+import communication.events.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -72,5 +72,39 @@ public class NotConnected extends CommunicationState {
     @Override
     public void denyChallenge() {
         System.out.println("Need to be challenged!");
+    }
+
+    @Override
+    public void matchStarted(MatchStarted event) {
+        System.out.println("Not possible");
+    }
+    @Override
+    public void yourTurn(YourTurn event) {
+
+    }
+
+    @Override
+    public void move(Move event) {
+
+    }
+
+    @Override
+    public void win(Win event) {
+
+    }
+
+    @Override
+    public void loss(Loss event) {
+
+    }
+
+    @Override
+    public void draw(Draw event) {
+
+    }
+
+    @Override
+    public void doMove(int index) {
+
     }
 }
