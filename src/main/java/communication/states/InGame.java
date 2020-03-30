@@ -10,8 +10,8 @@ import java.io.IOException;
 /**
  * Created by Dylan Hiemstra
  */
-public class Challenged extends CommunicationState {
-    public Challenged(StrategicGameClient client) {
+public class InGame extends CommunicationState {
+    public InGame(StrategicGameClient client) {
         super(client);
     }
 
@@ -49,63 +49,61 @@ public class Challenged extends CommunicationState {
 
     @Override
     public void subscribe(String game) {
-        System.out.println("Can't subscribe! Already challenged by someone else!");
+        System.out.println("Already in match");
     }
 
     @Override
     public void challenge(String player, String game) {
-        System.out.println("Can't challenge! Already challenged by someone else!");
+        System.out.println("Already in match");
     }
 
     @Override
     public void challenged(JSONObject data) {
-        System.out.println("Already challenged by someone else!");
+        System.out.println("Already in match");
     }
 
     @Override
     public void acceptChallenge(ReceivedChallenge event) {
-        client.acceptChallenge(event);
+        System.out.println("Already in match");
     }
 
     @Override
     public void denyChallenge() {
-        client.denyChallenge();
+        System.out.println("Already in match");
     }
 
     @Override
     public void matchStarted(MatchStarted event) {
-        client.matchStarted(event);
-    }
-
-    @Override
-    public void doMove(int index) {
-
+        System.out.println("Already in match");
     }
 
     @Override
     public void yourTurn(YourTurn event) {
-
+        client.yourTurn(event);
     }
 
     @Override
     public void move(Move event) {
-
+        client.move(event);
     }
 
     @Override
     public void win(Win event) {
-
+        client.win(event);
     }
 
     @Override
     public void loss(Loss event) {
-
+        client.loss(event);
     }
 
     @Override
     public void draw(Draw event) {
-
+        client.draw(event);
     }
 
-
+    @Override
+    public void doMove(int index) {
+        client.doMove(index);
+    }
 }

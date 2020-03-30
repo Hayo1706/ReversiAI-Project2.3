@@ -1,5 +1,8 @@
 package view;
 
+import communication.StrategicGameClient;
+import communication.events.MatchStarted;
+import communication.events.ReceivedChallenge;
 import controller.Controller;
 import games.reversi.controller.ReversiController;
 import games.reversi.model.ReversiAI;
@@ -11,7 +14,9 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -19,6 +24,8 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.Model;
 import model.Peg;
+
+import java.util.Optional;
 
 public class GameClient extends Application implements View {
 
@@ -32,6 +39,36 @@ public class GameClient extends Application implements View {
 
     @Override
     public void start(Stage stage) {
+
+        StrategicGameClient.getInstance().getEventBus().addObserver(event -> {
+            if(event instanceof ReceivedChallenge) {
+                ReceivedChallenge receivedChallenge = (ReceivedChallenge) event;
+                Platform.runLater(() -> {
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setTitle("Confirmation Dialog");
+                    alert.setContentText("Accept challenge from " + receivedChallenge.getChallenger() + " to play " + receivedChallenge.getGameType());
+
+                    Optional<ButtonType> result = alert.showAndWait();
+                    if (result.get() == ButtonType.OK) {
+                        receivedChallenge.acceptChallenge();
+                    } else {
+                        receivedChallenge.denyChallenge();
+                    }
+                });
+            } else if(event instanceof MatchStarted) {
+                MatchStarted matchStarted = (MatchStarted) event;
+
+                if(matchStarted.getGameType().equals("Reversi")) {
+
+                } else if(matchStarted.getGameType().equals("Tic-tac-toe")) {
+                    Platform.runLater(() -> {
+                        StartGame(1, matchStarted);
+                    });
+                }
+            }
+        });
+
+
         this.stage = stage;
 
 
@@ -120,6 +157,21 @@ public class GameClient extends Application implements View {
             stage.setTitle("Reversi");
         } else if (GameToPlay == 1) {
             SetUpGame(3, new TicTacToeController(new TicTacToeModel(3, this, new TicTacToeAI())));
+            stage.setTitle("TicTacToe");
+        }
+
+        stage.setScene(GameScene);
+        stage.sizeToScene();
+    }
+
+    private void StartGame(int GameToPlay, MatchStarted event) {
+        gridPane.getChildren().clear();
+
+        if (GameToPlay == 0) {
+            SetUpGame(8, new ReversiController(new ReversiModel(8, this, new ReversiAI())));
+            stage.setTitle("Reversi");
+        } else if (GameToPlay == 1) {
+            SetUpGame(3, new TicTacToeController(new TicTacToeModel(3, this, new TicTacToeAI()), event));
             stage.setTitle("TicTacToe");
         }
 

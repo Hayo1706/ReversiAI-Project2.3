@@ -1,6 +1,7 @@
 package communication;
 
 import communication.events.Event;
+import communication.events.MatchStarted;
 import communication.events.ReceivedChallenge;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -43,33 +44,32 @@ public class DebugBar extends Application {
             System.exit(0);
         });
 
-        new Thread(() -> {
-            while (true) {
-                Event event = null;
-                try {
-                    event = StrategicGameClient.getInstance().getEventBus().take();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    return;
-                }
 
-                if (event instanceof ReceivedChallenge) {
-                    ReceivedChallenge finalEvent = (ReceivedChallenge) event;
-                    Platform.runLater(() -> {
-                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                        alert.setTitle("Confirmation Dialog");
-                        alert.setContentText("Accept challenge from " + finalEvent.getChallenger() + " to play " + finalEvent.getGameType());
+        StrategicGameClient.getInstance().getEventBus().addObserver(event -> {
+            if(event instanceof ReceivedChallenge) {
+                ReceivedChallenge receivedChallenge = (ReceivedChallenge) event;
+                Platform.runLater(() -> {
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setTitle("Confirmation Dialog");
+                    alert.setContentText("Accept challenge from " + receivedChallenge.getChallenger() + " to play " + receivedChallenge.getGameType());
 
-                        Optional<ButtonType> result = alert.showAndWait();
-                        if (result.get() == ButtonType.OK) {
-                            finalEvent.acceptChallenge();
-                        } else {
-                            finalEvent.denyChallenge();
-                        }
-                    });
+                    Optional<ButtonType> result = alert.showAndWait();
+                    if (result.get() == ButtonType.OK) {
+                        receivedChallenge.acceptChallenge();
+                    } else {
+                        receivedChallenge.denyChallenge();
+                    }
+                });
+            } else if(event instanceof MatchStarted) {
+                MatchStarted matchStarted = (MatchStarted) event;
+
+                if(matchStarted.getGameType().equals("Reversi")) {
+
+                } else if(matchStarted.getGameType().equals("Tic-tac-toe")) {
+
                 }
             }
-        }).start();
+        });
 
         VBox vbox = new VBox(button1, button2);
 

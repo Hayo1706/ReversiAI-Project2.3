@@ -1,7 +1,7 @@
 package communication.states;
 
 import communication.StrategicGameClient;
-import communication.events.ReceivedChallenge;
+import communication.events.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -38,4 +38,18 @@ public abstract class CommunicationState {
     public abstract void acceptChallenge(ReceivedChallenge event);
 
     public abstract void denyChallenge();
+    
+    public abstract void matchStarted(MatchStarted event);
+
+    public abstract void doMove(int index);
+
+    public abstract void yourTurn(YourTurn event);
+
+    public abstract void move(Move event);
+
+    public abstract void win(Win event);
+
+    public abstract void loss(Loss event);
+
+    public abstract void draw(Draw event);
 }
