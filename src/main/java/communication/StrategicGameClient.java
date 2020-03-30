@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -37,6 +38,8 @@ public class StrategicGameClient implements GameClient {
     private Connection connection;
 
     private Observable<Event> eventBus = new Observable<>();
+
+    private BlockingQueue<Move> moveQueue = new LinkedBlockingDeque<>();
 
     private StrategicGameClient() {
         setState(new NotConnected(this));
@@ -238,7 +241,6 @@ public class StrategicGameClient implements GameClient {
     public void matchStarted(MatchStarted event) {
         setState(new InGame(this));
         eventBus.notifyObservers(event);
-
     }
 
     @Override
@@ -262,6 +264,7 @@ public class StrategicGameClient implements GameClient {
 
     @Override
     public void move(Move event) {
+        moveQueue.add(event);
         eventBus.notifyObservers(event);
     }
 
@@ -300,5 +303,10 @@ public class StrategicGameClient implements GameClient {
 
     public Observable<Event> getEventBus() {
         return eventBus;
+    }
+
+    @Override
+    public BlockingQueue<Move> getMoveQueue() {
+        return moveQueue;
     }
 }
