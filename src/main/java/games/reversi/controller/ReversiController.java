@@ -49,11 +49,32 @@ public class ReversiController implements controller.Controller {
 
 
         if (gameOver()) {
-
             disable_pegs();
-
         }
+
+        printBoardToConsole();
+
+
     }
+
+
+    /**
+     * @author Maurice Wijker
+     * @printBoardToConsole Prints current layout to console
+     */
+    public void printBoardToConsole(){
+        String row = "";
+
+        for(int i = 0; i < 8; i++){
+            for(int j = 0; j < 8; j++){
+                row += model.get_pegs()[i][j].getPegState() + " ";
+            }
+            System.out.println(row);
+            row = "";
+        }
+        System.out.println("\n");
+    }
+
 
     public Peg[][] get_pegs() {
 
