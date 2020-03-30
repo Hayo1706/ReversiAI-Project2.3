@@ -59,7 +59,7 @@ public class ReversiController implements controller.Controller {
 
 
     /**
-     * @author Maurice Wijker
+     * @author Maurice Wijker.
      * @printBoardToConsole Prints current layout to console
      */
     public void printBoardToConsole(){
