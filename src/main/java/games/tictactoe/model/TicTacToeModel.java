@@ -29,7 +29,28 @@ public class TicTacToeModel extends Model
             }
         }
     }
+    public void playMove(int move) {
 
+        Peg peg = pegs[move / boardsize][move % boardsize];
+
+        if (side == PLAYER2) {
+
+            peg.setTile(1);
+
+        } else {
+
+            peg.setTile(0);
+        }
+
+        if (side == PLAYER1) {
+            this.side = PLAYER2;
+            setText(player2.getName() + "'s turn!");
+
+        } else {
+            this.side = PLAYER1;
+            setText(player1.getName() + "'s turn!");
+        }
+    }
 
     public void play_ai_vs_server() {
         // TODO: 28/03/2020
