@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.concurrent.BlockingQueue;
 
 
 /**
@@ -119,5 +120,10 @@ public class StrategicGameClientProxy implements GameClient {
     @Override
     public Observable<Event> getEventBus() {
         return realGameClient.getEventBus();
+    }
+
+    @Override
+    public BlockingQueue<Move> getMoveQueue() {
+        return realGameClient.getMoveQueue();
     }
 }

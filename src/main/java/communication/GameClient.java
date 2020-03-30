@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.concurrent.BlockingQueue;
 
 /**
  * Created by Dylan Hiemstra
@@ -46,6 +47,8 @@ public interface GameClient {
     void loss(Loss event);
 
     void doMove(int index);
+
+    BlockingQueue<Move> getMoveQueue();
 
     CommunicationState getState();
 

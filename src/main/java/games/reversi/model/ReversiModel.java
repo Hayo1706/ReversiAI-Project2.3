@@ -1,5 +1,6 @@
 package games.reversi.model;
 
+import communication.events.MatchStarted;
 import model.Model;
 import model.Peg;
 import view.View;
@@ -10,6 +11,11 @@ public class ReversiModel extends Model {
     //Model
     public ReversiModel(int boardsize, View view, ai.AI AI) {
         super(boardsize, view, AI);
+
+    }
+    //Model
+    public ReversiModel(int boardsize, View view, ai.AI AI,MatchStarted matchStarted) {
+        super(boardsize, view, AI,matchStarted);
 
     }
 

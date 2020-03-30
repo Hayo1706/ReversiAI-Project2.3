@@ -1,7 +1,10 @@
 package model;
 
 import ai.AI;
+import communication.StrategicGameClient;
+import communication.events.*;
 import javafx.application.Platform;
+import player.ExternalPlayer;
 import player.LocalPlayer;
 import player.Player;
 import view.GameClient;
@@ -21,8 +24,8 @@ public abstract class Model {
     public static int AI_VS_SERVER = 2;
     public static int HUMAN_VS_SERVER = 3;
     //boardstate
-    protected static int PLAYER1 = 0;
-    protected static int PLAYER2 = 1;
+    public static int PLAYER1 = 0;
+    public static int PLAYER2 = 1;
     protected static int EMPTY = 2;
     protected static int PLAYER1_WIN = 0;
     protected static int DRAW = 1;
@@ -43,13 +46,26 @@ public abstract class Model {
     //name to be logged in with
     protected Player player1;
     protected Player player2;
-    public Model(int boardsize, View view, AI AI) {
+    protected MatchStarted matchStarted;
+
+
+    public Model(int boardsize, View view, AI AI ) {
         pegs = new Peg[boardsize][boardsize];
         this.boardsize = boardsize;
         this.view = view;
         fill_pegs();
         this.AI = AI;
+
     }
+    public Model(int boardsize, View view, AI AI, MatchStarted matchStarted) {
+        pegs = new Peg[boardsize][boardsize];
+        this.boardsize = boardsize;
+        this.view = view;
+        fill_pegs();
+        this.AI = AI;
+        this.matchStarted=matchStarted;
+    }
+
 
     protected abstract void fill_pegs();
 
@@ -74,11 +90,36 @@ public abstract class Model {
                 setText(player1.getName() + "'s turn!");
             }
         } else if (mode == HUMAN_VS_SERVER) {
+            player1=new LocalPlayer(GameClient.username);
+            player2=new ExternalPlayer(matchStarted.getOpponent());
+            if(matchStarted.getPlayerToMove().equals(GameClient.username)){
+                side=PLAYER1;
+            } else {
+                side=PLAYER2;
+                boolean movevent=false;
+
+                StrategicGameClient.getInstance().getEventBus().addObserver(event -> {
+
+
+                        System.out.println();
+
+                        Platform.runLater(() -> {
+                            //playMove(Integer.parseInt(moveEvent.getMove()));
+
+                        });
+                        StrategicGameClient.getInstance().getEventBus().removeAllObservers();
+
+
+
+                });
+            }
             //check who begins
             //update names
             //update side
             //if side==opponent(player2): play the move on the model
         } else if (mode == AI_VS_SERVER) {
+            player1=new LocalPlayer(GameClient.username);
+            player2=new ExternalPlayer(matchStarted.getOpponent());
             play_ai_vs_server();
 
         } else if (mode == HUMAN_VS_HUMAN) {
@@ -209,5 +250,9 @@ public abstract class Model {
         if (this.position == PLAYER1_WIN) return player1.getName();
         else if (this.position == PLAYER2_WIN) return player2.getName();
         else return "nobody";
+    }
+
+    public int getSide() {
+        return side;
     }
 }
