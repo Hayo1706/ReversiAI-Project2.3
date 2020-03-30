@@ -43,11 +43,11 @@ public class ReversiModel extends Model {
 
         if (side == PLAYER2) {
 
-            peg.setTile(1);
+            peg.setTile(0);
 
         } else {
 
-            peg.setTile(0);
+            peg.setTile(1);
         }
 
         if (side == PLAYER1) {

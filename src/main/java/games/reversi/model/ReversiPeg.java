@@ -24,13 +24,12 @@ public class ReversiPeg extends Peg {
             imageView.setFitHeight(40);
             setGraphic(imageView);
             setDisable(true);
-            pegState = 2;
+            pegState = 0;
         }
         //black
-        else {
+        else if(i == 1){
             Image image = new Image("black.png");
             ImageView imageView = new ImageView(image);
-            imageView.smoothProperty().set(true);
             imageView.setFitWidth(40);
             imageView.setFitHeight(40);
             setGraphic(imageView);

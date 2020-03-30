@@ -76,7 +76,7 @@ public abstract class Model {
             player2 = new LocalPlayer("Computer");
 
 
-            side = random.nextInt(2);
+            side = 0;
             if (side == PLAYER2) {
                 setText(player2.getName() + "'s turn!");
 
@@ -219,6 +219,7 @@ public abstract class Model {
         for (int row = 0; row < boardsize; row++) {
             for (int col = 0; col < boardsize; col++) {
                 pegs[row][col].setDisable(true);
+                pegs[row][col].setStyle("-fx-background-color: #3c8047;");
             }
         }
     }
