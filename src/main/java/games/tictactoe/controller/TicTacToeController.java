@@ -18,7 +18,7 @@ import java.util.Optional;
 public class TicTacToeController implements Controller {
 
 
-    Model model;
+    public Model model;
 
 
     public TicTacToeController(Model model) {
@@ -31,31 +31,7 @@ public class TicTacToeController implements Controller {
         model.switch_gamemode(GameClient.gameMode);
     }
 
-    public TicTacToeController(Model model, MatchStarted start) {
-        this.model = model;
-        //At startup no square can be filled
-        //model.switch_gamemode(Model.IDLE);
-        //human vs human
-        //model.switch_gamemode(Model.HUMAN_VS_HUMAN);
-        //human vs ai
-        model.switch_gamemode(GameClient.gameMode);
 
-        // start -> determine who starts, name opponent
-
-        StrategicGameClient.getInstance().getEventBus().addObserver(event -> {
-            if(event instanceof YourTurn) {
-                // event.doMove or  StrategicGameClient.getInstance().doMove(index);
-            } else if(event instanceof Move) {
-                // event.getPlayer and event.getMove()
-            } else if(event instanceof Win) {
-                // we won!
-            } else if(event instanceof Loss) {
-                // We lost
-            } else if(event instanceof Draw) {
-                // Draw!
-            }
-        });
-    }
 
 
     public void setupBoard() {
@@ -64,6 +40,8 @@ public class TicTacToeController implements Controller {
 
 
     public void nextTurn(model.Peg peg) {
+
+
         if (model.is_mode(Model.HUMAN_VS_AI)) {
 
             model.playMove(peg.getXPosition() * 3 + peg.getZPosition());
@@ -75,10 +53,26 @@ public class TicTacToeController implements Controller {
             model.playMove(peg.getXPosition() * 3 + peg.getZPosition());
         } else if (model.is_mode(Model.HUMAN_VS_SERVER)) {
 
-            //play on the server
-            //update model
-            model.playMove(peg.getXPosition() * 3 + peg.getZPosition());
-            //receive opponents result and play the same move on the model
+
+
+                model.playMove(peg.getXPosition() * 3 + peg.getZPosition());
+            StrategicGameClient.getInstance().doMove(peg.getXPosition()*3+peg.getZPosition());
+
+            //wait for move
+
+            StrategicGameClient.getInstance().getEventBus().addObserver(event -> {
+                while (!(event instanceof Move)){};
+                if(event instanceof Move) {
+                    Move moveEvent = (Move) event;
+                    model.playMove(Integer.parseInt(moveEvent.getMove()));
+
+
+                    StrategicGameClient.getInstance().getEventBus().removeAllObservers();
+
+
+                }
+            });
+
         }
         //game is idle and cannot reach this whole method
         else {

@@ -29,8 +29,8 @@ import java.util.Optional;
 
 public class GameClient extends Application implements View {
 
-    public static int gameMode = Model.HUMAN_VS_HUMAN;
-    public static String username = "Pietje";
+    public static int gameMode = Model.HUMAN_VS_SERVER;
+    public static String username = "Dylan";
     private Stage stage;
     private GridPane gridPane = new GridPane();
     private Label gameLabel = new Label();
@@ -168,10 +168,10 @@ public class GameClient extends Application implements View {
         gridPane.getChildren().clear();
 
         if (GameToPlay == 0) {
-            SetUpGame(8, new ReversiController(new ReversiModel(8, this, new ReversiAI())));
+            SetUpGame(8, new ReversiController(new ReversiModel(8, this, new ReversiAI(),event)));
             stage.setTitle("Reversi");
         } else if (GameToPlay == 1) {
-            SetUpGame(3, new TicTacToeController(new TicTacToeModel(3, this, new TicTacToeAI()), event));
+            SetUpGame(3, new TicTacToeController(new TicTacToeModel(3, this, new TicTacToeAI(),event)));
             stage.setTitle("TicTacToe");
         }
 

@@ -1,5 +1,6 @@
 package controller;
 
+import model.Model;
 import model.Peg;
 
 /**
@@ -17,5 +18,4 @@ public interface Controller {
     public void setupBoard();
 
     void nextTurn(Peg peg);
-
 }

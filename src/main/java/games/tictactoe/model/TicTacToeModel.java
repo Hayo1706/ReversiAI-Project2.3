@@ -1,9 +1,13 @@
 package games.tictactoe.model;
 
 import ai.AI;
+import communication.Observer;
 import communication.StrategicGameClient;
+import communication.events.*;
+import javafx.application.Platform;
 import model.Model;
 import model.Peg;
+import view.GameClient;
 import view.View;
 
 /**
@@ -13,8 +17,16 @@ import view.View;
 public class TicTacToeModel extends Model
         //The games.tictactoe logic
 {
+
+
+
     public TicTacToeModel(int boardsize, View view, AI ai) {
         super(boardsize, view, ai);
+    }
+    public TicTacToeModel(int boardsize, View view, ai.AI AI, MatchStarted matchStarted) {
+        super(boardsize, view, AI,matchStarted);
+
+
     }
 
 
@@ -31,7 +43,6 @@ public class TicTacToeModel extends Model
         }
     }
     public void playMove(int move) {
-
         Peg peg = pegs[move / boardsize][move % boardsize];
 
         if (side == PLAYER2) {
@@ -40,6 +51,7 @@ public class TicTacToeModel extends Model
 
         } else {
             peg.setTile(0);
+
         }
 
         if (side == PLAYER1) {
@@ -53,22 +65,25 @@ public class TicTacToeModel extends Model
     }
 
     public void play_ai_vs_server() {
-        // TODO: 28/03/2020
-        //update the names
-        //check who begins and update side
-        //while !gameover():
-        /*
-        if(side==PLAYER1)
-        //calculate best move
-        //play move on the server
-        //play move on model
-        playMove()
-        else
-        //receive move
-        play received move on model
-         */
-        //if game over: update winner label
+        if (GameClient.username==matchStarted.getPlayerToMove()){
+            side=PLAYER1;
+        }
+        else {
+            side=PLAYER2;
 
+        }
+
+        while (!gameOver()) {
+            if(side==PLAYER1){
+
+                StrategicGameClient.getInstance().doMove(calculateBest());
+            }
+            else{
+
+            }
+
+
+        }
     }
 
 
