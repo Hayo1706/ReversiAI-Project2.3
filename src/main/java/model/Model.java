@@ -36,7 +36,7 @@ public abstract class Model {
     //gui board
     protected Peg[][] pegs;
     protected int boardsize;
-    protected int mode = IDLE;
+    protected int mode = 0;
     protected int side = 0;
     protected Random random = new Random();
     protected View view;

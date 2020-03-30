@@ -13,6 +13,9 @@ public class ReversiController implements controller.Controller {
         this.model = model;
         startupAnimation();
         model.switch_gamemode(GameClient.gameMode);
+
+
+
     }
 
     public void startupAnimation() {
@@ -33,11 +36,12 @@ public class ReversiController implements controller.Controller {
 
     public void nextTurn(Peg peg) {
         if (model.is_mode(Model.HUMAN_VS_AI)) {
-
+            if(isValidMove(peg)) {
+                model.playMove(peg.getXPosition() * 8 + peg.getZPosition());
+            }
 
         } else if (model.is_mode(Model.HUMAN_VS_HUMAN)) {
 
-            model.playMove(peg.getXPosition() * 8 + peg.getZPosition());
         } else if (model.is_mode(Model.HUMAN_VS_SERVER)) {
 
 
@@ -52,9 +56,9 @@ public class ReversiController implements controller.Controller {
             disable_pegs();
         }
 
-        printBoardToConsole();
+//        printBoardToConsole();
 
-
+        //row 0 col 1 System.out.println(model.get_pegs()[row][col].getPegState());
     }
 
 
@@ -74,6 +78,46 @@ public class ReversiController implements controller.Controller {
         }
         System.out.println("\n");
     }
+
+
+    /**
+     *
+     *
+     * @return Is legal move to make
+     * @author Maurice Wijker
+     */
+    public boolean isValidMove(Peg peg) {
+        int z = peg.getZPosition(); // -> horizontal
+        int x = peg.getXPosition(); // -> vertical
+        int side = model.getSide();
+
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; i <= 1; i++) {
+                if(side == 0 && model.get_pegs()[z+i][x+j].getPegState() == 0 || model.get_pegs()[z+i][x+j].getPegState() == 0){
+                    System.out.println("hoi");
+
+                }
+            }
+        }
+
+
+//
+//        //scan horizontal to the right
+//        for (int j = z; j < 8; j++) {
+//            if (peg.getPegState() == model.get_pegs()[j][z].getPegState()) {
+//                return true;
+//            }
+//        }
+//
+//        //scan vertically down
+//        for (int i = x; i < 8; i++) {
+//            if (peg.getPegState() == model.get_pegs()[i][x].getPegState()) {
+//                return true;
+//            }
+//        }
+        return false;
+    }
+
 
 
     public Peg[][] get_pegs() {

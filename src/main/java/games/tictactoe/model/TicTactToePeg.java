@@ -11,9 +11,6 @@ public class TicTactToePeg extends Peg {
         super(x, z);
     }
 
-    public TicTactToePeg() {
-
-    }
 
     public void setTile(int i) {
         // set o

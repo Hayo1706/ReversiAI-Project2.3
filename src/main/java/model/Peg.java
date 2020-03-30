@@ -10,9 +10,6 @@ public abstract class Peg extends Button {
     int x; //row
     int z; //column
 
-    public Peg() {
-
-    }
 
     public Peg(int x, int z) {
         this.x = x;
@@ -35,7 +32,7 @@ public abstract class Peg extends Button {
     public void reset() {
         setGraphic(null);
         setDisable(false);
-        pegState = 0;
+        pegState = 2;
     }
 
     public abstract void setTile(int i);
