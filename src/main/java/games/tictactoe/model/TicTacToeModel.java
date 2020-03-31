@@ -94,23 +94,6 @@ public class TicTacToeModel extends Model
                 side=PLAYER2;
                 setText(player2.getName() + "'s turn!");
 
-
-                //get opponents move
-                Runnable opponent=()->{
-
-                    try {
-                        Move playermove=StrategicGameClient.getInstance().getMoveQueue().take();
-                        int move=Integer.parseInt(playermove.getMove());
-                        playMove(move);
-
-
-
-
-
-                    } catch (InterruptedException e){};
-                };
-                new Thread(opponent).start();
-
             }
             play_ai_vs_server();
 
@@ -168,25 +151,66 @@ public class TicTacToeModel extends Model
     }
 
     public void play_ai_vs_server() {
-        if (GameClient.username==matchStarted.getPlayerToMove()){
-            side=PLAYER1;
-        }
-        else {
-            side=PLAYER2;
+        Runnable run=()->{
+            if(side==PLAYER2) {
+                try {
+                    Move playermove = StrategicGameClient.getInstance().getMoveQueue().take();
+                    int move = Integer.parseInt(playermove.getMove());
 
-        }
+                    Platform.runLater(()-> {
 
-        while (!gameOver()) {
-            if(side==PLAYER1){
+                        playMove(move);
 
-                StrategicGameClient.getInstance().doMove(calculateBest());
+                    });
+
+                } catch (InterruptedException e) {
+                }
+
             }
-            else{
+
+            while (!gameOver()){
+
+
+                Platform.runLater(()-> {
+                    int best=calculateBest();
+                    StrategicGameClient.getInstance().doMove(best);
+                    playMove(best);
+                    gameOver();
+
+                });
+
+
+
+
+
+                try {
+                    StrategicGameClient.getInstance().getMoveQueue().take();
+                } catch (InterruptedException e) {
+                }
+
+
+                Move playermove = null;
+                try {
+                    playermove = StrategicGameClient.getInstance().getMoveQueue().take();
+                } catch (InterruptedException e) {
+                }
+
+                int opponentmove = Integer.parseInt(playermove.getMove());
+
+                Platform.runLater(()-> {
+                    playMove(opponentmove);
+                    gameOver();
+                });
+
+
+
 
             }
 
+        };
+        new Thread(run).start();
 
-        }
+
     }
 
 

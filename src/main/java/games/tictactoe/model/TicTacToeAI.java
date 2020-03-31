@@ -1,7 +1,9 @@
 package games.tictactoe.model;
 
 import ai.AI;
+import model.Model;
 import model.Peg;
+import view.GameClient;
 
 /**
  * Created by Singh van Offeren
@@ -35,8 +37,12 @@ public class TicTacToeAI implements AI {
 
 
     public int chooseMove() {
-
-        Best best = chooseMove(AI);
+        Best best;
+        if (GameClient.gameMode== Model.AI_VS_SERVER){
+            best= chooseMove(PLAYER);
+        } else {
+             best = chooseMove(AI);
+        }
         return best.row * 3 + best.column;
 
 

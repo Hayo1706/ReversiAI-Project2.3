@@ -191,4 +191,5 @@ public abstract class Model {
     public int getSide() {
         return side;
     }
+
 }
