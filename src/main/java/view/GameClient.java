@@ -127,11 +127,12 @@ public class GameClient extends Application implements View {
 
     private Scene CreateGameScene() {
         Button backButton = CreateButton("Ga back to Main menu");
+        Button forfeitButton=CreateButton("Forfeit");
         backButton.setOnMouseClicked((e) -> {
             LoadMainMenu();
         });
 
-        VBox vBox = new VBox(gameLabel, gridPane, backButton);
+        VBox vBox = new VBox(gameLabel, gridPane, backButton,forfeitButton);
         vBox.setAlignment(Pos.TOP_CENTER);
 
         Scene scene = new Scene(vBox);
