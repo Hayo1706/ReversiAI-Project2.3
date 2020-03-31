@@ -64,6 +64,8 @@ public class TicTacToeController implements Controller {
                     Platform.runLater(()-> {
                         model.playMove(move);
                         gameOver();
+                        disable_pegs();
+
                     });
 
 
@@ -87,6 +89,8 @@ public class TicTacToeController implements Controller {
                     Platform.runLater(()-> {
                         model.playMove(opponentmove);
                         gameOver();
+                        enable_pegs();
+
                     });
 
                 };
@@ -110,7 +114,9 @@ public class TicTacToeController implements Controller {
     public void disable_pegs() {
         model.disable_pegs();
     }
-
+    public void enable_pegs() {
+        model.enable_pegs();
+    }
     public int getBest() {
         return model.calculateBest();
     }

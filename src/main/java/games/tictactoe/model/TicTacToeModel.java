@@ -60,6 +60,7 @@ public class TicTacToeModel extends Model
                 side=PLAYER1;
                 setText(player1.getName() + "'s turn!");
             } else {
+
                 side=PLAYER2;
                 setText(player2.getName() + "'s turn!");
 
@@ -68,13 +69,16 @@ public class TicTacToeModel extends Model
                 Runnable opponent=()->{
 
                     try {
+                        disable_pegs();
                         Move playermove=StrategicGameClient.getInstance().getMoveQueue().take();
                         int move=Integer.parseInt(playermove.getMove());
                         Platform.runLater(()-> {
                             playMove(move);
+
+
                         });
 
-
+                        enable_pegs();
 
                     } catch (InterruptedException e){};
                 };
@@ -105,6 +109,7 @@ public class TicTacToeModel extends Model
                 setText(player1.getName() + " 's turn!");
             } else {
                 setText(player2.getName() + " 's turn!");
+
             }
         }
         //nothing: game is idle
