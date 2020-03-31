@@ -47,16 +47,16 @@ public class TicTacToeController implements Controller {
                 model.playMove(peg.getXPosition()*3+peg.getZPosition());
 
             } else if (model.mode==Model.HUMAN_VS_AI) {
+
                 model.playMove(peg.getXPosition()*3+peg.getZPosition());
 
 
                 int best = model.calculateBest();
-                if (!gameOver()) {
-                    model.playMove(best);
 
-                } else {
-                    disable_pegs();
-                }
+                    if (!gameOver()) {
+                        model.playMove(best);
+                        gameOver();
+                    }
 
             } else if (model.mode==Model.HUMAN_VS_SERVER) {
                 Runnable run=()-> {

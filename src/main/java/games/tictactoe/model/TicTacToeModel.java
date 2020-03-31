@@ -43,9 +43,9 @@ public class TicTacToeModel extends Model
                     setText(player2.getName() + "'s turn!");
 
                     int best = calculateBest();
-
-                        playMove(best);
-
+                        Platform.runLater(()-> {
+                            playMove(best);
+                        });
 
 
                 } else {

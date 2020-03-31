@@ -169,8 +169,9 @@ public abstract class Model {
     public boolean gameOver() {
         this.position = positionValue();
         if (position != UNCLEAR) {
-            disable_pegs();
+
             Platform.runLater(() -> {
+                disable_pegs();
                 if (position == DRAW) {
 
                     setText(" It's a draw, " + winner() + " wins!");
