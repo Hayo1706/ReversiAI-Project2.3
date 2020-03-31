@@ -1,7 +1,6 @@
 package model;
 
 import javafx.scene.control.Button;
-import javafx.scene.image.ImageView;
 
 public abstract class Peg extends Button {
     //2 == empty
@@ -16,7 +15,7 @@ public abstract class Peg extends Button {
         this.x = x;
         this.z = z;
         pegState = 2;
-        setDisable(true);
+        setDisable(false);
     }
 
     public int getPegState() {
@@ -33,7 +32,7 @@ public abstract class Peg extends Button {
 
     public void reset() {
         setGraphic(null);
-        setDisable(true);
+        setDisable(false);
         pegState = 2;
     }
     public abstract void setTile(int i);
