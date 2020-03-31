@@ -65,12 +65,12 @@ public class TicTacToeController implements Controller {
                         model.playMove(move);
                     });
 
+
+
+                    StrategicGameClient.getInstance().doMove(move);
                     if (gameOver()) {
                         return;
                     }
-
-                    StrategicGameClient.getInstance().doMove(move);
-
                     try {
                         StrategicGameClient.getInstance().getMoveQueue().take();
                     } catch (InterruptedException e) {
@@ -87,17 +87,15 @@ public class TicTacToeController implements Controller {
 
                     Platform.runLater(()-> {
                         model.playMove(opponentmove);
+                        gameOver();
                     });
+
                 };
                 new Thread(run).start();
 
             }
 
-            if (gameOver()) {
-                disable_pegs();
-                return;
 
-            }
 
     }
 
