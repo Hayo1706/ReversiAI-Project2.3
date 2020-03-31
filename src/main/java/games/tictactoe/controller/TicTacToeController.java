@@ -42,63 +42,18 @@ public class TicTacToeController implements Controller {
     public void nextTurn(model.Peg peg) {
 
 
-        if (model.is_mode(Model.HUMAN_VS_AI)) {
 
-            model.playMove(peg.getXPosition() * 3 + peg.getZPosition());
-            if (!gameOver()) {
-                model.playMove(getBest());
-            }
-
-        } else if (model.is_mode(Model.HUMAN_VS_HUMAN)) {
-            model.playMove(peg.getXPosition() * 3 + peg.getZPosition());
-        } else if (model.is_mode(Model.HUMAN_VS_SERVER)) {
-
-
-
-                model.playMove(peg.getXPosition() * 3 + peg.getZPosition());
-            StrategicGameClient.getInstance().doMove(peg.getXPosition()*3+peg.getZPosition());
-
-            //wait for move
-
-            StrategicGameClient.getInstance().getEventBus().addObserver(event -> {
-                while (!(event instanceof Move)){};
-                if(event instanceof Move) {
-                    Move moveEvent = (Move) event;
-                    model.playMove(Integer.parseInt(moveEvent.getMove()));
-
-
-                    StrategicGameClient.getInstance().getEventBus().removeAllObservers();
-
-
-                }
-            });
-
-        }
-        //game is idle and cannot reach this whole method
-        else {
-
-        }
-
-
-        if (gameOver()) {
-
-            disable_pegs();
-
-        }
     }
 
-    public Peg[][] get_pegs() {
-
-        return model.get_pegs();
+    @Override
+    public Peg[][] board_to_pegs() {
+        return model.board_to_pegs();
     }
 
     public boolean gameOver() {
         return model.gameOver();
     }
 
-    public void disable_pegs() {
-        model.disable_pegs();
-    }
 
     public int getBest() {
         return model.calculateBest();

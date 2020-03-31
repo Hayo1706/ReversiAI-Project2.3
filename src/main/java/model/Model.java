@@ -26,7 +26,7 @@ public abstract class Model {
     //boardstate
     public static int PLAYER1 = 0;
     public static int PLAYER2 = 1;
-    protected static int EMPTY = 2;
+    public static int EMPTY = 2;
     protected static int PLAYER1_WIN = 0;
     protected static int DRAW = 1;
     protected static int UNCLEAR = 2;
@@ -34,10 +34,13 @@ public abstract class Model {
     //winstate
     protected static int PLAYER2_WIN = 3;
     //gui board
-    protected Peg[][] pegs;
+
     protected int boardsize;
-    protected int mode = 0;
-    protected int side = 0;
+    //board
+    protected int[][] board;
+
+    protected int mode = IDLE;
+    protected  int side = 0;
     protected Random random = new Random();
     protected View view;
     protected AI AI;
@@ -50,113 +53,44 @@ public abstract class Model {
 
 
     public Model(int boardsize, View view, AI AI ) {
-        pegs = new Peg[boardsize][boardsize];
+        board=new int[boardsize][boardsize];
         this.boardsize = boardsize;
         this.view = view;
-        fill_pegs();
+        setup_board();
         this.AI = AI;
 
     }
     public Model(int boardsize, View view, AI AI, MatchStarted matchStarted) {
-        pegs = new Peg[boardsize][boardsize];
+        board=new int[boardsize][boardsize];
         this.boardsize = boardsize;
         this.view = view;
-        fill_pegs();
+        setup_board();
         this.AI = AI;
         this.matchStarted=matchStarted;
     }
 
 
-    protected abstract void fill_pegs();
+    protected abstract void setup_board();
+    protected abstract void initSide();
 
-    protected void initSide() {
-
-        if (mode == HUMAN_VS_AI) {
-            player1 = new LocalPlayer(GameClient.username);
-            player2 = new LocalPlayer("Computer");
-
-
-            side = 0;
-            if (side == PLAYER2) {
-                setText(player2.getName() + "'s turn!");
-
-                int best = calculateBest();
-                Platform.runLater(() -> {
-                    playMove(best);
-                });
-
-
-            } else {
-                setText(player1.getName() + "'s turn!");
-            }
-        } else if (mode == HUMAN_VS_SERVER) {
-            player1=new LocalPlayer(GameClient.username);
-            player2=new ExternalPlayer(matchStarted.getOpponent());
-            if(matchStarted.getPlayerToMove().equals(GameClient.username)){
-                side=PLAYER1;
-            } else {
-                side=PLAYER2;
-                boolean movevent=false;
-
-                StrategicGameClient.getInstance().getEventBus().addObserver(event -> {
-
-
-                        System.out.println();
-
-                        Platform.runLater(() -> {
-                            //playMove(Integer.parseInt(moveEvent.getMove()));
-
-                        });
-                        StrategicGameClient.getInstance().getEventBus().removeAllObservers();
-
-
-
-                });
-            }
-            //check who begins
-            //update names
-            //update side
-            //if side==opponent(player2): play the move on the model
-        } else if (mode == AI_VS_SERVER) {
-            player1=new LocalPlayer(GameClient.username);
-            player2=new ExternalPlayer(matchStarted.getOpponent());
-            play_ai_vs_server();
-
-        } else if (mode == HUMAN_VS_HUMAN) {
-            side = random.nextInt(2);
-            player1 = new LocalPlayer(GameClient.username);
-            player2 = new LocalPlayer("Guest");
-            if (side == PLAYER1) {
-                setText(player1.getName() + " 's turn!");
-            } else {
-                setText(player2.getName() + " 's turn!");
-            }
-        }
-        //nothing: game is idle
-        else {
-
-        }
-
+    public void UpdateView(){
+        Platform.runLater(()->{
+            view.UpdateGame(boardsize, view.getController());
+        });
     }
-
     public abstract void play_ai_vs_server();
 
     public void switch_gamemode(int gamemode) {
 
         mode = gamemode;
-        //check if board can be enabled
-        if (mode == IDLE || mode == AI_VS_SERVER) {
-            disable_pegs();
-        }
 
         initSide();
 
 
     }
 
-    public Peg[][] get_pegs() {
-        return pegs;
-    }
+    public abstract Peg[][] board_to_pegs();
+
 
     public boolean is_mode(int gamemode) {
         return gamemode == mode;
@@ -185,12 +119,12 @@ public abstract class Model {
     // Play a move, possibly clearing a square
     // Play a move, possibly clearing a square
     protected void place(int row, int column, int piece) {
-        Platform.runLater(() -> pegs[row][column].pegState = piece
+        Platform.runLater(() -> board[row][column] = piece
         );
     }
 
     public boolean squareIsEmpty(int row, int column) {
-        return pegs[row][column].pegState == EMPTY;
+        return board[row][column] == EMPTY;
     }
 
     // Compute static value of current position (win, draw, etc.)
@@ -215,22 +149,6 @@ public abstract class Model {
         view.setText(text);
     }
 
-    public void disable_pegs() {
-        for (int row = 0; row < boardsize; row++) {
-            for (int col = 0; col < boardsize; col++) {
-                pegs[row][col].setDisable(true);
-                pegs[row][col].setStyle("-fx-background-color: #3c8047;");
-            }
-        }
-    }
-
-    public void enable_pegs() {
-        for (int row = 0; row < boardsize; row++) {
-            for (int col = 0; col < boardsize; col++) {
-                pegs[row][col].setDisable(false);
-            }
-        }
-    }
 
     public boolean gameOver() {
         this.position = positionValue();
@@ -253,7 +171,16 @@ public abstract class Model {
         else return "nobody";
     }
 
-    public int getSide() {
-        return side;
+    public synchronized void changeSide() {
+        if (side == PLAYER1) {
+            this.side = PLAYER2;
+            setText(player2.getName() + "'s turn!");
+
+        } else {
+
+            this.side = PLAYER1;
+            setText(player1.getName() + "'s turn!");
+        }
+
     }
 }

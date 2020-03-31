@@ -4,12 +4,14 @@ import model.Peg;
 
 public class ReversiAI implements ai.AI {
 
+
+    public void load_board(int[][] board) {
+
+    }
+
     public int chooseMove() {
         return 0;
     }
 
 
-    public void pegs_to_board(Peg[][] pegs) {
-
-    }
 }

@@ -7,6 +7,8 @@ import communication.events.*;
 import javafx.application.Platform;
 import model.Model;
 import model.Peg;
+import player.ExternalPlayer;
+import player.LocalPlayer;
 import view.GameClient;
 import view.View;
 
@@ -19,77 +21,262 @@ public class TicTacToeModel extends Model
 {
 
 
-
     public TicTacToeModel(int boardsize, View view, AI ai) {
         super(boardsize, view, ai);
     }
+
     public TicTacToeModel(int boardsize, View view, ai.AI AI, MatchStarted matchStarted) {
-        super(boardsize, view, AI,matchStarted);
+        super(boardsize, view, AI, matchStarted);
 
 
     }
 
 
-    public void fill_pegs() {
+    public void setup_board() {
         for (int i = 0; i < boardsize; i++) {
             for (int o = 0; o < boardsize; o++) {
-                Peg peg = new TicTactToePeg(i, o);
-                peg.setMinSize(100, 100);
-                pegs[i][o] = peg;
-                //i = row
-                //o=column
+
+                board[i][o] = EMPTY;
 
             }
         }
     }
-    public void playMove(int move) {
-        Peg peg = pegs[move / boardsize][move % boardsize];
 
-        if (side == PLAYER2) {
-
-            peg.setTile(1);
-
-        } else {
-            peg.setTile(0);
-
+    public  Peg[][] board_to_pegs(){
+        Peg[][] pegs=new Peg[boardsize][boardsize];
+        for(int row=0;row<boardsize;row++){
+            for (int col=0;col<boardsize;col++){
+                Peg peg=new TicTactToePeg(row,col);
+                peg.pegState=board[row][col];
+                peg.setMinSize(100,100);
+                peg.setOnAction(actionEvent -> {
+                    playMove(peg.getXPosition()*boardsize+peg.getZPosition());
+                    peg.setDisable(true);
+                });
+                if(peg.pegState!=EMPTY) {
+                    peg.setTile(peg.pegState);
+                }
+                pegs[row][col]=peg;
+            }
         }
-
-        if (side == PLAYER1) {
-            this.side = PLAYER2;
-            setText(player2.getName() + "'s turn!");
-
-        } else {
-            this.side = PLAYER1;
-            setText(player1.getName() + "'s turn!");
-        }
+        return pegs;
     }
 
-    public void play_ai_vs_server() {
-        if (GameClient.username==matchStarted.getPlayerToMove()){
-            side=PLAYER1;
+    protected void initSide() {
+
+        if (mode == HUMAN_VS_AI) {
+
+            player1 = new LocalPlayer(GameClient.username);
+            player2 = new LocalPlayer("Computer");
+
+
+            side = random.nextInt(2);
+            if (side == PLAYER2) {
+                setText(player2.getName() + "'s turn!");
+
+                int best = calculateBest();
+                board[best / boardsize][best % boardsize]=side;
+                changeSide();
+                UpdateView();
+
+
+            } else {
+                setText(player1.getName() + "'s turn!");
+            }
+        } else if (mode == HUMAN_VS_SERVER) {
+            player1=new LocalPlayer(GameClient.username);
+            player2=new ExternalPlayer(matchStarted.getOpponent());
+            if(matchStarted.getPlayerToMove().equals(GameClient.username)){
+                side=PLAYER1;
+                setText(player1.getName() + "'s turn!");
+            } else {
+                side=PLAYER2;
+                setText(player2.getName() + "'s turn!");
+
+
+                //get opponents move
+                Runnable opponent=()->{
+
+                    try {
+                        Move playermove=StrategicGameClient.getInstance().getMoveQueue().take();
+                        int move=Integer.parseInt(playermove.getMove());
+                        board[move / boardsize][move % boardsize]=side;
+
+
+                        changeSide();
+                        UpdateView();
+
+
+                    } catch (InterruptedException e){};
+                };
+                new Thread(opponent).start();
+
+            }
+
+        } else if (mode == AI_VS_SERVER) {
+            view.disable_pegs(boardsize);
+            player1=new LocalPlayer(GameClient.username);
+            player2=new ExternalPlayer(matchStarted.getOpponent());
+            if(matchStarted.getPlayerToMove().equals(GameClient.username)){
+                side=PLAYER1;
+                setText(player1.getName() + "'s turn!");
+            } else {
+
+                side=PLAYER2;
+                setText(player2.getName() + "'s turn!");
+
+
+                //get opponents move
+                Runnable opponent=()->{
+
+                    try {
+                        Move playermove=StrategicGameClient.getInstance().getMoveQueue().take();
+                        int move=Integer.parseInt(playermove.getMove());
+                        board[move / boardsize][move % boardsize]=side;
+
+
+                        changeSide();
+                        UpdateView();
+
+
+                    } catch (InterruptedException e){};
+                };
+                new Thread(opponent).start();
+
+            }
+            play_ai_vs_server();
+
+        } else if (mode == HUMAN_VS_HUMAN) {
+            side = random.nextInt(2);
+            player1 = new LocalPlayer(GameClient.username);
+            player2 = new LocalPlayer("Guest");
+            if (side == PLAYER1) {
+                setText(player1.getName() + " 's turn!");
+            } else {
+                setText(player2.getName() + " 's turn!");
+            }
         }
+        //nothing: game is idle
         else {
-            side=PLAYER2;
 
         }
 
-        while (!gameOver()) {
-            if(side==PLAYER1){
+    }
 
-                StrategicGameClient.getInstance().doMove(calculateBest());
+
+    public void playMove(int move) {
+        Runnable run=()-> {
+            if (mode == Model.HUMAN_VS_HUMAN) {
+                board[move / boardsize][move % boardsize] = side;
+                changeSide();
+                gameOver();
+                UpdateView();
+            } else if (mode == HUMAN_VS_AI) {
+                board[move / boardsize][move % boardsize] = side;
+                changeSide();
+                UpdateView();
+
+
+                int best = calculateBest();
+                if (!gameOver()) {
+                    board[best / boardsize][best % boardsize] = side;
+                    changeSide();
+                    UpdateView();
+                } else {
+                    view.disable_pegs(boardsize);
+                }
+
+            } else if (mode == HUMAN_VS_SERVER) {
+                board[move / boardsize][move % boardsize] = PLAYER1;
+
+
+                changeSide();
+                UpdateView();
+                if(gameOver()){return;}
+
+                StrategicGameClient.getInstance().doMove(move);
+
+                try {
+                    StrategicGameClient.getInstance().getMoveQueue().take();
+                } catch (InterruptedException e) {
+                }
+                ;
+
+
+                Move playermove = null;
+                try {
+                    playermove = StrategicGameClient.getInstance().getMoveQueue().take();
+                } catch (InterruptedException e) {
+                }
+                ;
+                int opponentmove = Integer.parseInt(playermove.getMove());
+                System.out.println(opponentmove);
+                board[opponentmove / boardsize][opponentmove % boardsize] = PLAYER2;
+
+                changeSide();
+                UpdateView();
+
+
+
+
+
             }
-            else{
+
+            if (gameOver()) {
+                view.disable_pegs(boardsize);
+                return;
 
             }
+        };
+        new Thread(run).start();
+
+    }
+    public void play_ai_vs_server() {
+        Runnable run=()-> {
+            while (true) {
+                int best = calculateBest();
+                board[best / boardsize][best % boardsize] = PLAYER1;
 
 
-        }
+                changeSide();
+                UpdateView();
+                if(gameOver()){break;}
+
+                StrategicGameClient.getInstance().doMove(best);
+                if(gameOver()){break;}
+                try {
+                    StrategicGameClient.getInstance().getMoveQueue().take();
+                } catch (InterruptedException e) {
+                }
+
+
+
+                Move playermove = null;
+                try {
+                    playermove = StrategicGameClient.getInstance().getMoveQueue().take();
+                } catch (InterruptedException e) {
+                }
+                ;
+                int opponentmove = Integer.parseInt(playermove.getMove());
+                System.out.println(opponentmove);
+                board[opponentmove / boardsize][opponentmove % boardsize] = PLAYER2;
+
+                changeSide();
+                UpdateView();
+
+                if(gameOver()){break;}
+
+            }
+        };
+        new Thread(run).start();
+
     }
 
 
     public int calculateBest() {
 
-        AI.pegs_to_board(pegs);
+
+        AI.load_board(board);
         int best = AI.chooseMove();
 
         return best;
@@ -100,22 +287,22 @@ public class TicTacToeModel extends Model
     public boolean isAWin(int side) {
         //sides:
         //top
-        if ((side == pegs[0][0].pegState) && (side == pegs[0][1].pegState) && (side == pegs[0][2].pegState)) {
+        if ((side == board[0][0]) && (side == board[0][1]) && (side == board[0][2])) {
             return true;
 
         }
         //bottom
-        if ((side == pegs[2][0].pegState) && (side == pegs[2][1].pegState) && (side == pegs[2][2].pegState)) {
+        if ((side == board[2][0]) && (side == board[2][1]) && (side == board[2][2])) {
             return true;
 
         }
         //left
-        if ((side == pegs[0][0].pegState) && (side == pegs[1][0].pegState) && (side == pegs[2][0].pegState)) {
+        if ((side == board[0][0]) && (side == board[1][0]) && (side == board[2][0])) {
             return true;
 
         }
         //right
-        if ((side == pegs[0][2].pegState) && (side == pegs[1][2].pegState) && (side == pegs[2][2].pegState)) {
+        if ((side == board[0][2]) && (side == board[1][2]) && (side == board[2][2])) {
             return true;
 
         }
@@ -123,24 +310,24 @@ public class TicTacToeModel extends Model
 
         //middle:
         //horizontal
-        if ((side == pegs[1][0].pegState) && (side == pegs[1][1].pegState) && (side == pegs[1][2].pegState)) {
+        if ((side == board[1][0]) && (side == board[1][1]) && (side == board[1][2])) {
             return true;
 
         }
         //vertical
-        if ((side == pegs[0][1].pegState) && (side == pegs[1][1].pegState) && (side == pegs[2][1].pegState)) {
+        if ((side == board[0][1]) && (side == board[1][1]) && (side == board[2][1])) {
             return true;
 
         }
 
 
         //diagonal bottom left corner to top right
-        if ((side == pegs[2][0].pegState) && (side == pegs[1][1].pegState) && (side == pegs[0][2].pegState)) {
+        if ((side == board[2][0]) && (side == board[1][1]) && (side == board[0][2])) {
             return true;
 
         }
         //diagonal bottom right corner to top left
-        if ((side == pegs[2][2].pegState) && (side == pegs[1][1].pegState) && (side == pegs[0][0].pegState)) {
+        if ((side == board[2][2]) && (side == board[1][1]) && (side == board[0][0])) {
 
             return true;
         }
@@ -149,9 +336,9 @@ public class TicTacToeModel extends Model
     }
 
 
+
+
 }
-
-
 
 
 

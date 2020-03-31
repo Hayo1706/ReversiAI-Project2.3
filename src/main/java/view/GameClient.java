@@ -25,17 +25,20 @@ import javafx.stage.StageStyle;
 import model.Model;
 import model.Peg;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 public class GameClient extends Application implements View {
 
-    public static int gameMode = Model.HUMAN_VS_AI;
+    public static int gameMode = Model.AI_VS_SERVER;
     public static String username = "Dylan";
     private Stage stage;
     private GridPane gridPane = new GridPane();
     private Label gameLabel = new Label();
     private Scene StartScene;
     private Scene GameScene;
+    public  Controller controller=null;
+    ArrayList<Peg> pegs=new ArrayList<>();
 
     @Override
     public void start(Stage stage) {
@@ -95,6 +98,7 @@ public class GameClient extends Application implements View {
 
         Button TTTButton = CreateButton("Play Tic Tac Toe");
         TTTButton.setOnMouseClicked((e) -> {
+
             StartGame(1);
         });
 
@@ -153,10 +157,12 @@ public class GameClient extends Application implements View {
         gridPane.getChildren().clear();
 
         if (GameToPlay == 0) {
-            SetUpGame(8, new ReversiController(new ReversiModel(8, this, new ReversiAI())));
+            this.controller=new ReversiController(new ReversiModel(8, this, new ReversiAI()));
+            UpdateGame(8, controller);
             stage.setTitle("Reversi");
         } else if (GameToPlay == 1) {
-            SetUpGame(3, new TicTacToeController(new TicTacToeModel(3, this, new TicTacToeAI())));
+            this.controller=new TicTacToeController(new TicTacToeModel(3, this, new TicTacToeAI()));
+            UpdateGame(3, controller);
             stage.setTitle("TicTacToe");
         }
 
@@ -168,10 +174,12 @@ public class GameClient extends Application implements View {
         gridPane.getChildren().clear();
 
         if (GameToPlay == 0) {
-            SetUpGame(8, new ReversiController(new ReversiModel(8, this, new ReversiAI(),event)));
+            this.controller=new ReversiController(new ReversiModel(8, this, new ReversiAI(),event));
+            UpdateGame(8,controller );
             stage.setTitle("Reversi");
         } else if (GameToPlay == 1) {
-            SetUpGame(3, new TicTacToeController(new TicTacToeModel(3, this, new TicTacToeAI(),event)));
+            this.controller=new TicTacToeController(new TicTacToeModel(3, this, new TicTacToeAI(),event));
+            UpdateGame(3,controller );
             stage.setTitle("TicTacToe");
         }
 
@@ -179,14 +187,11 @@ public class GameClient extends Application implements View {
         stage.sizeToScene();
     }
 
-    private void SetUpGame(int size, Controller controller) {
+    public void UpdateGame(int size, Controller controller) {
         for (int i = 0; i < size; i++) {
             for (int o = 0; o < size; o++) {
-                Peg peg = controller.get_pegs()[i][o];
-                peg.setOnAction(
-                        actionEvent -> Platform.runLater(() -> {
-                            controller.nextTurn(peg);
-                        }));
+                Peg peg = controller.board_to_pegs()[i][o];
+                pegs.add(peg);
                 gridPane.add(peg, peg.getZPosition(), peg.getXPosition());
             }
         }
@@ -197,6 +202,32 @@ public class GameClient extends Application implements View {
     }
 
     public void setText(String s) {
-        this.gameLabel.setText(s);
+        Platform.runLater(()-> {
+            this.gameLabel.setText(s);
+        });
+    }
+
+    public Controller getController() {
+        return controller;
+    }
+
+    public void enable_pegs(int size) {
+        Platform.runLater(()->{
+            for (Peg peg:pegs) {
+                if(peg.pegState==Model.EMPTY){
+                    peg.setDisable(false);
+                }
+            }
+        });
+    }
+
+    public void disable_pegs(int size) {
+        Platform.runLater(()->{
+            for (Peg peg:pegs) {
+                if(peg.pegState==Model.EMPTY){
+                    peg.setDisable(true);
+                }
+            }
+        });
     }
 }

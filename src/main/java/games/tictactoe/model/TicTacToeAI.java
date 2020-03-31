@@ -2,6 +2,7 @@ package games.tictactoe.model;
 
 import ai.AI;
 import model.Peg;
+import view.GameClient;
 
 /**
  * Created by Singh van Offeren
@@ -20,13 +21,13 @@ public class TicTacToeAI implements AI {
 
 
     //Method to convert the GUI pegs to a board array
-    public void pegs_to_board(Peg[][] pegs) {
+    public void load_board(int[][] board) {
 
         clearBoard();
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
 
-                board[row][col] = pegs[row][col].pegState;
+                this.board[row][col]=board[row][col];
             }
         }
 
@@ -35,8 +36,12 @@ public class TicTacToeAI implements AI {
 
 
     public int chooseMove() {
-
-        Best best = chooseMove(AI);
+        Best best;
+        if(GameClient.gameMode== TicTacToeModel.AI_VS_SERVER){
+            best= chooseMove(PLAYER);
+        } else {
+            best = chooseMove(AI);
+        }
         return best.row * 3 + best.column;
 
 
