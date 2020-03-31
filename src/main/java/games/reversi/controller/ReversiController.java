@@ -44,9 +44,10 @@ public class ReversiController implements controller.Controller {
 
         } else if (model.is_mode(Model.HUMAN_VS_HUMAN)) {
 //            if(calcValidMove(peg)){
-            printBoardToConsole();
+
                 model.playMove(peg.getXPosition() * 8 + peg.getZPosition());
 //            }
+            printBoardToConsole();
 
         } else if (model.is_mode(Model.HUMAN_VS_SERVER)) {
 
@@ -167,14 +168,18 @@ public class ReversiController implements controller.Controller {
 
 
     //player1 == black
-    //player1 == 0
-    //black == 1
+    //player1 == 0 = side
+    //black == 1 = pegstate
 
     //player2 == white
-    //player2 == 1
-    //white == 0
+    //player2 == 1 = side
+    //white == 0 = pegstate
 
 
+    /**
+     * @author hayo & Maurice Wijker
+     * row 4 col 2 X && row 3 col 5 X
+     */
     public void checkMovesCloseby() {
 
         int side = model.getSide();
@@ -190,6 +195,7 @@ public class ReversiController implements controller.Controller {
                             if((pegs[abs(q + row)][abs(w + col)].getPegState() == 2) && (checkHorizontal(abs(q + row), abs(w + col)) || checkVertical(abs(q + row), abs(w + col)) || checkDiagonal(abs(q + row), abs(w + col)))) {
                                 pegs[abs(q + row)][abs(w + col)].setDisable(false);
                                 pegs[abs(q + row)][abs(w + col)].setStyle("-fx-background-color: #3c8e55");
+                                pegs[0][1].setStyle("-fx-background-color: black");
                             }
                         }
                     }
@@ -197,7 +203,6 @@ public class ReversiController implements controller.Controller {
             }
         }
     }
-
 
     /**
      * @author Maurice Wijker
@@ -207,20 +212,35 @@ public class ReversiController implements controller.Controller {
      */
 
 
-    private boolean checkHorizontal(int posZ,int posX){
-        int side = model.getSide();
-
-        for (int col = posZ; col >= 0; col--){
-            if(model.get_pegs()[posX][col].getPegState() == side){
-                return true;
-            }
-        }
-
-        for (int col = posZ; col < 8; col++){
-            if(model.get_pegs()[posX][col].getPegState() == side){
-                return true;
-            }
-        }
+    private boolean checkHorizontal(int posX,int posZ){
+//        int side = model.getSide();
+//
+//        int other = -1;
+//
+//        if(side == 0){
+//            other = 1;
+//        }
+//        else if(side == 1){
+//            other = 0;
+//        }
+//        if(model.get_pegs()[posX][posZ-1].getPegState() == side) {
+//            for (int col = posZ - 2; col >= 0; col--) {
+//                if (model.get_pegs()[posX][col].getPegState() == other) {
+//                    return true;
+//                } else if (model.get_pegs()[posX][col].getPegState() == 2) {
+//                    break;
+//                }
+//            }
+//        }
+//        if(model.get_pegs()[posX][posZ+1].getPegState() == side) {
+//            for (int col = posZ + 2; col < 8; col++) {
+//                if (model.get_pegs()[posX][col].getPegState() == other) {
+//                    return true;
+//                } else if (model.get_pegs()[posX][col].getPegState() == 2) {
+//                    break;
+//                }
+//            }
+//        }
         return false;
     }
 
@@ -232,18 +252,32 @@ public class ReversiController implements controller.Controller {
      * @return is move legal to make vertically?
      */
     private boolean checkVertical(int posX,int posZ){
-
         int side = model.getSide();
 
-        for (int row = posX; row >= 0; row--){
-            if(model.get_pegs()[posZ][row].getPegState() == side){
-                return true;
+        int other = -1;
+
+        if(side == 0)
+            other = 1;
+        else
+            other = 0;
+
+        if(posX-1 >= 0 && model.get_pegs()[posX -1][posZ].getPegState() == side) {
+
+            for (int row = posX - 2; row >= 0; row--) {
+                if (model.get_pegs()[posZ][row].getPegState() == other) {
+                    return true;
+                } else if (model.get_pegs()[posZ][row].getPegState() == 2) {
+                    break;
+                }
             }
         }
-
-        for (int row = posZ; row < 8; row++){
-            if(model.get_pegs()[posZ][row].getPegState() == side){
-                return true;
+        if(posX+1 < 8 && model.get_pegs()[posX +1][posZ].getPegState() == side) {
+            for (int row = posX + 2; row < 8; row++) {
+                if (model.get_pegs()[posZ][row].getPegState() == other) {
+                    return true;
+                } else if (model.get_pegs()[posZ][row].getPegState() == 2) {
+                    break;
+                }
             }
         }
         return false;
@@ -258,25 +292,36 @@ public class ReversiController implements controller.Controller {
      */
 
     private boolean checkDiagonal(int posX,int posZ){
-        int side = model.getSide();
-
-
-
-        for (int row = posX; row < 8; row++){
-            for (int col = posZ; col < 8; col++){
-                if(model.get_pegs()[posZ][row].getPegState() == side){
-                    return true;
-                }
-            }
-        }
-        for (int row = posX; row >= 0; row--){
-            for (int col = posZ; col >= 0; col--){
-                if(model.get_pegs()[posZ][row].getPegState() == side){
-                    return true;
-                }
-            }
-        }
-        return false;
+//        int side = model.getSide();
+//
+//        int other = -1;
+//
+//        if(side == 0){
+//            other = 1;
+//        }
+//        else if(side == 1){
+//            other = 0;
+//        }
+//
+//        for (int row = posX; row < 8; row++){
+//            for (int col = posZ; col < 8; col++){
+//                if(model.get_pegs()[posZ][row].getPegState() == other){
+//                    return true;
+//                }else if(model.get_pegs()[posZ][row].getPegState() == 2) {
+//                    break;
+//                }
+//            }
+//        }
+//        for (int row = posX; row >= 0; row--){
+//            for (int col = posZ; col >= 0; col--){
+//                if(model.get_pegs()[posZ][row].getPegState() == other){
+//                    return true;
+//                } else if(model.get_pegs()[posZ][row].getPegState() == 2) {
+//                    break;
+//                }
+//            }
+//        }
+       return false;
     }
 
 
