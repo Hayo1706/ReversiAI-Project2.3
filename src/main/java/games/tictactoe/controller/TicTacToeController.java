@@ -63,14 +63,13 @@ public class TicTacToeController implements Controller {
                     int move = peg.getXPosition() * 3 + peg.getZPosition();
                     Platform.runLater(()-> {
                         model.playMove(move);
+                        gameOver();
                     });
 
 
 
                     StrategicGameClient.getInstance().doMove(move);
-                    if (gameOver()) {
-                        return;
-                    }
+
                     try {
                         StrategicGameClient.getInstance().getMoveQueue().take();
                     } catch (InterruptedException e) {
