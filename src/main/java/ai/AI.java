@@ -18,5 +18,5 @@ public interface AI {
 
     public int chooseMove();
 
-    public void load_board(int[][] board);
+    public void pegs_to_board(Peg[][] pegs);
 }

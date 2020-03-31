@@ -9,11 +9,13 @@ import model.Peg;
 public interface Controller {
     public boolean gameOver();
 
+    public void disable_pegs();
 
     public int getBest();
 
-    public Peg[][] board_to_pegs();
+    Peg[][] get_pegs();
 
+    public void setupBoard();
 
-
+    void nextTurn(Peg peg);
 }

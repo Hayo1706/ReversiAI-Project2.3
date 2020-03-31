@@ -26,7 +26,7 @@ public abstract class Model {
     //boardstate
     public static int PLAYER1 = 0;
     public static int PLAYER2 = 1;
-    public static int EMPTY = 2;
+    protected static int EMPTY = 2;
     protected static int PLAYER1_WIN = 0;
     protected static int DRAW = 1;
     protected static int UNCLEAR = 2;
@@ -34,13 +34,10 @@ public abstract class Model {
     //winstate
     protected static int PLAYER2_WIN = 3;
     //gui board
-
+    protected Peg[][] pegs;
     protected int boardsize;
-    //board
-    protected int[][] board;
-
-    protected int mode = IDLE;
-    protected  int side = 0;
+    public int mode = 0;
+    protected int side = 0;
     protected Random random = new Random();
     protected View view;
     protected AI AI;
@@ -53,44 +50,45 @@ public abstract class Model {
 
 
     public Model(int boardsize, View view, AI AI ) {
-        board=new int[boardsize][boardsize];
+        pegs = new Peg[boardsize][boardsize];
         this.boardsize = boardsize;
         this.view = view;
-        setup_board();
+        fill_pegs();
         this.AI = AI;
 
     }
     public Model(int boardsize, View view, AI AI, MatchStarted matchStarted) {
-        board=new int[boardsize][boardsize];
+        pegs = new Peg[boardsize][boardsize];
         this.boardsize = boardsize;
         this.view = view;
-        setup_board();
+        fill_pegs();
         this.AI = AI;
         this.matchStarted=matchStarted;
     }
 
 
-    protected abstract void setup_board();
-    protected abstract void initSide();
+    protected abstract void fill_pegs();
 
-    public void UpdateView(){
-        Platform.runLater(()->{
-            view.UpdateGame(boardsize, view.getController());
-        });
-    }
+    public abstract void initSide();
+
     public abstract void play_ai_vs_server();
 
     public void switch_gamemode(int gamemode) {
 
         mode = gamemode;
+        //check if board can be enabled
+        if (mode == IDLE || mode == AI_VS_SERVER) {
+            disable_pegs();
+        }
 
         initSide();
 
 
     }
 
-    public abstract Peg[][] board_to_pegs();
-
+    public Peg[][] get_pegs() {
+        return pegs;
+    }
 
     public boolean is_mode(int gamemode) {
         return gamemode == mode;
@@ -119,12 +117,12 @@ public abstract class Model {
     // Play a move, possibly clearing a square
     // Play a move, possibly clearing a square
     protected void place(int row, int column, int piece) {
-        Platform.runLater(() -> board[row][column] = piece
+        Platform.runLater(() -> pegs[row][column].pegState = piece
         );
     }
 
     public boolean squareIsEmpty(int row, int column) {
-        return board[row][column] == EMPTY;
+        return pegs[row][column].pegState == EMPTY;
     }
 
     // Compute static value of current position (win, draw, etc.)
@@ -146,9 +144,27 @@ public abstract class Model {
     }
 
     protected void setText(String text) {
-        view.setText(text);
+        Platform.runLater(()-> {
+            view.setText(text);
+        });
     }
 
+    public void disable_pegs() {
+        for (int row = 0; row < boardsize; row++) {
+            for (int col = 0; col < boardsize; col++) {
+                pegs[row][col].setDisable(true);
+                pegs[row][col].setStyle("-fx-background-color: #3c8047;");
+            }
+        }
+    }
+
+    public void enable_pegs() {
+        for (int row = 0; row < boardsize; row++) {
+            for (int col = 0; col < boardsize; col++) {
+                pegs[row][col].setDisable(false);
+            }
+        }
+    }
 
     public boolean gameOver() {
         this.position = positionValue();
@@ -171,16 +187,7 @@ public abstract class Model {
         else return "nobody";
     }
 
-    public synchronized void changeSide() {
-        if (side == PLAYER1) {
-            this.side = PLAYER2;
-            setText(player2.getName() + "'s turn!");
-
-        } else {
-
-            this.side = PLAYER1;
-            setText(player1.getName() + "'s turn!");
-        }
-
+    public int getSide() {
+        return side;
     }
 }

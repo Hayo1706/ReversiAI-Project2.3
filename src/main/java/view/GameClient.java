@@ -25,20 +25,17 @@ import javafx.stage.StageStyle;
 import model.Model;
 import model.Peg;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 public class GameClient extends Application implements View {
 
-    public static int gameMode = Model.AI_VS_SERVER;
+    public static int gameMode = Model.HUMAN_VS_HUMAN;
     public static String username = "Dylan";
     private Stage stage;
     private GridPane gridPane = new GridPane();
     private Label gameLabel = new Label();
     private Scene StartScene;
     private Scene GameScene;
-    public  Controller controller=null;
-    ArrayList<Peg> pegs=new ArrayList<>();
 
     @Override
     public void start(Stage stage) {
@@ -98,7 +95,6 @@ public class GameClient extends Application implements View {
 
         Button TTTButton = CreateButton("Play Tic Tac Toe");
         TTTButton.setOnMouseClicked((e) -> {
-
             StartGame(1);
         });
 
@@ -157,12 +153,10 @@ public class GameClient extends Application implements View {
         gridPane.getChildren().clear();
 
         if (GameToPlay == 0) {
-            this.controller=new ReversiController(new ReversiModel(8, this, new ReversiAI()));
-            UpdateGame(8, controller);
+            SetUpGame(8, new ReversiController(new ReversiModel(8, this, new ReversiAI())));
             stage.setTitle("Reversi");
         } else if (GameToPlay == 1) {
-            this.controller=new TicTacToeController(new TicTacToeModel(3, this, new TicTacToeAI()));
-            UpdateGame(3, controller);
+            SetUpGame(3, new TicTacToeController(new TicTacToeModel(3, this, new TicTacToeAI())));
             stage.setTitle("TicTacToe");
         }
 
@@ -174,12 +168,10 @@ public class GameClient extends Application implements View {
         gridPane.getChildren().clear();
 
         if (GameToPlay == 0) {
-            this.controller=new ReversiController(new ReversiModel(8, this, new ReversiAI(),event));
-            UpdateGame(8,controller );
+            SetUpGame(8, new ReversiController(new ReversiModel(8, this, new ReversiAI(),event)));
             stage.setTitle("Reversi");
         } else if (GameToPlay == 1) {
-            this.controller=new TicTacToeController(new TicTacToeModel(3, this, new TicTacToeAI(),event));
-            UpdateGame(3,controller );
+            SetUpGame(3, new TicTacToeController(new TicTacToeModel(3, this, new TicTacToeAI(),event)));
             stage.setTitle("TicTacToe");
         }
 
@@ -187,11 +179,14 @@ public class GameClient extends Application implements View {
         stage.sizeToScene();
     }
 
-    public void UpdateGame(int size, Controller controller) {
+    private void SetUpGame(int size, Controller controller) {
         for (int i = 0; i < size; i++) {
             for (int o = 0; o < size; o++) {
-                Peg peg = controller.board_to_pegs()[i][o];
-                pegs.add(peg);
+                Peg peg = controller.get_pegs()[i][o];
+                peg.setOnAction(
+                        actionEvent ->  {
+                            controller.nextTurn(peg);
+                        });
                 gridPane.add(peg, peg.getZPosition(), peg.getXPosition());
             }
         }
@@ -204,30 +199,6 @@ public class GameClient extends Application implements View {
     public void setText(String s) {
         Platform.runLater(()-> {
             this.gameLabel.setText(s);
-        });
-    }
-
-    public Controller getController() {
-        return controller;
-    }
-
-    public void enable_pegs(int size) {
-        Platform.runLater(()->{
-            for (Peg peg:pegs) {
-                if(peg.pegState==Model.EMPTY){
-                    peg.setDisable(false);
-                }
-            }
-        });
-    }
-
-    public void disable_pegs(int size) {
-        Platform.runLater(()->{
-            for (Peg peg:pegs) {
-                if(peg.pegState==Model.EMPTY){
-                    peg.setDisable(true);
-                }
-            }
         });
     }
 }

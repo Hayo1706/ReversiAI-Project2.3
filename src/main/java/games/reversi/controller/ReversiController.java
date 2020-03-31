@@ -10,16 +10,9 @@ import static java.lang.Math.abs;
 
 
 public class ReversiController implements controller.Controller {
-
-
-    public Peg[][] board_to_pegs() {
-        return null;
-    }
-
     Model model;
 
     public ReversiController(Model model) {
-
         this.model = model;
         setupBoard();
         startupAnimation();
@@ -47,10 +40,10 @@ public class ReversiController implements controller.Controller {
     public void nextTurn(Peg peg) {
 
         if (model.is_mode(Model.HUMAN_VS_AI)) {
-            model.playMove(peg.getXPosition() * 8 + peg.getZPosition());
+
 
         } else if (model.is_mode(Model.HUMAN_VS_HUMAN)) {
-
+            model.playMove(peg.getXPosition() * 8 + peg.getZPosition());
         } else if (model.is_mode(Model.HUMAN_VS_SERVER)) {
 
         }
@@ -161,5 +154,4 @@ public class ReversiController implements controller.Controller {
     public int getBest() {
         return model.calculateBest();
     }
-
 }
