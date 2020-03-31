@@ -177,10 +177,14 @@ public class TicTacToeModel extends Model
 
 
                 Platform.runLater(()-> {
-                    int best=calculateBest();
-                    StrategicGameClient.getInstance().doMove(best);
-                    playMove(best);
-                    gameOver();
+                    if(!gameOver()) {
+                        int best = calculateBest();
+
+
+                        StrategicGameClient.getInstance().doMove(best);
+                        playMove(best);
+                        gameOver();
+                    }
 
                 });
 
@@ -202,11 +206,14 @@ public class TicTacToeModel extends Model
 
                 int opponentmove = Integer.parseInt(playermove.getMove());
 
-                Platform.runLater(()-> {
-                    playMove(opponentmove);
-                    gameOver();
-                });
+                    Platform.runLater(() -> {
+                        if(!gameOver()) {
+                        playMove(opponentmove);
+                        gameOver();
+                        }
 
+
+                    });
 
 
 
