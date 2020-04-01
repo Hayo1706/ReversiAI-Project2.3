@@ -169,7 +169,7 @@ public abstract class Model {
     public boolean gameOver() {
         this.position = positionValue();
         if (position != UNCLEAR) {
-
+            view.BackTomainMenu();
             Platform.runLater(() -> {
                 disable_pegs();
                 if (position == DRAW) {

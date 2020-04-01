@@ -36,7 +36,7 @@ public class GameClient extends Application implements View {
     private Label gameLabel = new Label();
     private Scene StartScene;
     private Scene GameScene;
-
+    Button backButton;
     @Override
     public void start(Stage stage) {
 
@@ -126,13 +126,12 @@ public class GameClient extends Application implements View {
     }
 
     private Scene CreateGameScene() {
-        Button backButton = CreateButton("Ga back to Main menu");
-        Button forfeitButton=CreateButton("Forfeit");
+        backButton = CreateButton("Give up!");
         backButton.setOnMouseClicked((e) -> {
             LoadMainMenu();
         });
 
-        VBox vBox = new VBox(gameLabel, gridPane, backButton,forfeitButton);
+        VBox vBox = new VBox(gameLabel, gridPane, backButton);
         vBox.setAlignment(Pos.TOP_CENTER);
 
         Scene scene = new Scene(vBox);
@@ -200,6 +199,11 @@ public class GameClient extends Application implements View {
     public void setText(String s) {
         Platform.runLater(()-> {
             this.gameLabel.setText(s);
+        });
+    }
+    public void BackTomainMenu() {
+        Platform.runLater(()-> {
+            backButton.setText("Go back to main menu!");
         });
     }
 }
