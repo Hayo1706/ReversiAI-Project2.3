@@ -51,6 +51,7 @@ public abstract class Model {
     protected MatchStarted matchStarted;
 
 
+
     public Model(int boardsize, View view, AI AI ) {
         pegs = new Peg[boardsize][boardsize];
         this.boardsize = boardsize;
@@ -194,6 +195,11 @@ public abstract class Model {
     public int getSide() {
         return side;
     }
+
+    public void setSide(int side) {
+        this.side = side;
+    }
+
     public int getMode() {
         return mode;
     }
