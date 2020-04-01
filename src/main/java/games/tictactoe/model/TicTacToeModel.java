@@ -72,7 +72,7 @@ public class TicTacToeModel extends Model
 
                     try {
                         disable_pegs();
-                        Move playermove=StrategicGameClient.getInstance().getMoveQueue().poll(30, TimeUnit.SECONDS);
+                        Move playermove=StrategicGameClient.getInstance().getMoveQueue().poll(Model.TIMELIMIT, TimeUnit.SECONDS);
                         if(playermove==null){
                             Win win = StrategicGameClient.getInstance().getWinQueue().take();
                             if (win.getComment().equals("Player forfeited match")) {
@@ -177,7 +177,7 @@ public class TicTacToeModel extends Model
             if(side==PLAYER2) {
                 try {
 
-                    Move playermove=StrategicGameClient.getInstance().getMoveQueue().poll(30, TimeUnit.SECONDS);
+                    Move playermove=StrategicGameClient.getInstance().getMoveQueue().poll(Model.TIMELIMIT, TimeUnit.SECONDS);
                     if(playermove==null){
                         Win win = StrategicGameClient.getInstance().getWinQueue().take();
                         Platform.runLater(()-> {
