@@ -126,4 +126,7 @@ public class StrategicGameClientProxy implements GameClient {
     public BlockingQueue<Move> getMoveQueue() {
         return realGameClient.getMoveQueue();
     }
+
+    @Override
+    public BlockingQueue<Win> getWinQueue() { return realGameClient.getWinQueue(); }
 }

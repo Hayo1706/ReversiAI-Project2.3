@@ -36,7 +36,7 @@ public abstract class Model {
     //gui board
     protected Peg[][] pegs;
     protected int boardsize;
-    public int mode = 0;
+    protected int mode = 0;
     protected int side = 0;
     protected Random random = new Random();
     protected View view;
@@ -143,7 +143,7 @@ public abstract class Model {
 
     }
 
-    protected void setText(String text) {
+    public void setText(String text) {
         Platform.runLater(()-> {
             view.setText(text);
         });
@@ -191,6 +191,18 @@ public abstract class Model {
 
     public int getSide() {
         return side;
+    }
+    public int getMode() {
+        return mode;
+    }
+    public Player getPlayer1(){
+        return player1;
+    }
+    public Player getPlayer2(){
+        return player2;
+    }
+    public void backToMainMenu(){
+        view.BackTomainMenu();
     }
 
 }
