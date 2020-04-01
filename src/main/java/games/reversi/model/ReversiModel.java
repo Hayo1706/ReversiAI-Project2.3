@@ -4,7 +4,6 @@ import communication.events.MatchStarted;
 import model.Model;
 import model.Peg;
 import player.LocalPlayer;
-import view.GameClient;
 import view.View;
 
 import java.util.HashSet;
@@ -42,8 +41,11 @@ public class ReversiModel extends Model {
 
     public void initSide() {
         side = PLAYER1;
-        player1 = new LocalPlayer(GameClient.username);
-        player2 = new LocalPlayer("Guest");
+
+        player1 = new LocalPlayer("white");
+        player2 = new LocalPlayer("black");
+
+
         if (side == PLAYER1) {
             setText(player1.getName() + " 's turn!");
         } else {
@@ -95,7 +97,6 @@ public class ReversiModel extends Model {
     public void setValidMoves() {
         validMoves.clear();
         int side = getSide();
-        System.out.println(side);
         disable_pegs();
         Peg[][] pegs = get_pegs();
 
@@ -103,7 +104,6 @@ public class ReversiModel extends Model {
             for (int col = 0; col < 8; col++) {
                 if ((pegs[abs(row)][abs(col)].getPegState() == 2) && (checkHorizontalL(row,col) || checkHorizontalR(row,col)||
                         checkVerticalL(row,col)||checkVerticalR(row,col)||checkDiagonalDL(row,col)||checkDiagonalDR(row,col)||checkDiagonalUL(row,col)||checkDiagonalUR(row,col))) {
-                    System.out.println(row + " " + col);
                     pegs[abs(row)][abs(col)].setDisable(false);
                     pegs[abs(row)][abs(col)].setStyle("-fx-background-color: #3c8e55");
                     validMoves.add(row*8 + col);
@@ -309,10 +309,44 @@ public class ReversiModel extends Model {
 
 
     // Returns whether 'side' has won in this position
+
+    /**
+     * @author Maurice Wijker
+     *
+     * @return is it a win for side?
+     */
+
     public boolean isAWin(int side) {
-        // TODO: 28/03/2020
-        return false;
+
+        int amountOfWhite = 0;
+        int amountOfBlack = 0;
+        Peg[][] pegs = get_pegs();
+
+        //check if board has empty space
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if(get_pegs()[i][j].getPegState() == 2){
+                    return false;
+                }
+            }
+        }
+
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if(get_pegs()[i][j].getPegState() == 0){
+                    amountOfWhite++;
+                } else if(get_pegs()[i][j].getPegState() == 1){
+                    amountOfBlack++;
+                }
+            }
+        }
+
+        if(side == 0 && amountOfWhite > amountOfBlack){
+            return true;
+        } else if (side == 1 && amountOfBlack > amountOfWhite){
+            return true;
+        } else {
+            return false;
+        }
     }
-
-
 }

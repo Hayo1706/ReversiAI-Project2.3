@@ -1,13 +1,9 @@
 package model;
 
 import ai.AI;
-import communication.StrategicGameClient;
-import communication.events.*;
+import communication.events.MatchStarted;
 import javafx.application.Platform;
-import player.ExternalPlayer;
-import player.LocalPlayer;
 import player.Player;
-import view.GameClient;
 import view.View;
 
 import java.util.Random;
@@ -176,7 +172,6 @@ public abstract class Model {
             Platform.runLater(() -> {
                 disable_pegs();
                 if (position == DRAW) {
-
                     setText(" It's a draw, " + winner() + " wins!");
                 } else {
                     setText(" Match over, " + winner() + " wins!");

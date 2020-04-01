@@ -6,11 +6,6 @@ import model.Model;
 import model.Peg;
 import view.GameClient;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import static java.lang.Math.abs;
-
 
 public class ReversiController implements controller.Controller {
     ReversiModel model;
@@ -43,7 +38,6 @@ public class ReversiController implements controller.Controller {
         } else if (model.is_mode(Model.HUMAN_VS_HUMAN)) {
             model.playMove(peg.getXPosition() * 8 + peg.getZPosition());
 
-//            printBoardToConsole();
 
         } else if (model.is_mode(Model.HUMAN_VS_SERVER)) {
 
