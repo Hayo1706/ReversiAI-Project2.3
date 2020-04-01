@@ -68,7 +68,6 @@ public class TicTacToeController implements Controller {
                 Runnable run=()-> {
 
                     if(StrategicGameClient.getInstance().getLossQueue().size()>0) {
-                        System.out.println(true);
                         model.setText(model.getPlayer2().getName() + " won! " + model.getPlayer1().getName() + " took too long!");
                         Platform.runLater(()-> {
 
@@ -129,14 +128,7 @@ public class TicTacToeController implements Controller {
 
                     });
 
-                    try {
-                        StrategicGameClient.getInstance().getMoveQueue().take();
 
-                        //see if player 1 timed out
-
-
-                    } catch (InterruptedException e) {
-                    }
 
                 };
                 new Thread(run).start();
