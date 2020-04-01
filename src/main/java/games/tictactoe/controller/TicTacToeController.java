@@ -45,6 +45,10 @@ public class TicTacToeController implements Controller {
 
 
             if (model.getMode()== Model.HUMAN_VS_HUMAN) {
+
+
+
+
                 model.playMove(peg.getXPosition()*3+peg.getZPosition());
                 gameOver();
 
@@ -62,6 +66,20 @@ public class TicTacToeController implements Controller {
 
             } else if (model.getMode()==Model.HUMAN_VS_SERVER) {
                 Runnable run=()-> {
+
+                    if(StrategicGameClient.getInstance().getLossQueue().size()>0) {
+                        System.out.println(true);
+                        model.setText(model.getPlayer2().getName() + " won! " + model.getPlayer1().getName() + " took too long!");
+                        Platform.runLater(()-> {
+
+                            disable_pegs();
+                            model.backToMainMenu();
+
+                        });
+                        StrategicGameClient.getInstance().getLossQueue().clear();
+                        return;
+                    }
+
                     int move = peg.getXPosition() * 3 + peg.getZPosition();
                     Platform.runLater(()-> {
                         model.playMove(move);
@@ -82,7 +100,7 @@ public class TicTacToeController implements Controller {
 
                     Move playermove=null;
                     try {
-                         playermove= StrategicGameClient.getInstance().getMoveQueue().poll(30, TimeUnit.SECONDS);
+                         playermove= StrategicGameClient.getInstance().getMoveQueue().poll(Model.TIMELIMIT, TimeUnit.SECONDS);
 
                         if (playermove == null) {
                             Win win = StrategicGameClient.getInstance().getWinQueue().take();
@@ -110,6 +128,15 @@ public class TicTacToeController implements Controller {
                         enable_pegs();
 
                     });
+
+                    try {
+                        StrategicGameClient.getInstance().getMoveQueue().take();
+
+                        //see if player 1 timed out
+
+
+                    } catch (InterruptedException e) {
+                    }
 
                 };
                 new Thread(run).start();

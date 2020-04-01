@@ -49,7 +49,10 @@ public interface GameClient {
     void doMove(int index);
 
     BlockingQueue<Move> getMoveQueue();
+
     BlockingQueue<Win> getWinQueue();
+
+    BlockingQueue<Loss> getLossQueue();
 
     CommunicationState getState();
 
