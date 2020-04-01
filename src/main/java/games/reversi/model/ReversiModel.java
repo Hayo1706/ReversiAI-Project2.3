@@ -50,9 +50,6 @@ public class ReversiModel extends Model {
 
     }
 
-    public void play_ai_vs_server(){
-
-    }
 
     public void playMove(int move) {
 

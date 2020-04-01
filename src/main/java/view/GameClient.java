@@ -187,6 +187,7 @@ public class GameClient extends Application implements View {
 
     private void LoadMainMenu() {
         stage.setScene(StartScene);
+        setText("");
         //remove model as observer
         StrategicGameClient.getInstance().getEventBus().removeObserver(model);
     }
@@ -195,6 +196,7 @@ public class GameClient extends Application implements View {
         Platform.runLater(()-> {
             this.gameLabel.setText(s);
         });
+
     }
     public void BackTomainMenu() {
         Platform.runLater(()-> {

@@ -29,7 +29,6 @@ public class TicTacToeModel extends Model
     }
 
     public void initSide() {
-        enable_pegs();
         if (mode == HUMAN_VS_AI) {
 
                 player1 = new LocalPlayer(GameClient.username);
@@ -43,6 +42,7 @@ public class TicTacToeModel extends Model
                     int best = calculateBest();
                         Platform.runLater(()-> {
                             playMove(best);
+                            change_side();
                         });
 
 
@@ -94,32 +94,16 @@ public class TicTacToeModel extends Model
 
             }
 
-            if (side == PLAYER1) {
-                this.side = PLAYER2;
-                setText(player2.getName() + "'s turn!");
-
-            } else {
-                this.side = PLAYER1;
-                setText(player1.getName() + "'s turn!");
-            }
 
     }
 
-    public void play_ai_vs_server() {
-        int best=calculateBest();
-        Platform.runLater(()->{
 
-            playMove(best);
-
-        });
-        StrategicGameClient.getInstance().doMove(best);
-        gameOver();
-    }
 
 
     public int calculateBest() {
 
-        AI.pegs_to_board(pegs);
+            AI.pegs_to_board(pegs);
+
         int best = AI.chooseMove();
 
         return best;

@@ -2,6 +2,7 @@ package model;
 
 import ai.AI;
 import communication.Observer;
+import communication.StrategicGameClient;
 import communication.events.*;
 import javafx.application.Platform;
 import player.ExternalPlayer;
@@ -74,13 +75,14 @@ public abstract class Model implements Observer<Event>{
 
                     if (matchStarted.getPlayerToMove().equals(GameClient.username)) {
                         side = PLAYER1;
+
                         setText(player1.getName() + "'s turn!");
-                        if(mode==AI_VS_SERVER){
-                            play_ai_vs_server();
-                        }
+
+
                     } else {
                         disable_pegs();
                         side = PLAYER2;
+
                         setText(player2.getName() + "'s turn!");
 
 
@@ -92,33 +94,49 @@ public abstract class Model implements Observer<Event>{
 
                 Move move=(Move) event;
                 if(move.getPlayer().equals(player2.getName())) {
+                    //
                     Platform.runLater(() -> {
-                        playMove(Integer.parseInt(move.getMove()));
+                        try {
+                            int opponentmove=Integer.parseInt(move.getMove());
 
+                            if(moveOk(opponentmove)) {
+                                playMove(opponentmove);
+                                change_side();
+                            }
+                        } catch (NumberFormatException e){}
 
                     });
+
                     if(mode!=AI_VS_SERVER) {
                         enable_pegs();
-                        gameOver();
-                    } else{
-                        Platform.runLater(() -> {
-                            play_ai_vs_server();
-
-                        });
                     }
                 }
             }
+
+
             else if(event instanceof Win){
 
                 Win win =(Win) event;
                 if (win.getComment().equals("Player forfeited match")) {
-                    setText(player1.getName() + " wins! " + player2.getName() + " gave up!");
+                    Platform.runLater(()-> {
+                        setText(player1.getName() + " wins! " + player2.getName() + " gave up!");
+                    });
                 } else if (win.getComment().equals("Client disconnected")) {
-                    setText(player1.getName() + " wins! " + player2.getName() + " lost connection!");
+                    Platform.runLater(()-> {
+                        setText(player1.getName() + " wins! " + player2.getName() + " lost connection!");
+                    });
                 } else  if(win.getComment().equals("Turn timelimit reached")){
-                    setText(player1.getName() + " wins! " + player2.getName() + " took too long!");
-                } else if(win.getComment().equals("Illegal, move")){
-                    setText(player1.getName() + " wins! " + player2.getName() + "played an illegal move");
+                        Platform.runLater(()-> {
+                            setText(player1.getName() + " wins! " + player2.getName() + " took too long!");
+                        });
+                } else if(win.getComment().equals("Illegal move")){
+                    Platform.runLater(()-> {
+                         setText(player1.getName() + " wins! " + player2.getName() + " played an illegal move!");
+                    });
+                } else{
+                    Platform.runLater(()-> {
+                        setText(player1.getName() + " wins!");
+                    });
                 }
                 view.BackTomainMenu();
                 disable_pegs();
@@ -126,17 +144,37 @@ public abstract class Model implements Observer<Event>{
             else if(event instanceof Loss){
                 Loss loss =(Loss) event;
                 if (loss.getComment().equals("Turn timelimit reached")) {
+                    Platform.runLater(()-> {
                     setText(player2.getName() + " wins! " + player1.getName() + " took too long!");
+                    });
+                } else {
+                    Platform.runLater(()-> {
+                    setText(player2.getName() + " wins! ");
+                    });
                 }
 
                 view.BackTomainMenu();
                 disable_pegs();
             }
             else if(event instanceof Draw){
-
+                Platform.runLater(()-> {
+                setText("Nobody" + " wins! It's a draw!");
+                });
+                view.BackTomainMenu();
+                disable_pegs();
             }
             else if(event instanceof YourTurn){
+                if(mode==AI_VS_SERVER){
 
+                    Platform.runLater(() -> {
+                        int best=calculateBest();
+                        playMove(best);
+                        change_side();
+                        StrategicGameClient.getInstance().doMove(best);
+                    });
+
+
+                }
             }
 
         }
@@ -145,9 +183,27 @@ public abstract class Model implements Observer<Event>{
 
     protected abstract void fill_pegs();
 
+    //check if move ok
+    public boolean moveOk(int move) {
+        return (move >= 0 && move <= 8 && pegs[move / 3][move % 3].pegState == EMPTY);
+
+    }
+
+
     public abstract void initSide();
 
-    public abstract void play_ai_vs_server();
+    public void change_side(){
+        if (side == PLAYER1) {
+            this.side = PLAYER2;
+            setText(player2.getName() + "'s turn!");
+
+        } else {
+            this.side = PLAYER1;
+            setText(player1.getName() + "'s turn!");
+        }
+
+    }
+
 
     public void switch_gamemode(int gamemode) {
 
@@ -226,9 +282,7 @@ public abstract class Model implements Observer<Event>{
     }
 
     public void setText(String text) {
-        Platform.runLater(()-> {
             view.setText(text);
-        });
     }
 
     public void disable_pegs() {
