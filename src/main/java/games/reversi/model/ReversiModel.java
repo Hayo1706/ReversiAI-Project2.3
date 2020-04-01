@@ -7,14 +7,19 @@ import player.LocalPlayer;
 import view.GameClient;
 import view.View;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import static java.lang.Math.abs;
+
 
 public class ReversiModel extends Model {
+    Set<Integer> validMoves = new HashSet<>();
 
 
     //Model
     public ReversiModel(int boardsize, View view, ai.AI AI) {
         super(boardsize, view, AI);
-
     }
     //Model
     public ReversiModel(int boardsize, View view, ai.AI AI,MatchStarted matchStarted) {
@@ -47,31 +52,254 @@ public class ReversiModel extends Model {
 
     }
 
-    public void play_ai_vs_server() {
-
+    public void play_ai_vs_server(){
 
     }
     public void playMove(int move) {
 
         Peg peg = pegs[move / boardsize][move % boardsize];
+            if (side == PLAYER2) {
 
-        if (side == PLAYER2) {
+                peg.setTile(0);
+                checkAndSet(peg.getXPosition(),peg.getZPosition());
+                this.side = PLAYER1;
+                setText("Black's turn!");
+            } else {
 
-            peg.setTile(0);
+                peg.setTile(1);
+                checkAndSet(peg.getXPosition(),peg.getZPosition());
+                this.side = PLAYER2;
+                setText("White's turn!");
+            }
+    }
 
-        } else {
+    public void checkAndSet(int x,int z){
+        if(checkHorizontalL(x,z))
+            setHorizontalL(x, z);
+        if(checkHorizontalR(x,z))
+            setHorizontalR(x,z);
+        if (checkVerticalL(x,z))
+            setVerticalL(x,z);
+        if (checkVerticalR(x,z))
+            setVerticalR(x,z);
+        if (checkDiagonalUR(x,z))
+            setDiagonalUR(x,z);
+        if (checkDiagonalUL(x,z))
+            setDiagonalUL(x,z);
+        if (checkDiagonalDR(x,z))
+            setDiagonalDR(x,z);
+        if (checkDiagonalDL(x,z))
+            setDiagonalDL(x,z);
+    }
 
-            peg.setTile(1);
+    public void setValidMoves() {
+        validMoves.clear();
+        int side = getSide();
+        System.out.println(side);
+        disable_pegs();
+        Peg[][] pegs = get_pegs();
+
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                if ((pegs[abs(row)][abs(col)].getPegState() == 2) && (checkHorizontalL(row,col) || checkHorizontalR(row,col)||
+                        checkVerticalL(row,col)||checkVerticalR(row,col)||checkDiagonalDL(row,col)||checkDiagonalDR(row,col)||checkDiagonalUL(row,col)||checkDiagonalUR(row,col))) {
+                    System.out.println(row + " " + col);
+                    pegs[abs(row)][abs(col)].setDisable(false);
+                    pegs[abs(row)][abs(col)].setStyle("-fx-background-color: #3c8e55");
+                    validMoves.add(row*8 + col);
+                }
+            }
         }
+    }
 
-        if (side == PLAYER1) {
-            this.side = PLAYER2;
-            setText(player2.getName() + "'s turn!");
-
-        } else {
-            this.side = PLAYER1;
-            setText(player1.getName() + "'s turn!");
+    private boolean checkHorizontalL(int posX, int posZ) {
+        int side = getSide();
+        if (posZ - 1 >= 0 && get_pegs()[posX][posZ - 1].getPegState() == side) {
+            for (int col = posZ - 2; col >= 0; col--) {
+                if (get_pegs()[posX][col].getPegState() == abs(side - 1)) {
+                    return true;
+                } else if (get_pegs()[posX][col].getPegState() == 2) {
+                    break;
+                }
+            }
         }
+        return false;
+    }
+    private void setHorizontalL(int posX, int posZ) {
+        int side = getSide();
+        for (int col = posZ - 1; col >= 0; col--) {
+            if (get_pegs()[posX][col].getPegState() == side) {
+                get_pegs()[posX][col].setTile(abs(side - 1));
+            } else{
+                return;
+            }
+        }
+    }
+
+    private boolean checkHorizontalR(int posX, int posZ) {
+        int side = getSide();
+        if (posZ + 1 < 8 && get_pegs()[posX][posZ + 1].getPegState() == side) {
+            for (int col = posZ + 2; col < 8; col++) {
+                if (get_pegs()[posX][col].getPegState() == abs(side - 1)) {
+                    return true;
+                } else if (get_pegs()[posX][col].getPegState() == 2) {
+                    break;
+                }
+            }
+        }
+        return false;
+    }
+    private void setHorizontalR(int posX, int posZ) {
+        int side = getSide();
+        for (int col = posZ + 1; col < 8; col++) {
+            if (get_pegs()[posX][col].getPegState() == side)
+                get_pegs()[posX][col].setTile(abs(side - 1));
+            else
+                return;
+        }
+    }
+    private boolean checkVerticalL(int posX, int posZ) {
+        int side = getSide();
+        if (posX - 1 >= 0 && get_pegs()[posX - 1][posZ].getPegState() == side) {
+
+            for (int row = posX - 2; row >= -0; row--) {
+                if (get_pegs()[row][posZ].getPegState() == abs(side - 1)) {
+                    return true;
+                } else if (get_pegs()[row][posZ].getPegState() == 2) {
+                    break;
+                }
+            }
+        }
+        return false;
+    }
+    private void setVerticalL(int posX, int posZ) {
+        int side = getSide();
+        for (int row = posX - 1; row >= -0; row--) {
+            if (get_pegs()[row][posZ].getPegState() == side)
+                get_pegs()[row][posZ].setTile(abs(side - 1));
+            else
+                return;
+        }
+    }
+
+
+    private boolean checkVerticalR(int posX, int posZ) {
+        int side = getSide();
+        if (posX + 1 < 8 && get_pegs()[posX + 1][posZ].getPegState() == side) {
+            for (int row = posX + 2; row < 8; row++) {
+                if (get_pegs()[row][posZ].getPegState() == abs(side - 1)) {
+                    return true;
+                } else if (get_pegs()[row][posZ].getPegState() == 2) {
+                    break;
+                }
+            }
+        }
+        return false;
+    }
+    private void setVerticalR(int posX, int posZ) {
+        int side = getSide();
+        for (int row = posX + 1; row < 8; row++) {
+            if (get_pegs()[row][posZ].getPegState() == side)
+                get_pegs()[row][posZ].setTile(abs(side - 1));
+            else
+                return;
+        }
+    }
+
+    private boolean checkDiagonalDR(int posX, int posZ) {
+        int side = getSide();
+        if (posX + 1 < 8 && posZ + 1 < 8 && get_pegs()[posX + 1][posZ + 1].getPegState() == side) {
+            for (int i = posX + 2, o = posZ + 2; i < 8 && o < 8; i++, o++) {
+                if (get_pegs()[i][o].getPegState() == abs(side - 1)) {
+                    return true;
+                } else if (get_pegs()[i][o].getPegState() == 2) {
+                    break;
+                }
+            }
+        }
+        return false;
+    }
+    private void setDiagonalDR(int posX, int posZ) {
+        int side = getSide();
+        for (int i = posX + 1, o = posZ + 1; i < 8 && o < 8; i++, o++) {
+            if (get_pegs()[i][o].getPegState() == side)
+                get_pegs()[i][o].setTile(abs(side - 1));
+            else
+                return;
+        }
+    }
+
+    private boolean checkDiagonalUL(int posX, int posZ) {
+        int side = getSide();
+        if (posX - 1 >= 0 && posZ - 1 >= 0 && get_pegs()[posX - 1][posZ - 1].getPegState() == side) {
+            for (int i = posX - 2, o = posZ - 2; i >= 0 && o >= 0; i--, o--) {
+                if (get_pegs()[i][o].getPegState() == abs(side - 1)) {
+                    return true;
+                } else if (get_pegs()[i][o].getPegState() == 2) {
+                    break;
+                }
+            }
+        }
+        return false;
+    }
+    private void setDiagonalUL(int posX, int posZ) {
+        int side = getSide();
+        for (int i = posX - 1, o = posZ - 1; i >= 0 && o >= 0; i--, o--) {
+            if (get_pegs()[i][o].getPegState() == side)
+                get_pegs()[i][o].setTile(abs(side - 1));
+            else
+                return;
+        }
+    }
+
+    private boolean checkDiagonalUR(int posX, int posZ) {
+        int side = getSide();
+        if (posX + 1 < 8 && posZ - 1 >= 0 && get_pegs()[posX + 1][posZ - 1].getPegState() == side) {
+            for (int i = posX + 2, o = posZ - 2; i < 8 && o >= 0; i++, o--) {
+                if (get_pegs()[i][o].getPegState() == abs(side - 1)) {
+                    return true;
+                } else if (get_pegs()[i][o].getPegState() == 2) {
+                    break;
+                }
+            }
+        }
+        return false;
+    }
+    private void setDiagonalUR(int posX, int posZ) {
+        int side = getSide();
+        for (int i = posX + 1, o = posZ - 1; i < 8 && o >= 0; i++, o--) {
+            if (get_pegs()[i][o].getPegState() == side)
+                get_pegs()[i][o].setTile(abs(side - 1));
+            else
+                return;
+        }
+    }
+
+    private boolean checkDiagonalDL(int posX,int posZ){
+        int side = getSide();
+        if(posX-1 >= 0 && posZ+1 < 8 && get_pegs()[posX - 1][posZ + 1].getPegState() == side) {
+            for (int i = posX-2,o = posZ+2; i >= 0 && o < 8; i--,o++) {
+                if (get_pegs()[i][o].getPegState() == abs(side-1)) {
+                    return true;
+                } else if (get_pegs()[i][o].getPegState() == 2) {
+                    break;
+                }
+            }
+        }
+        return false;
+    }
+    private void setDiagonalDL(int posX,int posZ){
+        int side = getSide();
+        for (int i = posX-1,o = posZ+1; i >= 0 && o < 8; i--,o++) {
+            if (get_pegs()[i][o].getPegState() == side)
+                get_pegs()[i][o].setTile(abs(side - 1));
+            else
+                return;
+        }
+    }
+
+    public Set<Integer> getValidMoves() {
+        return validMoves;
     }
 
     public int calculateBest() {

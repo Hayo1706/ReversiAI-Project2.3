@@ -30,13 +30,15 @@ public abstract class Model {
     protected static int PLAYER1_WIN = 0;
     protected static int DRAW = 1;
     protected static int UNCLEAR = 2;
+    //timelimit for server
+    public static int TIMELIMIT=30;
 
     //winstate
     protected static int PLAYER2_WIN = 3;
     //gui board
     protected Peg[][] pegs;
     protected int boardsize;
-    public int mode = 0;
+    protected int mode = 0;
     protected int side = 0;
     protected Random random = new Random();
     protected View view;
@@ -47,6 +49,7 @@ public abstract class Model {
     protected Player player1;
     protected Player player2;
     protected MatchStarted matchStarted;
+
 
 
     public Model(int boardsize, View view, AI AI ) {
@@ -143,7 +146,7 @@ public abstract class Model {
 
     }
 
-    protected void setText(String text) {
+    public void setText(String text) {
         Platform.runLater(()-> {
             view.setText(text);
         });
@@ -169,7 +172,7 @@ public abstract class Model {
     public boolean gameOver() {
         this.position = positionValue();
         if (position != UNCLEAR) {
-
+            view.BackTomainMenu();
             Platform.runLater(() -> {
                 disable_pegs();
                 if (position == DRAW) {
@@ -192,5 +195,23 @@ public abstract class Model {
     public int getSide() {
         return side;
     }
+
+    public void setSide(int side) {
+        this.side = side;
+    }
+
+    public int getMode() {
+        return mode;
+    }
+    public Player getPlayer1(){
+        return player1;
+    }
+    public Player getPlayer2(){
+        return player2;
+    }
+    public void backToMainMenu(){
+        view.BackTomainMenu();
+    }
+
 
 }

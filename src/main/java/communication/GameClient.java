@@ -50,6 +50,10 @@ public interface GameClient {
 
     BlockingQueue<Move> getMoveQueue();
 
+    BlockingQueue<Win> getWinQueue();
+
+    BlockingQueue<Loss> getLossQueue();
+
     CommunicationState getState();
 
     Connection getConnection();
