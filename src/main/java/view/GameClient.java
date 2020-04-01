@@ -129,6 +129,7 @@ public class GameClient extends Application implements View {
     private Scene CreateGameScene() {
         backButton = CreateButton("Give up!");
         backButton.setOnMouseClicked((e) -> {
+            backButton.setText("Give up!");
             LoadMainMenu();
             //if text.equals("Give up!")send forfeit to server
 
