@@ -82,7 +82,7 @@ public class TicTacToeController implements Controller {
 
                     Move playermove=null;
                     try {
-                         playermove= StrategicGameClient.getInstance().getMoveQueue().poll(30, TimeUnit.SECONDS);
+                         playermove= StrategicGameClient.getInstance().getMoveQueue().poll(Model.TIMELIMIT, TimeUnit.SECONDS);
 
                         if (playermove == null) {
                             Win win = StrategicGameClient.getInstance().getWinQueue().take();

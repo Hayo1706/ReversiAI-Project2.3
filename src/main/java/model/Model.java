@@ -30,6 +30,8 @@ public abstract class Model {
     protected static int PLAYER1_WIN = 0;
     protected static int DRAW = 1;
     protected static int UNCLEAR = 2;
+    //timelimit for server
+    public static int TIMELIMIT=30;
 
     //winstate
     protected static int PLAYER2_WIN = 3;
@@ -204,5 +206,6 @@ public abstract class Model {
     public void backToMainMenu(){
         view.BackTomainMenu();
     }
+
 
 }
