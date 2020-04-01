@@ -29,6 +29,7 @@ import java.util.Optional;
 
 public class GameClient extends Application implements View {
 
+
     public static int gameMode = Model.HUMAN_VS_SERVER;
     public static String username = "Dylan";
     private Stage stage;

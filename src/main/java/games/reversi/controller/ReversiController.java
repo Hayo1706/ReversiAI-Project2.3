@@ -385,7 +385,7 @@ public class ReversiController implements controller.Controller {
     }
     private void setDiagonalUL(int posX, int posZ) {
         int side = model.getSide();
-        for (int i = posX - 1, o = posZ - 1; i >= 0 && o >= 0; i++, o++) {
+        for (int i = posX - 1, o = posZ - 1; i >= 0 && o >= 0; i--, o--) {
             if (model.get_pegs()[i][o].getPegState() == side)
                 get_pegs()[i][o].setTile(abs(side - 1));
             else
