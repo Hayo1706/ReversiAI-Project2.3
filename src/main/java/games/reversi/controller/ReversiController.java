@@ -13,10 +13,10 @@ import static java.lang.Math.abs;
 
 
 public class ReversiController implements controller.Controller {
-    ReversiModel model;
+   Model model;
 
 
-    public ReversiController(ReversiModel model) {
+    public ReversiController(Model model) {
         this.model = model;
         setupBoard();
         Animation animation = new Animation(model.get_pegs());

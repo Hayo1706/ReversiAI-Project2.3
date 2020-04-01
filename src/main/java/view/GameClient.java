@@ -30,7 +30,7 @@ import java.util.Optional;
 public class GameClient extends Application implements View {
 
     
-    public static int gameMode = Model.HUMAN_VS_HUMAN;
+    public static int gameMode = Model.AI_VS_SERVER;
 
     public static String username = "Dylan";
     private Stage stage;
@@ -39,6 +39,7 @@ public class GameClient extends Application implements View {
     private Scene StartScene;
     private Scene GameScene;
     Button backButton;
+    Model model;
     @Override
     public void start(Stage stage) {
 
@@ -57,16 +58,6 @@ public class GameClient extends Application implements View {
                         receivedChallenge.denyChallenge();
                     }
                 });
-            } else if(event instanceof MatchStarted) {
-                MatchStarted matchStarted = (MatchStarted) event;
-
-                if(matchStarted.getGameType().equals("Reversi")) {
-
-                } else if(matchStarted.getGameType().equals("Tic-tac-toe")) {
-                    Platform.runLater(() -> {
-                        StartGame(1, matchStarted);
-                    });
-                }
             }
         });
 
@@ -87,6 +78,7 @@ public class GameClient extends Application implements View {
         stage.show();
 
         LoadMainMenu();
+        StartGame(1);
     }
 
     private Scene CreateStartScene() {
@@ -163,31 +155,22 @@ public class GameClient extends Application implements View {
         gridPane.getChildren().clear();
 
         if (GameToPlay == 0) {
-            SetUpGame(8, new ReversiController(new ReversiModel(8, this, new ReversiAI())));
+            model=new ReversiModel(8, this, new ReversiAI());
+            SetUpGame(8, new ReversiController(model));
             stage.setTitle("Reversi");
         } else if (GameToPlay == 1) {
-            SetUpGame(3, new TicTacToeController(new TicTacToeModel(3, this, new TicTacToeAI())));
+            model=new TicTacToeModel(3, this, new TicTacToeAI());
+            SetUpGame(3, new TicTacToeController(model));
             stage.setTitle("TicTacToe");
         }
+        //add the model as an observer
+        StrategicGameClient.getInstance().getEventBus().addObserver(model);
 
         stage.setScene(GameScene);
         stage.sizeToScene();
     }
 
-    private void StartGame(int GameToPlay, MatchStarted event) {
-        gridPane.getChildren().clear();
 
-        if (GameToPlay == 0) {
-            SetUpGame(8, new ReversiController(new ReversiModel(8, this, new ReversiAI(),event)));
-            stage.setTitle("Reversi");
-        } else if (GameToPlay == 1) {
-            SetUpGame(3, new TicTacToeController(new TicTacToeModel(3, this, new TicTacToeAI(),event)));
-            stage.setTitle("TicTacToe");
-        }
-
-        stage.setScene(GameScene);
-        stage.sizeToScene();
-    }
 
     private void SetUpGame(int size, Controller controller) {
         for (int i = 0; i < size; i++) {
@@ -204,6 +187,8 @@ public class GameClient extends Application implements View {
 
     private void LoadMainMenu() {
         stage.setScene(StartScene);
+        //remove model as observer
+        StrategicGameClient.getInstance().getEventBus().removeObserver(model);
     }
 
     public void setText(String s) {
