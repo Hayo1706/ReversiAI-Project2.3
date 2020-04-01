@@ -106,7 +106,7 @@ public class TicTacToeController implements Controller {
                             if (win.getComment().equals("Player forfeited match")) {
                                 model.setText(model.getPlayer1().getName() + " wins! " + model.getPlayer2().getName() + " gave up!");
                             } else if (win.getComment().equals("Client disconnected")) {
-                                model.setText(model.getPlayer1().getName() + " wins! " + model.getPlayer2().getName() + "lost connection!");
+                                model.setText(model.getPlayer1().getName() + " wins! " + model.getPlayer2().getName() + " lost connection!");
                             } else {
                                 model.setText(model.getPlayer1().getName() + " wins! " + model.getPlayer2().getName() + " took too long!");
                             }
