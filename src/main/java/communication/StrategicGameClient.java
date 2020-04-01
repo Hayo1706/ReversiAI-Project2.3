@@ -260,6 +260,28 @@ public class StrategicGameClient implements GameClient {
         connection.startListening();
     }
 
+    @Override
+    public void forfeit() {
+        connection.stopListening();
+
+        executeCommand(new Forfeit(this));
+
+        try {
+            connection.expectOK();
+        } catch (NotOKResponseException e) {
+            e.printStackTrace();
+        }
+
+        endGame();
+    }
+
+    /**
+     * End game
+     */
+    private void endGame() {
+        connection.startListening();
+        setState(new Waiting(this));
+    }
 
     @Override
     public void yourTurn(YourTurn event) { eventBus.notifyObservers(event); }
@@ -274,18 +296,20 @@ public class StrategicGameClient implements GameClient {
     public void win(Win event) {
         eventBus.notifyObservers(event);
         winQueue.add(event);
+        endGame();
     }
 
     @Override
     public void draw(Draw event) {
         eventBus.notifyObservers(event);
+        endGame();
     }
 
     @Override
     public void loss(Loss event) {
         eventBus.notifyObservers(event);
         lossQueue.add(event);
-
+        endGame();
     }
 
     public CommunicationState getState() {
