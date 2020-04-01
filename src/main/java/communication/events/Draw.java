@@ -2,7 +2,7 @@ package communication.events;
 
 import org.json.JSONObject;
 
-public class Draw extends Event {
+public class Draw extends GameOverEvent {
     private String playerOneScore;
     private String playerTwoScore;
     private String comment;

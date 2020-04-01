@@ -1,8 +1,8 @@
 package view;
 
 import communication.StrategicGameClient;
-import communication.events.MatchStarted;
-import communication.events.ReceivedChallenge;
+import communication.commands.Login;
+import communication.events.*;
 import controller.Controller;
 import games.reversi.controller.ReversiController;
 import games.reversi.model.ReversiAI;
@@ -12,36 +12,74 @@ import games.tictactoe.model.TicTacToeAI;
 import games.tictactoe.model.TicTacToeModel;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.Model;
-import model.Peg;
 
 import java.util.Optional;
 
-public class GameClient extends Application implements View {
+public class GameClient extends Application {
 
     public static int gameMode = Model.AI_VS_SERVER;
     public static String username = "Dylan";
     private Stage stage;
     private GridPane gridPane = new GridPane();
     private Label gameLabel = new Label();
-    private Scene StartScene;
-    private Scene GameScene;
+    private Scene startScene, gameScene;
+
+    private SceneView loginView, gamesView, boardView;
 
     @Override
     public void start(Stage stage) {
 
+
+        SetEvents();
+
+        this.stage = stage;
+
+        loginView = new LoginView(this);
+        loginView.CreateScene();
+
+
+        SceneView startView = new ChooseGameView(this);
+        startView.CreateScene();
+        startScene = startView.getScene();
+
+
+        boardView = new BoardView(this);
+        boardView.CreateScene();
+        gameScene = boardView.getScene();
+
+
+        gamesView = new GamesView(this);
+        gamesView.CreateScene();
+
+
+        stage.setResizable(false);
+        stage.setTitle("!!!Games!!!");
+        stage.initStyle(StageStyle.DECORATED);
+
+        stage.show();
+
+        SwitchScene(Scenes.LOGIN);
+    }
+
+    private void StartGame(int GameToPlay, MatchStarted event) {
+        if (GameToPlay == 0) {
+            ((BoardView) boardView).SetUpGame("Reversi", 8, new ReversiController(new ReversiModel(8, boardView, new ReversiAI(), event)));
+        } else if (GameToPlay == 1) {
+            ((BoardView) boardView).SetUpGame("Tic Tac Toe", 3, new TicTacToeController(new TicTacToeModel(3, boardView, new TicTacToeAI(), event)));
+        }
+
+        SwitchScene(Scenes.GAME);
+    }
+
+    private void SetEvents() {
         StrategicGameClient.getInstance().getEventBus().addObserver(event -> {
-            if(event instanceof ReceivedChallenge) {
+            if (event instanceof ReceivedChallenge) {
                 ReceivedChallenge receivedChallenge = (ReceivedChallenge) event;
                 Platform.runLater(() -> {
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -55,151 +93,37 @@ public class GameClient extends Application implements View {
                         receivedChallenge.denyChallenge();
                     }
                 });
-            } else if(event instanceof MatchStarted) {
+            } else if (event instanceof MatchStarted) {
                 MatchStarted matchStarted = (MatchStarted) event;
 
-                if(matchStarted.getGameType().equals("Reversi")) {
-
-                } else if(matchStarted.getGameType().equals("Tic-tac-toe")) {
-                    Platform.runLater(() -> {
-                        StartGame(1, matchStarted);
-                    });
+                if (matchStarted.getGameType().equals("Reversi")) {
+                    Platform.runLater(() -> StartGame(0, matchStarted));
+                } else if (matchStarted.getGameType().equals("Tic-tac-toe")) {
+                    Platform.runLater(() -> StartGame(1, matchStarted));
                 }
+            } else if (event instanceof GameOverEvent) {
+                Platform.runLater(() -> ((BoardView) boardView).GameOver((GameOverEvent) event));
             }
         });
-
-
-        this.stage = stage;
-
-
-        GridPane gridPane = new GridPane();
-
-        StartScene = CreateStartScene();
-        GameScene = CreateGameScene();
-
-
-        stage.setResizable(false);
-        stage.setTitle("!!!Games!!!");
-        stage.initStyle(StageStyle.DECORATED);
-
-        stage.show();
-
-        LoadMainMenu();
     }
 
-    private Scene CreateStartScene() {
-        Button RButton = CreateButton("Play Othello (reversi)");
-        RButton.setOnMouseClicked((e) -> {
-            StartGame(0);
-        });
-
-        Button TTTButton = CreateButton("Play Tic Tac Toe");
-        TTTButton.setOnMouseClicked((e) -> {
-            StartGame(1);
-        });
-
-        RButton.setWrapText(true);
-        RButton.setMinSize(50, 50);
-        RButton.setMaxSize(200, 50);
-
-        TTTButton.setWrapText(true);
-        TTTButton.setMinSize(50, 50);
-        TTTButton.setMaxSize(200, 50);
-
-
-        Label title = new Label("Choose your game!");
-        title.getStyleClass().add("start-game-title");
-        title.setMinSize(50, 50);
-        title.setMaxSize(200, 50);
-
-        VBox alignBox = new VBox(title, TTTButton, RButton);
-        alignBox.setSpacing(10);
-        alignBox.setMaxWidth(200);
-
-        VBox vBox = new VBox(alignBox);
-        vBox.setAlignment(Pos.TOP_CENTER);
-
-        Scene scene = new Scene(vBox, 500, 500);
-        scene.getStylesheets().add("style.css");
-
-        return scene;
-    }
-
-    private Scene CreateGameScene() {
-        Button backButton = CreateButton("Ga back to Main menu");
-        Button forfeitButton=CreateButton("Forfeit");
-        backButton.setOnMouseClicked((e) -> {
-            LoadMainMenu();
-        });
-
-        VBox vBox = new VBox(gameLabel, gridPane, backButton,forfeitButton);
-        vBox.setAlignment(Pos.TOP_CENTER);
-
-        Scene scene = new Scene(vBox);
-        scene.getStylesheets().add("style.css");
-
-        return scene;
-    }
-
-    private Button CreateButton(String text) {
-        var button = new Button(text);
-
-        button.getStyleClass().clear();
-        button.getStyleClass().add("Client-button");
-
-        return button;
-    }
-
-    private void StartGame(int GameToPlay) {
-        gridPane.getChildren().clear();
-
-        if (GameToPlay == 0) {
-            SetUpGame(8, new ReversiController(new ReversiModel(8, this, new ReversiAI())));
-            stage.setTitle("Reversi");
-        } else if (GameToPlay == 1) {
-            SetUpGame(3, new TicTacToeController(new TicTacToeModel(3, this, new TicTacToeAI())));
-            stage.setTitle("TicTacToe");
-        }
-
-        stage.setScene(GameScene);
-        stage.sizeToScene();
-    }
-
-    private void StartGame(int GameToPlay, MatchStarted event) {
-        gridPane.getChildren().clear();
-
-        if (GameToPlay == 0) {
-            SetUpGame(8, new ReversiController(new ReversiModel(8, this, new ReversiAI(),event)));
-            stage.setTitle("Reversi");
-        } else if (GameToPlay == 1) {
-            SetUpGame(3, new TicTacToeController(new TicTacToeModel(3, this, new TicTacToeAI(),event)));
-            stage.setTitle("TicTacToe");
-        }
-
-        stage.setScene(GameScene);
-        stage.sizeToScene();
-    }
-
-    private void SetUpGame(int size, Controller controller) {
-        for (int i = 0; i < size; i++) {
-            for (int o = 0; o < size; o++) {
-                Peg peg = controller.get_pegs()[i][o];
-                peg.setOnAction(
-                        actionEvent ->  {
-                            controller.nextTurn(peg);
-                        });
-                gridPane.add(peg, peg.getZPosition(), peg.getXPosition());
-            }
+    public void SwitchScene(Scenes scene) {
+        switch (scene) {
+            case LOGIN:
+                stage.setScene(loginView.getScene());
+                break;
+            case GAMES:
+                stage.setScene(gamesView.getScene());
+                break;
+            case GAME:
+                stage.setScene(boardView.getScene());
+                break;
         }
     }
 
-    private void LoadMainMenu() {
-        stage.setScene(StartScene);
-    }
-
-    public void setText(String s) {
-        Platform.runLater(()-> {
-            this.gameLabel.setText(s);
-        });
+    public enum Scenes {
+        LOGIN,
+        GAMES,
+        GAME,
     }
 }
