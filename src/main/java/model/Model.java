@@ -5,6 +5,7 @@ import communication.Observer;
 import communication.StrategicGameClient;
 import communication.events.*;
 import javafx.application.Platform;
+import javafx.scene.image.Image;
 import player.ExternalPlayer;
 import player.LocalPlayer;
 import player.Player;
@@ -75,12 +76,15 @@ public abstract class Model implements Observer<Event>{
 
                     if (matchStarted.getPlayerToMove().equals(GameClient.username)) {
                         side = PLAYER1;
-
+                        player1.setSymbol(new Image("x.png"));
+                        player2.setSymbol(new Image("o.png"));
                         setText(player1.getName() + "'s turn!");
 
 
                     } else {
                         disable_pegs();
+                        player1.setSymbol(new Image("o.png"));
+                        player2.setSymbol(new Image("x.png"));
                         side = PLAYER2;
 
                         setText(player2.getName() + "'s turn!");

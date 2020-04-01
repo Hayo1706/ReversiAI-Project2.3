@@ -5,6 +5,7 @@ import communication.Observer;
 import communication.StrategicGameClient;
 import communication.events.*;
 import javafx.application.Platform;
+import javafx.scene.image.Image;
 import model.Model;
 import model.Peg;
 import player.ExternalPlayer;
@@ -37,6 +38,9 @@ public class TicTacToeModel extends Model
 
                 side = random.nextInt(2);
                 if (side == PLAYER2) {
+                    player1.setSymbol(new Image("o.png"));
+                    player2.setSymbol(new Image("x.png"));
+
                     setText(player2.getName() + "'s turn!");
 
                     int best = calculateBest();
@@ -47,6 +51,8 @@ public class TicTacToeModel extends Model
 
 
                 } else {
+                    player1.setSymbol(new Image("x.png"));
+                    player2.setSymbol(new Image("o.png"));
                     setText(player1.getName() + "'s turn!");
                 }
 
@@ -55,10 +61,16 @@ public class TicTacToeModel extends Model
             side = random.nextInt(2);
             player1 = new LocalPlayer(GameClient.username);
             player2 = new LocalPlayer("Guest");
-            if (side == PLAYER1) {
-                setText(player1.getName() + " 's turn!");
-            } else {
+            if (side == PLAYER2) {
+                player1.setSymbol(new Image("o.png"));
+                player2.setSymbol(new Image("x.png"));
+
                 setText(player2.getName() + " 's turn!");
+            } else {
+                player1.setSymbol(new Image("x.png"));
+                player2.setSymbol(new Image("o.png"));
+
+                setText(player1.getName() + " 's turn!");
 
             }
         }
@@ -83,14 +95,14 @@ public class TicTacToeModel extends Model
     }
     public void playMove(int move) {
 
-            Peg peg = pegs[move / boardsize][move % boardsize];
+            TicTactToePeg peg = (TicTactToePeg) pegs[move / boardsize][move % boardsize];
 
             if (side == PLAYER2) {
 
-                peg.setTile(1);
+                peg.setTile(1,player2.getSymbol());
 
             } else {
-                peg.setTile(0);
+                peg.setTile(0,player1.getSymbol());
 
             }
 
