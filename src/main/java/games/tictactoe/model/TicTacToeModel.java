@@ -12,6 +12,8 @@ import player.LocalPlayer;
 import view.GameClient;
 import view.View;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Created by Singh van Offeren
  */
@@ -70,17 +72,32 @@ public class TicTacToeModel extends Model
 
                     try {
                         disable_pegs();
-                        Move playermove=StrategicGameClient.getInstance().getMoveQueue().take();
+                        Move playermove=StrategicGameClient.getInstance().getMoveQueue().poll(30, TimeUnit.SECONDS);
+                        if(playermove==null){
+                            Win win = StrategicGameClient.getInstance().getWinQueue().take();
+                            if (win.getComment().equals("Player forfeited match")) {
+                                setText(player1.getName() + " wins! " + player2.getName() + " gave up!");
+                            } else if (win.getComment().equals("Client disconnected")) {
+                                setText(player1.getName() + " wins! " + player2.getName() + " lost connection!");
+                            } else {
+                                setText(player1.getName() + " wins! " + player2.getName() + " took too long!");
+                            }
+
+
+                            view.BackTomainMenu();
+                            return;
+                        }
+
                         int move=Integer.parseInt(playermove.getMove());
                         Platform.runLater(()-> {
                             playMove(move);
 
 
                         });
-
+                    } catch (InterruptedException e){};
                         enable_pegs();
 
-                    } catch (InterruptedException e){};
+
                 };
                 new Thread(opponent).start();
 
@@ -159,7 +176,24 @@ public class TicTacToeModel extends Model
         Runnable run=()->{
             if(side==PLAYER2) {
                 try {
-                    Move playermove = StrategicGameClient.getInstance().getMoveQueue().take();
+
+                    Move playermove=StrategicGameClient.getInstance().getMoveQueue().poll(30, TimeUnit.SECONDS);
+                    if(playermove==null){
+                        Win win = StrategicGameClient.getInstance().getWinQueue().take();
+                        Platform.runLater(()-> {
+                                    if (win.getComment().equals("Player forfeited match")) {
+                                        setText(player1.getName() + " wins! " + player2.getName() + " gave up!");
+                                    } else if (win.getComment().equals("Client disconnected")) {
+                                        setText(player1.getName() + " wins! " + player2.getName() + " lost connection!");
+                                    } else {
+                                        setText(player1.getName() + " wins! " + player2.getName() + " took too long!");
+                                    }
+
+                                });
+                        view.BackTomainMenu();
+                        return;
+                    }
+
                     int move = Integer.parseInt(playermove.getMove());
 
                     Platform.runLater(()-> {

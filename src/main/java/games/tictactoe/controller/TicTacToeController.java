@@ -11,6 +11,7 @@ import model.Peg;
 import view.GameClient;
 
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Singh van Offeren
@@ -43,11 +44,11 @@ public class TicTacToeController implements Controller {
 
 
 
-            if (model.mode== Model.HUMAN_VS_HUMAN) {
+            if (model.getMode()== Model.HUMAN_VS_HUMAN) {
                 model.playMove(peg.getXPosition()*3+peg.getZPosition());
                 gameOver();
 
-            } else if (model.mode==Model.HUMAN_VS_AI) {
+            } else if (model.getMode()==Model.HUMAN_VS_AI) {
 
                 model.playMove(peg.getXPosition()*3+peg.getZPosition());
 
@@ -59,7 +60,7 @@ public class TicTacToeController implements Controller {
                         gameOver();
                     }
 
-            } else if (model.mode==Model.HUMAN_VS_SERVER) {
+            } else if (model.getMode()==Model.HUMAN_VS_SERVER) {
                 Runnable run=()-> {
                     int move = peg.getXPosition() * 3 + peg.getZPosition();
                     Platform.runLater(()-> {
@@ -79,10 +80,26 @@ public class TicTacToeController implements Controller {
                     }
 
 
-                    Move playermove = null;
+                    Move playermove=null;
                     try {
-                        playermove = StrategicGameClient.getInstance().getMoveQueue().take();
-                    } catch (InterruptedException e) {
+                         playermove= StrategicGameClient.getInstance().getMoveQueue().poll(30, TimeUnit.SECONDS);
+
+                        if (playermove == null) {
+                            Win win = StrategicGameClient.getInstance().getWinQueue().take();
+                            if (win.getComment().equals("Player forfeited match")) {
+                                model.setText(model.getPlayer1().getName() + " wins! " + model.getPlayer2().getName() + " gave up!");
+                            } else if (win.getComment().equals("Client disconnected")) {
+                                model.setText(model.getPlayer1().getName() + " wins! " + model.getPlayer2().getName() + "lost connection!");
+                            } else {
+                                model.setText(model.getPlayer1().getName() + " wins! " + model.getPlayer2().getName() + " took too long!");
+                            }
+
+                            disable_pegs();
+                            model.backToMainMenu();
+                            return;
+                        }
+
+                    }catch (InterruptedException e) {
                     }
 
                     int opponentmove = Integer.parseInt(playermove.getMove());
