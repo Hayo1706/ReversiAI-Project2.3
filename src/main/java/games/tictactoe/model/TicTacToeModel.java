@@ -180,15 +180,16 @@ public class TicTacToeModel extends Model
                     Move playermove=StrategicGameClient.getInstance().getMoveQueue().poll(30, TimeUnit.SECONDS);
                     if(playermove==null){
                         Win win = StrategicGameClient.getInstance().getWinQueue().take();
-                        if (win.getComment().equals("Player forfeited match")) {
-                            setText(player1.getName() + " wins! " + player2.getName() + " gave up!");
-                        } else if (win.getComment().equals("Client disconnected")) {
-                            setText(player1.getName() + " wins! " + player2.getName() + " lost connection!");
-                        } else {
-                            setText(player1.getName() + " wins! " + player2.getName() + " took too long!");
-                        }
+                        Platform.runLater(()-> {
+                                    if (win.getComment().equals("Player forfeited match")) {
+                                        setText(player1.getName() + " wins! " + player2.getName() + " gave up!");
+                                    } else if (win.getComment().equals("Client disconnected")) {
+                                        setText(player1.getName() + " wins! " + player2.getName() + " lost connection!");
+                                    } else {
+                                        setText(player1.getName() + " wins! " + player2.getName() + " took too long!");
+                                    }
 
-
+                                });
                         view.BackTomainMenu();
                         return;
                     }
