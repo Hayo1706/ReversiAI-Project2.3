@@ -5,11 +5,15 @@ import model.Model;
 import model.Peg;
 import view.GameClient;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static java.lang.Math.abs;
 
 
 public class ReversiController implements controller.Controller {
     Model model;
+    Set<Double> validMoves = new HashSet<>();
 
     public ReversiController(Model model) {
         this.model = model;
@@ -17,7 +21,7 @@ public class ReversiController implements controller.Controller {
         startupAnimation();
         model.switch_gamemode(GameClient.gameMode);
 
-        checkMovesCloseby();
+        setValidMoves();
 
 
     }
@@ -43,10 +47,12 @@ public class ReversiController implements controller.Controller {
 
 
         } else if (model.is_mode(Model.HUMAN_VS_HUMAN)) {
-//            if(calcValidMove(peg)){
+            if(checkHorizontalL(peg.getXPosition(),peg.getZPosition())) {
+                setHorizontalL(peg.getXPosition(), peg.getZPosition());
+            }
+            model.playMove(peg.getXPosition() * 8 + peg.getZPosition());
 
-                model.playMove(peg.getXPosition() * 8 + peg.getZPosition());
-//            }
+
             printBoardToConsole();
 
         } else if (model.is_mode(Model.HUMAN_VS_SERVER)) {
@@ -56,7 +62,7 @@ public class ReversiController implements controller.Controller {
         if (gameOver()) {
             disable_pegs();
         }
-        checkMovesCloseby();
+        setValidMoves();
     }
 
 
@@ -164,9 +170,6 @@ public class ReversiController implements controller.Controller {
 //    }
 
 
-
-
-
     //player1 == black
     //player1 == 0 = side
     //black == 1 = pegstate
@@ -180,8 +183,8 @@ public class ReversiController implements controller.Controller {
      * @author hayo & Maurice Wijker
      * row 4 col 2 X && row 3 col 5 X
      */
-    public void checkMovesCloseby() {
-
+    public void setValidMoves() {
+        validMoves.clear();
         int side = model.getSide();
         System.out.println(side);
         model.disable_pegs();
@@ -189,138 +192,167 @@ public class ReversiController implements controller.Controller {
 
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
-                if ((pegs[row][col].getPegState() == 0 && side == 0) || (side == 1 && pegs[row][col].getPegState() == 1)) {
-                    for (int q= -1; q <= 1 && q+row < 8; q++) {
-                        for (int w= -1; w <= 1 && w+col < 8; w++) {
-                            if((pegs[abs(q + row)][abs(w + col)].getPegState() == 2) && (checkHorizontal(abs(q + row), abs(w + col)) || checkVertical(abs(q + row), abs(w + col)) || checkDiagonal(abs(q + row), abs(w + col)))) {
-                                pegs[abs(q + row)][abs(w + col)].setDisable(false);
-                                pegs[abs(q + row)][abs(w + col)].setStyle("-fx-background-color: #3c8e55");
-                            }
-                        }
-                    }
+//                if ((pegs[row][col].getPegState() == 0 && side == 0) || (side == 1 && pegs[row][col].getPegState() == 1)) {
+//                    for (int q= -1; q <= 1 && q+row < 8; q++) {
+//                        for (int w= -1; w <= 1 && w+col < 8; w++) {
+                if ((pegs[abs(row)][abs(col)].getPegState() == 2) && (checkHorizontalL(row,col) || checkHorizontalR(row,col)||
+                        checkVerticalL(row,col)||checkVerticalR(row,col)||checkDiagonalDL(row,col)||checkDiagonalDR(row,col)||checkDiagonalUL(row,col)||checkDiagonalUR(row,col))) {
+                    System.out.println(row + " " + col);
+                    pegs[abs(row)][abs(col)].setDisable(false);
+                    pegs[abs(row)][abs(col)].setStyle("-fx-background-color: #3c8e55");
+                    validMoves.add(row + col / 10.0);
+                    System.out.println(validMoves);
+
                 }
+//                        }
+//                    }
+//                }
             }
         }
     }
 
     /**
-     * @author Maurice Wijker
      * @param posZ the initial horizontal position
      * @param posX the initial vertical position
      * @return is move legal to make horizontal?
+     * @author Maurice Wijker
      */
 
 
-    private boolean checkHorizontal(int posX,int posZ){
+    private boolean checkHorizontalL(int posX, int posZ) {
         int side = model.getSide();
-
-        int other = -1;
-
-        if(side == 0){
-            other = 1;
-        }
-        else if(side == 1){
-            other = 0;
-        }
-        if(posZ-1 >= 0 && model.get_pegs()[posX][posZ-1].getPegState() == side) {
-                for (int col = posZ - 2; col >= 0; col--) {
-                    if (model.get_pegs()[posX][col].getPegState() == other) {
-                        return true;
-                    } else if (model.get_pegs()[posX][col].getPegState() == 2) {
-                        break;
-                    }
+        if (posZ - 1 >= 0 && model.get_pegs()[posX][posZ - 1].getPegState() == side) {
+            for (int col = posZ - 2; col >= 0; col--) {
+                if (model.get_pegs()[posX][col].getPegState() == abs(side - 1)) {
+                    return true;
+                } else if (model.get_pegs()[posX][col].getPegState() == 2) {
+                    break;
                 }
+            }
         }
-        if(posZ+1 < 8 && model.get_pegs()[posX][posZ+1].getPegState() == side) {
-                for (int col = posZ + 2; col < 8; col++) {
-                    if (model.get_pegs()[posX][col].getPegState() == other) {
-                        return true;
-                    } else if (model.get_pegs()[posX][col].getPegState() == 2) {
-                        break;
-                    }
+        return false;
+    }
+    private void setHorizontalL(int posX, int posZ) {
+        int side = model.getSide();
+            for (int col = posZ - 1; col >= 0; col--) {
+                if (model.get_pegs()[posX][col].getPegState() == abs(side - 1) || model.get_pegs()[posX][col].getPegState() == 2) {
+                    return;
+                } else{
+                    get_pegs()[posX][col].setTile(abs(side - 1));
                 }
-        }
+            }
+    }
+
+    private boolean checkHorizontalR(int posX, int posZ) {
+//        int side = model.getSide();
+//        if (posZ + 1 < 8 && model.get_pegs()[posX][posZ + 1].getPegState() == side) {
+//            for (int col = posZ + 2; col < 8; col++) {
+//                if (model.get_pegs()[posX][col].getPegState() == abs(side - 1)) {
+//                    return true;
+//                } else if (model.get_pegs()[posX][col].getPegState() == 2) {
+//                    break;
+//                }
+//            }
+//        }
         return false;
     }
 
 
     /**
-     * @author Maurice Wijker
      * @param posZ the initial horizontal position
      * @param posX the initial vertical position
      * @return is move legal to make vertically?
+     * @author Maurice Wijker
      */
-    private boolean checkVertical(int posX,int posZ){
-        int side = model.getSide();
+    private boolean checkVerticalL(int posX, int posZ) {
+//        int side = model.getSide();
+//        if (posX - 1 >= 0 && model.get_pegs()[posX - 1][posZ].getPegState() == side) {
+//
+//            for (int row = posX - 2; row >= -0; row--) {
+//                if (model.get_pegs()[row][posZ].getPegState() == abs(side - 1)) {
+//                    return true;
+//                } else if (model.get_pegs()[row][posZ].getPegState() == 2) {
+//                    break;
+//                }
+//            }
+//        }
+        return false;
+    }
 
-        int other = -1;
-
-        if(side == 0)
-            other = 1;
-        else
-            other = 0;
-
-        if(posX-1 >= 0 && model.get_pegs()[posX -1][posZ].getPegState() == side) {
-
-            for (int row = posX - 2; row >= -0; row--) {
-                if (model.get_pegs()[row][posZ].getPegState() == other) {
-                    return true;
-                } else if (model.get_pegs()[row][posZ].getPegState() == 2) {
-                    break;
-                }
-            }
-        }
-        if(posX+1 < 8 && model.get_pegs()[posX +1][posZ].getPegState() == side) {
-            for (int row = posX + 2; row < 8; row++) {
-                if (model.get_pegs()[row][posZ].getPegState() == other) {
-                    return true;
-                } else if (model.get_pegs()[row][posZ].getPegState() == 2) {
-                    break;
-                }
-            }
-        }
+    private boolean checkVerticalR(int posX, int posZ) {
+//        int side = model.getSide();
+//        if (posX + 1 < 8 && model.get_pegs()[posX + 1][posZ].getPegState() == side) {
+//            for (int row = posX + 2; row < 8; row++) {
+//                if (model.get_pegs()[row][posZ].getPegState() == abs(side - 1)) {
+//                    return true;
+//                } else if (model.get_pegs()[row][posZ].getPegState() == 2) {
+//                    break;
+//                }
+//            }
+//        }
         return false;
     }
 
 
     /**
-     * @author Maurice Wijker
      * @param posZ the initial horizontal position
      * @param posX the initial vertical position
      * @return is move legal to make diagonaly?
+     * @author Maurice Wijker
      */
 
-    private boolean checkDiagonal(int posX,int posZ){
-        int side = model.getSide();
+    private boolean checkDiagonalDR(int posX, int posZ) {
+//        int side = model.getSide();
+//        if (posX + 1 < 8 && posZ + 1 < 8 && model.get_pegs()[posX + 1][posZ + 1].getPegState() == side) {
+//            for (int i = posX + 2, o = posZ + 2; i < 8 && o < 8; i++, o++) {
+//                if (model.get_pegs()[i][o].getPegState() == abs(side - 1)) {
+//                    return true;
+//                } else if (model.get_pegs()[i][o].getPegState() == 2) {
+//                    break;
+//                }
+//            }
+//        }
+        return false;
+    }
 
-        int other = -1;
+    private boolean checkDiagonalUL(int posX, int posZ) {
+//        int side = model.getSide();
+//        if (posX - 1 >= 0 && posZ - 1 >= 0 && model.get_pegs()[posX - 1][posZ - 1].getPegState() == side) {
+//            for (int i = posX - 2, o = posZ - 2; i >= 0 && o >= 0; i--, o--) {
+//                if (model.get_pegs()[i][o].getPegState() == abs(side - 1)) {
+//                    return true;
+//                } else if (model.get_pegs()[i][o].getPegState() == 2) {
+//                    break;
+//                }
+//            }
+//        }
+        return false;
+    }
 
-        if(side == 0){
-            other = 1;
-        }
-        else if(side == 1){
-            other = 0;
-        }
-
-        if(posX+1 < 8 && posZ+1 < 8 &&  model.get_pegs()[posX + 1][posZ + 1].getPegState() == side) {
-            for (int i = posX + 2; posX + i < 8 && posZ + i < 8; i++) {
-                if (model.get_pegs()[posX + i][posZ + i].getPegState() == other) {
-                    return true;
-                } else if (model.get_pegs()[posX + i][posZ + i].getPegState() == 2) {
-                    break;
-                }
-            }
-        }
-
-        if(posX-1 >= 0 && posZ-1 >= 0 && model.get_pegs()[posX - 1][posZ - 1].getPegState() == side) {
-            for (int i = posX -2; posX - i >= 0 && posZ-i >=0; i--) {
-                if (model.get_pegs()[posX-i][posZ-i].getPegState() == other) {
-                    return true;
-                } else if (model.get_pegs()[posX-i][posZ-i].getPegState() == 2) {
-                    break;
-                }
-            }
-        }
+    private boolean checkDiagonalUR(int posX, int posZ) {
+//        int side = model.getSide();
+//        if (posX + 1 < 8 && posZ - 1 >= 0 && model.get_pegs()[posX + 1][posZ - 1].getPegState() == side) {
+//            for (int i = posX + 2, o = posZ - 2; i < 8 && o >= 0; i++, o--) {
+//                if (model.get_pegs()[i][o].getPegState() == abs(side - 1)) {
+//                    return true;
+//                } else if (model.get_pegs()[i][o].getPegState() == 2) {
+//                    break;
+//                }
+//            }
+//        }
+        return false;
+    }
+    private boolean checkDiagonalDL(int posX,int posZ){
+//        int side = model.getSide();
+//        if(posX-1 >= 0 && posZ+1 < 8 && model.get_pegs()[posX - 1][posZ + 1].getPegState() == side) {
+//            for (int i = posX-2,o = posZ+2; i >= 0 && o < 8; i--,o++) {
+//                if (model.get_pegs()[i][o].getPegState() == abs(side-1)) {
+//                    return true;
+//                } else if (model.get_pegs()[i][o].getPegState() == 2) {
+//                    break;
+//                }
+//            }
+//        }
        return false;
     }
 

@@ -58,19 +58,13 @@ public class ReversiModel extends Model {
         if (side == PLAYER2) {
 
             peg.setTile(0);
-
+            this.side = PLAYER1;
+            setText(player1.getName() + "'s turn!");
         } else {
 
             peg.setTile(1);
-        }
-
-        if (side == PLAYER1) {
             this.side = PLAYER2;
             setText(player2.getName() + "'s turn!");
-
-        } else {
-            this.side = PLAYER1;
-            setText(player1.getName() + "'s turn!");
         }
     }
 
