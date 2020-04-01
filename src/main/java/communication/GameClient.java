@@ -48,6 +48,8 @@ public interface GameClient {
 
     void doMove(int index);
 
+    void forfeit();
+
     BlockingQueue<Move> getMoveQueue();
 
     BlockingQueue<Win> getWinQueue();

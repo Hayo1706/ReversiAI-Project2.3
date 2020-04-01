@@ -124,7 +124,7 @@ public class GameClient extends Application implements View {
         backButton.setOnMouseClicked((e) -> {
             backButton.setText("Give up!");
             LoadMainMenu();
-            //if text.equals("Give up!")send forfeit to server
+            StrategicGameClient.getInstance().forfeit();
 
             //clear ques for next play
             StrategicGameClient.getInstance().getMoveQueue().clear();

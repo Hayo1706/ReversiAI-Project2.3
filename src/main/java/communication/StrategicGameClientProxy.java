@@ -113,6 +113,11 @@ public class StrategicGameClientProxy implements GameClient {
     }
 
     @Override
+    public void forfeit() {
+        realGameClient.getState().forfeit();
+    }
+
+    @Override
     public Connection getConnection() {
         return null;
     }

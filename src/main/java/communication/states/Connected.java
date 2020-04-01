@@ -104,4 +104,9 @@ public class Connected extends CommunicationState {
     public void doMove(int index) {
 
     }
+
+    @Override
+    public void forfeit() {
+
+    }
 }
