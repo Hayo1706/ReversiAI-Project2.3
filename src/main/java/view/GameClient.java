@@ -78,7 +78,7 @@ public class GameClient extends Application implements View {
         stage.show();
 
         LoadMainMenu();
-        StartGame(1);
+
     }
 
     private Scene CreateStartScene() {
