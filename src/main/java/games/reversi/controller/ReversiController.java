@@ -33,10 +33,10 @@ public class ReversiController implements controller.Controller {
 
 
     public void setupBoard() {
-        model.get_pegs()[3][3].setTile(0);
-        model.get_pegs()[4][4].setTile(0);
-        model.get_pegs()[3][4].setTile(1);
-        model.get_pegs()[4][3].setTile(1);
+        model.get_pegs()[3][3].setTile(1);
+        model.get_pegs()[4][4].setTile(1);
+        model.get_pegs()[3][4].setTile(0);
+        model.get_pegs()[4][3].setTile(0);
 
     }
 
@@ -50,6 +50,24 @@ public class ReversiController implements controller.Controller {
             if(checkHorizontalL(peg.getXPosition(),peg.getZPosition())) {
                 setHorizontalL(peg.getXPosition(), peg.getZPosition());
             }
+            if(checkHorizontalR(peg.getXPosition(),peg.getZPosition()))
+                setHorizontalR(peg.getXPosition(),peg.getZPosition());
+            if (checkVerticalL(peg.getXPosition(),peg.getZPosition()))
+                setVerticalL(peg.getXPosition(),peg.getZPosition());
+            if (checkVerticalR(peg.getXPosition(),peg.getZPosition()))
+                setVerticalR(peg.getXPosition(),peg.getZPosition());
+            if (checkDiagonalUR(peg.getXPosition(),peg.getZPosition()))
+                setDiagonalUR(peg.getXPosition(),peg.getZPosition());
+            if (checkDiagonalUL(peg.getXPosition(),peg.getZPosition()))
+                setDiagonalUL(peg.getXPosition(),peg.getZPosition());
+            if (checkDiagonalDR(peg.getXPosition(),peg.getZPosition()))
+                setDiagonalDR(peg.getXPosition(),peg.getZPosition());
+            if (checkDiagonalDL(peg.getXPosition(),peg.getZPosition()))
+                setDiagonalDL(peg.getXPosition(),peg.getZPosition());
+
+
+
+
             model.playMove(peg.getXPosition() * 8 + peg.getZPosition());
 
 
@@ -235,26 +253,35 @@ public class ReversiController implements controller.Controller {
     private void setHorizontalL(int posX, int posZ) {
         int side = model.getSide();
             for (int col = posZ - 1; col >= 0; col--) {
-                if (model.get_pegs()[posX][col].getPegState() == abs(side - 1) || model.get_pegs()[posX][col].getPegState() == 2) {
-                    return;
-                } else{
+                if (model.get_pegs()[posX][col].getPegState() == side) {
                     get_pegs()[posX][col].setTile(abs(side - 1));
+                } else{
+                    return;
                 }
             }
     }
 
     private boolean checkHorizontalR(int posX, int posZ) {
-//        int side = model.getSide();
-//        if (posZ + 1 < 8 && model.get_pegs()[posX][posZ + 1].getPegState() == side) {
-//            for (int col = posZ + 2; col < 8; col++) {
-//                if (model.get_pegs()[posX][col].getPegState() == abs(side - 1)) {
-//                    return true;
-//                } else if (model.get_pegs()[posX][col].getPegState() == 2) {
-//                    break;
-//                }
-//            }
-//        }
+        int side = model.getSide();
+        if (posZ + 1 < 8 && model.get_pegs()[posX][posZ + 1].getPegState() == side) {
+            for (int col = posZ + 2; col < 8; col++) {
+                if (model.get_pegs()[posX][col].getPegState() == abs(side - 1)) {
+                    return true;
+                } else if (model.get_pegs()[posX][col].getPegState() == 2) {
+                    break;
+                }
+            }
+        }
         return false;
+    }
+    private void setHorizontalR(int posX, int posZ) {
+        int side = model.getSide();
+            for (int col = posZ + 1; col < 8; col++) {
+                if (model.get_pegs()[posX][col].getPegState() == side)
+                    get_pegs()[posX][col].setTile(abs(side - 1));
+                else
+                    return;
+            }
     }
 
 
@@ -265,32 +292,51 @@ public class ReversiController implements controller.Controller {
      * @author Maurice Wijker
      */
     private boolean checkVerticalL(int posX, int posZ) {
-//        int side = model.getSide();
-//        if (posX - 1 >= 0 && model.get_pegs()[posX - 1][posZ].getPegState() == side) {
-//
-//            for (int row = posX - 2; row >= -0; row--) {
-//                if (model.get_pegs()[row][posZ].getPegState() == abs(side - 1)) {
-//                    return true;
-//                } else if (model.get_pegs()[row][posZ].getPegState() == 2) {
-//                    break;
-//                }
-//            }
-//        }
+        int side = model.getSide();
+        if (posX - 1 >= 0 && model.get_pegs()[posX - 1][posZ].getPegState() == side) {
+
+            for (int row = posX - 2; row >= -0; row--) {
+                if (model.get_pegs()[row][posZ].getPegState() == abs(side - 1)) {
+                    return true;
+                } else if (model.get_pegs()[row][posZ].getPegState() == 2) {
+                    break;
+                }
+            }
+        }
         return false;
     }
+    private void setVerticalL(int posX, int posZ) {
+        int side = model.getSide();
+            for (int row = posX - 1; row >= -0; row--) {
+                if (model.get_pegs()[row][posZ].getPegState() == side)
+                    get_pegs()[row][posZ].setTile(abs(side - 1));
+                else
+                    return;
+            }
+    }
+
 
     private boolean checkVerticalR(int posX, int posZ) {
-//        int side = model.getSide();
-//        if (posX + 1 < 8 && model.get_pegs()[posX + 1][posZ].getPegState() == side) {
-//            for (int row = posX + 2; row < 8; row++) {
-//                if (model.get_pegs()[row][posZ].getPegState() == abs(side - 1)) {
-//                    return true;
-//                } else if (model.get_pegs()[row][posZ].getPegState() == 2) {
-//                    break;
-//                }
-//            }
-//        }
+        int side = model.getSide();
+        if (posX + 1 < 8 && model.get_pegs()[posX + 1][posZ].getPegState() == side) {
+            for (int row = posX + 2; row < 8; row++) {
+                if (model.get_pegs()[row][posZ].getPegState() == abs(side - 1)) {
+                    return true;
+                } else if (model.get_pegs()[row][posZ].getPegState() == 2) {
+                    break;
+                }
+            }
+        }
         return false;
+    }
+    private void setVerticalR(int posX, int posZ) {
+        int side = model.getSide();
+            for (int row = posX + 1; row < 8; row++) {
+                if (model.get_pegs()[row][posZ].getPegState() == side)
+                    get_pegs()[row][posZ].setTile(abs(side - 1));
+                else
+                    return;
+        }
     }
 
 
@@ -302,58 +348,95 @@ public class ReversiController implements controller.Controller {
      */
 
     private boolean checkDiagonalDR(int posX, int posZ) {
-//        int side = model.getSide();
-//        if (posX + 1 < 8 && posZ + 1 < 8 && model.get_pegs()[posX + 1][posZ + 1].getPegState() == side) {
-//            for (int i = posX + 2, o = posZ + 2; i < 8 && o < 8; i++, o++) {
-//                if (model.get_pegs()[i][o].getPegState() == abs(side - 1)) {
-//                    return true;
-//                } else if (model.get_pegs()[i][o].getPegState() == 2) {
-//                    break;
-//                }
-//            }
-//        }
+        int side = model.getSide();
+        if (posX + 1 < 8 && posZ + 1 < 8 && model.get_pegs()[posX + 1][posZ + 1].getPegState() == side) {
+            for (int i = posX + 2, o = posZ + 2; i < 8 && o < 8; i++, o++) {
+                if (model.get_pegs()[i][o].getPegState() == abs(side - 1)) {
+                    return true;
+                } else if (model.get_pegs()[i][o].getPegState() == 2) {
+                    break;
+                }
+            }
+        }
         return false;
+    }
+    private void setDiagonalDR(int posX, int posZ) {
+        int side = model.getSide();
+            for (int i = posX + 1, o = posZ + 1; i < 8 && o < 8; i++, o++) {
+                if (model.get_pegs()[i][o].getPegState() == side)
+                    get_pegs()[i][o].setTile(abs(side - 1));
+                else
+                    return;
+            }
     }
 
     private boolean checkDiagonalUL(int posX, int posZ) {
-//        int side = model.getSide();
-//        if (posX - 1 >= 0 && posZ - 1 >= 0 && model.get_pegs()[posX - 1][posZ - 1].getPegState() == side) {
-//            for (int i = posX - 2, o = posZ - 2; i >= 0 && o >= 0; i--, o--) {
-//                if (model.get_pegs()[i][o].getPegState() == abs(side - 1)) {
-//                    return true;
-//                } else if (model.get_pegs()[i][o].getPegState() == 2) {
-//                    break;
-//                }
-//            }
-//        }
+        int side = model.getSide();
+        if (posX - 1 >= 0 && posZ - 1 >= 0 && model.get_pegs()[posX - 1][posZ - 1].getPegState() == side) {
+            for (int i = posX - 2, o = posZ - 2; i >= 0 && o >= 0; i--, o--) {
+                if (model.get_pegs()[i][o].getPegState() == abs(side - 1)) {
+                    return true;
+                } else if (model.get_pegs()[i][o].getPegState() == 2) {
+                    break;
+                }
+            }
+        }
         return false;
+    }
+    private void setDiagonalUL(int posX, int posZ) {
+        int side = model.getSide();
+        for (int i = posX - 1, o = posZ - 1; i >= 0 && o >= 0; i++, o++) {
+            if (model.get_pegs()[i][o].getPegState() == side)
+                get_pegs()[i][o].setTile(abs(side - 1));
+            else
+                return;
+        }
     }
 
     private boolean checkDiagonalUR(int posX, int posZ) {
-//        int side = model.getSide();
-//        if (posX + 1 < 8 && posZ - 1 >= 0 && model.get_pegs()[posX + 1][posZ - 1].getPegState() == side) {
-//            for (int i = posX + 2, o = posZ - 2; i < 8 && o >= 0; i++, o--) {
-//                if (model.get_pegs()[i][o].getPegState() == abs(side - 1)) {
-//                    return true;
-//                } else if (model.get_pegs()[i][o].getPegState() == 2) {
-//                    break;
-//                }
-//            }
-//        }
+        int side = model.getSide();
+        if (posX + 1 < 8 && posZ - 1 >= 0 && model.get_pegs()[posX + 1][posZ - 1].getPegState() == side) {
+            for (int i = posX + 2, o = posZ - 2; i < 8 && o >= 0; i++, o--) {
+                if (model.get_pegs()[i][o].getPegState() == abs(side - 1)) {
+                    return true;
+                } else if (model.get_pegs()[i][o].getPegState() == 2) {
+                    break;
+                }
+            }
+        }
         return false;
     }
+    private void setDiagonalUR(int posX, int posZ) {
+        int side = model.getSide();
+            for (int i = posX + 1, o = posZ - 1; i < 8 && o >= 0; i++, o--) {
+                if (model.get_pegs()[i][o].getPegState() == side)
+                    get_pegs()[i][o].setTile(abs(side - 1));
+                else
+                    return;
+            }
+    }
+
     private boolean checkDiagonalDL(int posX,int posZ){
-//        int side = model.getSide();
-//        if(posX-1 >= 0 && posZ+1 < 8 && model.get_pegs()[posX - 1][posZ + 1].getPegState() == side) {
-//            for (int i = posX-2,o = posZ+2; i >= 0 && o < 8; i--,o++) {
-//                if (model.get_pegs()[i][o].getPegState() == abs(side-1)) {
-//                    return true;
-//                } else if (model.get_pegs()[i][o].getPegState() == 2) {
-//                    break;
-//                }
-//            }
-//        }
+        int side = model.getSide();
+        if(posX-1 >= 0 && posZ+1 < 8 && model.get_pegs()[posX - 1][posZ + 1].getPegState() == side) {
+            for (int i = posX-2,o = posZ+2; i >= 0 && o < 8; i--,o++) {
+                if (model.get_pegs()[i][o].getPegState() == abs(side-1)) {
+                    return true;
+                } else if (model.get_pegs()[i][o].getPegState() == 2) {
+                    break;
+                }
+            }
+        }
        return false;
+    }
+    private void setDiagonalDL(int posX,int posZ){
+        int side = model.getSide();
+            for (int i = posX-1,o = posZ+1; i >= 0 && o < 8; i--,o++) {
+                if (model.get_pegs()[i][o].getPegState() == side)
+                    get_pegs()[i][o].setTile(abs(side - 1));
+                else
+                    return;
+            }
     }
 
 
