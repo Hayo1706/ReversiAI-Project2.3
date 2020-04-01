@@ -1,9 +1,13 @@
 package model;
 
 import ai.AI;
-import communication.events.MatchStarted;
+import communication.Observer;
+import communication.events.*;
 import javafx.application.Platform;
+import player.ExternalPlayer;
+import player.LocalPlayer;
 import player.Player;
+import view.GameClient;
 import view.View;
 
 import java.util.Random;
@@ -11,7 +15,7 @@ import java.util.Random;
 /**
  * Created by Singh van Offeren
  */
-public abstract class Model {
+public abstract class Model implements Observer<Event>{
 
     //state vor mode
     public static int IDLE = -1;
@@ -44,7 +48,6 @@ public abstract class Model {
     //name to be logged in with
     protected Player player1;
     protected Player player2;
-    protected MatchStarted matchStarted;
 
 
 
@@ -56,15 +59,89 @@ public abstract class Model {
         this.AI = AI;
 
     }
-    public Model(int boardsize, View view, AI AI, MatchStarted matchStarted) {
-        pegs = new Peg[boardsize][boardsize];
-        this.boardsize = boardsize;
-        this.view = view;
-        fill_pegs();
-        this.AI = AI;
-        this.matchStarted=matchStarted;
-    }
 
+
+    @Override
+    public void update(Event event) {
+        if(mode==Model.HUMAN_VS_SERVER || mode==Model.AI_VS_SERVER) {
+
+            if(event instanceof MatchStarted){
+                MatchStarted matchStarted=(MatchStarted) event;
+                if(matchStarted.getGameType().equals("Tic-tac-toe")) {
+
+                    player1 = new LocalPlayer(GameClient.username);
+                    player2 = new ExternalPlayer(matchStarted.getOpponent());
+
+                    if (matchStarted.getPlayerToMove().equals(GameClient.username)) {
+                        side = PLAYER1;
+                        setText(player1.getName() + "'s turn!");
+                        if(mode==AI_VS_SERVER){
+                            play_ai_vs_server();
+                        }
+                    } else {
+                        disable_pegs();
+                        side = PLAYER2;
+                        setText(player2.getName() + "'s turn!");
+
+
+
+                    }
+                }
+            }
+            else if(event instanceof Move){
+
+                Move move=(Move) event;
+                if(move.getPlayer().equals(player2.getName())) {
+                    Platform.runLater(() -> {
+                        playMove(Integer.parseInt(move.getMove()));
+
+
+                    });
+                    if(mode!=AI_VS_SERVER) {
+                        enable_pegs();
+                        gameOver();
+                    } else{
+                        Platform.runLater(() -> {
+                            play_ai_vs_server();
+
+                        });
+                    }
+                }
+            }
+            else if(event instanceof Win){
+
+                Win win =(Win) event;
+                if (win.getComment().equals("Player forfeited match")) {
+                    setText(player1.getName() + " wins! " + player2.getName() + " gave up!");
+                } else if (win.getComment().equals("Client disconnected")) {
+                    setText(player1.getName() + " wins! " + player2.getName() + " lost connection!");
+                } else  if(win.getComment().equals("Turn timelimit reached")){
+                    setText(player1.getName() + " wins! " + player2.getName() + " took too long!");
+                } else if(win.getComment().equals("Illegal, move")){
+                    setText(player1.getName() + " wins! " + player2.getName() + "played an illegal move");
+                }
+                view.BackTomainMenu();
+                disable_pegs();
+            }
+            else if(event instanceof Loss){
+                Loss loss =(Loss) event;
+                if (loss.getComment().equals("Turn timelimit reached")) {
+                    setText(player2.getName() + " wins! " + player1.getName() + " took too long!");
+                }
+
+                view.BackTomainMenu();
+                disable_pegs();
+            }
+            else if(event instanceof Draw){
+
+            }
+            else if(event instanceof YourTurn){
+
+            }
+
+        }
+
+    }
 
     protected abstract void fill_pegs();
 
@@ -78,9 +155,15 @@ public abstract class Model {
         //check if board can be enabled
         if (mode == IDLE || mode == AI_VS_SERVER) {
             disable_pegs();
+            //wait for update
+        }
+        else if(mode==HUMAN_VS_SERVER){
+            //wait for update
+        } else {
+            initSide();
         }
 
-        initSide();
+
 
 
     }
@@ -172,6 +255,7 @@ public abstract class Model {
             Platform.runLater(() -> {
                 disable_pegs();
                 if (position == DRAW) {
+
                     setText(" It's a draw, " + winner() + " wins!");
                 } else {
                     setText(" Match over, " + winner() + " wins!");
@@ -207,6 +291,7 @@ public abstract class Model {
     public void backToMainMenu(){
         view.BackTomainMenu();
     }
+    public abstract void setValidMoves();
 
 
 }
