@@ -22,16 +22,12 @@ public class TicTacToeModel extends Model
         //The games.tictactoe logic
 {
 
-
+    public void setValidMoves() { }
 
     public TicTacToeModel(int boardsize, View view, AI ai) {
         super(boardsize, view, ai);
     }
-    public TicTacToeModel(int boardsize, View view, ai.AI AI, MatchStarted matchStarted) {
-        super(boardsize, view, AI,matchStarted);
 
-
-    }
     public void initSide() {
         enable_pegs();
         if (mode == HUMAN_VS_AI) {
@@ -54,69 +50,6 @@ public class TicTacToeModel extends Model
                     setText(player1.getName() + "'s turn!");
                 }
 
-
-        } else if (mode == HUMAN_VS_SERVER) {
-            player1=new LocalPlayer(GameClient.username);
-            player2=new ExternalPlayer(matchStarted.getOpponent());
-            if(matchStarted.getPlayerToMove().equals(GameClient.username)){
-                side=PLAYER1;
-                setText(player1.getName() + "'s turn!");
-            } else {
-
-                side=PLAYER2;
-                setText(player2.getName() + "'s turn!");
-
-
-                //get opponents move
-                Runnable opponent=()->{
-
-                    try {
-                        disable_pegs();
-                        Move playermove=StrategicGameClient.getInstance().getMoveQueue().poll(Model.TIMELIMIT, TimeUnit.SECONDS);
-                        if(playermove==null){
-                            Win win = StrategicGameClient.getInstance().getWinQueue().take();
-                            if (win.getComment().equals("Player forfeited match")) {
-                                setText(player1.getName() + " wins! " + player2.getName() + " gave up!");
-                            } else if (win.getComment().equals("Client disconnected")) {
-                                setText(player1.getName() + " wins! " + player2.getName() + " lost connection!");
-                            } else {
-                                setText(player1.getName() + " wins! " + player2.getName() + " took too long!");
-                            }
-
-
-                            view.BackTomainMenu();
-                            return;
-                        }
-
-                        int move=Integer.parseInt(playermove.getMove());
-                        Platform.runLater(()-> {
-                            playMove(move);
-
-
-                        });
-                    } catch (InterruptedException e){};
-                        enable_pegs();
-
-
-                };
-                new Thread(opponent).start();
-
-            }
-
-        } else if (mode == AI_VS_SERVER) {
-            disable_pegs();
-            player1=new LocalPlayer(GameClient.username);
-            player2=new ExternalPlayer(matchStarted.getOpponent());
-            if(matchStarted.getPlayerToMove().equals(GameClient.username)){
-                side=PLAYER1;
-                setText(player1.getName() + "'s turn!");
-            } else {
-
-                side=PLAYER2;
-                setText(player2.getName() + "'s turn!");
-
-            }
-            play_ai_vs_server();
 
         } else if (mode == HUMAN_VS_HUMAN) {
             side = random.nextInt(2);
@@ -173,90 +106,14 @@ public class TicTacToeModel extends Model
     }
 
     public void play_ai_vs_server() {
-        Runnable run=()->{
-            if(side==PLAYER2) {
-                try {
+        int best=calculateBest();
+        Platform.runLater(()->{
 
-                    Move playermove=StrategicGameClient.getInstance().getMoveQueue().poll(Model.TIMELIMIT, TimeUnit.SECONDS);
-                    if(playermove==null){
-                        Win win = StrategicGameClient.getInstance().getWinQueue().take();
-                        Platform.runLater(()-> {
-                                    if (win.getComment().equals("Player forfeited match")) {
-                                        setText(player1.getName() + " wins! " + player2.getName() + " gave up!");
-                                    } else if (win.getComment().equals("Client disconnected")) {
-                                        setText(player1.getName() + " wins! " + player2.getName() + " lost connection!");
-                                    } else {
-                                        setText(player1.getName() + " wins! " + player2.getName() + " took too long!");
-                                    }
+            playMove(best);
 
-                                });
-                        view.BackTomainMenu();
-                        return;
-                    }
-
-                    int move = Integer.parseInt(playermove.getMove());
-
-                    Platform.runLater(()-> {
-
-                        playMove(move);
-
-                    });
-
-                } catch (InterruptedException e) {
-                }
-
-            }
-
-            while (!gameOver()){
-
-
-                Platform.runLater(()-> {
-                    if(!gameOver()) {
-                        int best = calculateBest();
-
-
-                        StrategicGameClient.getInstance().doMove(best);
-                        playMove(best);
-                        gameOver();
-                    }
-
-                });
-
-
-
-
-
-                try {
-                    StrategicGameClient.getInstance().getMoveQueue().take();
-                } catch (InterruptedException e) {
-                }
-
-
-                Move playermove = null;
-                try {
-                    playermove = StrategicGameClient.getInstance().getMoveQueue().take();
-                } catch (InterruptedException e) {
-                }
-
-                int opponentmove = Integer.parseInt(playermove.getMove());
-
-                    Platform.runLater(() -> {
-                        if(!gameOver()) {
-                        playMove(opponentmove);
-                        gameOver();
-                        }
-
-
-                    });
-
-
-
-            }
-
-        };
-        new Thread(run).start();
-
-
+        });
+        StrategicGameClient.getInstance().doMove(best);
+        gameOver();
     }
 
 

@@ -21,10 +21,7 @@ public class ReversiModel extends Model {
         super(boardsize, view, AI);
     }
     //Model
-    public ReversiModel(int boardsize, View view, ai.AI AI,MatchStarted matchStarted) {
-        super(boardsize, view, AI,matchStarted);
 
-    }
 
     public void fill_pegs() {
         for (int i = 0; i < boardsize; i++) {
