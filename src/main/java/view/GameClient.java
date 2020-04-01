@@ -29,8 +29,9 @@ import java.util.Optional;
 
 public class GameClient extends Application implements View {
 
-
+    
     public static int gameMode = Model.HUMAN_VS_HUMAN;
+
     public static String username = "Dylan";
     private Stage stage;
     private GridPane gridPane = new GridPane();
@@ -129,7 +130,15 @@ public class GameClient extends Application implements View {
     private Scene CreateGameScene() {
         backButton = CreateButton("Give up!");
         backButton.setOnMouseClicked((e) -> {
+            backButton.setText("Give up!");
             LoadMainMenu();
+            //if text.equals("Give up!")send forfeit to server
+
+            //clear ques for next play
+            StrategicGameClient.getInstance().getMoveQueue().clear();
+            StrategicGameClient.getInstance().getWinQueue().clear();
+            StrategicGameClient.getInstance().getLossQueue().clear();
+
         });
 
         VBox vBox = new VBox(gameLabel, gridPane, backButton);
