@@ -280,7 +280,7 @@ public class StrategicGameClient implements GameClient {
      */
     private void endGame() {
         connection.startListening();
-        setState(new Waiting(this));
+        setState(new LoggedIn(this));
     }
 
     @Override
