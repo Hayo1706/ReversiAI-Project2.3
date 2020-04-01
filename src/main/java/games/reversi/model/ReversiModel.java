@@ -75,6 +75,12 @@ public class ReversiModel extends Model {
             }
     }
 
+    /**
+     * @author Maurice Wijker
+     * @param x check and set peg on x (vertical)
+     * @param z check and set peg on z (horizontal)
+     */
+
     public void checkAndSet(int x,int z){
         if(checkHorizontalL(x,z))
             setHorizontalL(x, z);
@@ -94,6 +100,11 @@ public class ReversiModel extends Model {
             setDiagonalDL(x,z);
     }
 
+    /**
+     * @author Maurice Wijker
+     * sets moves that are available
+     */
+
     public void setValidMoves() {
         validMoves.clear();
         int side = getSide();
@@ -112,6 +123,12 @@ public class ReversiModel extends Model {
         }
     }
 
+    /**
+     * @author Maurice Wijker
+     * @param posX init row
+     * @param posZ init col
+     */
+
     private boolean checkHorizontalL(int posX, int posZ) {
         int side = getSide();
         if (posZ - 1 >= 0 && get_pegs()[posX][posZ - 1].getPegState() == side) {
@@ -125,6 +142,12 @@ public class ReversiModel extends Model {
         }
         return false;
     }
+
+    /**
+     * @author Maurice Wijker
+     * @param posX init row
+     * @param posZ init col
+     */
     private void setHorizontalL(int posX, int posZ) {
         int side = getSide();
         for (int col = posZ - 1; col >= 0; col--) {
@@ -136,6 +159,11 @@ public class ReversiModel extends Model {
         }
     }
 
+    /**
+     * @author Maurice Wijker
+     * @param posX init row
+     * @param posZ init col
+     */
     private boolean checkHorizontalR(int posX, int posZ) {
         int side = getSide();
         if (posZ + 1 < 8 && get_pegs()[posX][posZ + 1].getPegState() == side) {
@@ -149,6 +177,12 @@ public class ReversiModel extends Model {
         }
         return false;
     }
+
+    /**
+     * @author Maurice Wijker
+     * @param posX init row
+     * @param posZ init col
+     */
     private void setHorizontalR(int posX, int posZ) {
         int side = getSide();
         for (int col = posZ + 1; col < 8; col++) {
@@ -158,6 +192,12 @@ public class ReversiModel extends Model {
                 return;
         }
     }
+
+    /**
+     * @author Maurice Wijker
+     * @param posX init row
+     * @param posZ init col
+     */
     private boolean checkVerticalL(int posX, int posZ) {
         int side = getSide();
         if (posX - 1 >= 0 && get_pegs()[posX - 1][posZ].getPegState() == side) {
@@ -172,6 +212,12 @@ public class ReversiModel extends Model {
         }
         return false;
     }
+
+    /**
+     * @author Maurice Wijker
+     * @param posX init row
+     * @param posZ init col
+     */
     private void setVerticalL(int posX, int posZ) {
         int side = getSide();
         for (int row = posX - 1; row >= -0; row--) {
@@ -182,7 +228,11 @@ public class ReversiModel extends Model {
         }
     }
 
-
+    /**
+     * @author Maurice Wijker
+     * @param posX init row
+     * @param posZ init col
+     */
     private boolean checkVerticalR(int posX, int posZ) {
         int side = getSide();
         if (posX + 1 < 8 && get_pegs()[posX + 1][posZ].getPegState() == side) {
@@ -196,6 +246,12 @@ public class ReversiModel extends Model {
         }
         return false;
     }
+
+    /**
+     * @author Maurice Wijker
+     * @param posX init row
+     * @param posZ init col
+     */
     private void setVerticalR(int posX, int posZ) {
         int side = getSide();
         for (int row = posX + 1; row < 8; row++) {
@@ -206,6 +262,11 @@ public class ReversiModel extends Model {
         }
     }
 
+    /**
+     * @author Maurice Wijker
+     * @param posX init row
+     * @param posZ init col
+     */
     private boolean checkDiagonalDR(int posX, int posZ) {
         int side = getSide();
         if (posX + 1 < 8 && posZ + 1 < 8 && get_pegs()[posX + 1][posZ + 1].getPegState() == side) {
@@ -219,6 +280,12 @@ public class ReversiModel extends Model {
         }
         return false;
     }
+
+    /**
+     * @author Maurice Wijker
+     * @param posX init row
+     * @param posZ init col
+     */
     private void setDiagonalDR(int posX, int posZ) {
         int side = getSide();
         for (int i = posX + 1, o = posZ + 1; i < 8 && o < 8; i++, o++) {
@@ -229,6 +296,12 @@ public class ReversiModel extends Model {
         }
     }
 
+
+    /**
+     * @author Maurice Wijker
+     * @param posX init row
+     * @param posZ init col
+     */
     private boolean checkDiagonalUL(int posX, int posZ) {
         int side = getSide();
         if (posX - 1 >= 0 && posZ - 1 >= 0 && get_pegs()[posX - 1][posZ - 1].getPegState() == side) {
@@ -242,6 +315,12 @@ public class ReversiModel extends Model {
         }
         return false;
     }
+
+    /**
+     * @author Maurice Wijker
+     * @param posX init row
+     * @param posZ init col
+     */
     private void setDiagonalUL(int posX, int posZ) {
         int side = getSide();
         for (int i = posX - 1, o = posZ - 1; i >= 0 && o >= 0; i--, o--) {
@@ -252,6 +331,11 @@ public class ReversiModel extends Model {
         }
     }
 
+    /**
+     * @author Maurice Wijker
+     * @param posX init row
+     * @param posZ init col
+     */
     private boolean checkDiagonalUR(int posX, int posZ) {
         int side = getSide();
         if (posX + 1 < 8 && posZ - 1 >= 0 && get_pegs()[posX + 1][posZ - 1].getPegState() == side) {
@@ -265,6 +349,12 @@ public class ReversiModel extends Model {
         }
         return false;
     }
+
+    /**
+     * @author Maurice Wijker
+     * @param posX init row
+     * @param posZ init col
+     */
     private void setDiagonalUR(int posX, int posZ) {
         int side = getSide();
         for (int i = posX + 1, o = posZ - 1; i < 8 && o >= 0; i++, o--) {
@@ -275,6 +365,12 @@ public class ReversiModel extends Model {
         }
     }
 
+
+    /**
+     * @author Maurice Wijker
+     * @param posX init row
+     * @param posZ init col
+     */
     private boolean checkDiagonalDL(int posX,int posZ){
         int side = getSide();
         if(posX-1 >= 0 && posZ+1 < 8 && get_pegs()[posX - 1][posZ + 1].getPegState() == side) {
@@ -288,6 +384,12 @@ public class ReversiModel extends Model {
         }
         return false;
     }
+
+    /**
+     * @author Maurice Wijker
+     * @param posX init row
+     * @param posZ init col
+     */
     private void setDiagonalDL(int posX,int posZ){
         int side = getSide();
         for (int i = posX-1,o = posZ+1; i >= 0 && o < 8; i--,o++) {
@@ -298,6 +400,10 @@ public class ReversiModel extends Model {
         }
     }
 
+    /**
+     * @author Maurice Wijker
+     * @return get validMoves in a Set
+     */
     public Set<Integer> getValidMoves() {
         return validMoves;
     }
