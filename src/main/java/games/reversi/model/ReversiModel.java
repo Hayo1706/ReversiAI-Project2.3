@@ -1,6 +1,5 @@
 package games.reversi.model;
 
-import communication.events.MatchStarted;
 import model.Model;
 import model.Peg;
 import player.LocalPlayer;
@@ -54,7 +53,20 @@ public class ReversiModel extends Model {
     public void play_ai_vs_server(){
 
     }
+
     public void playMove(int move) {
+
+        int otherSide = -1;
+
+        if(side == 0){
+            otherSide = 1;
+        } else {
+            otherSide = 0;
+        }
+
+        if(getValidMoves().isEmpty()){
+            side = otherSide;
+        }
 
         Peg peg = pegs[move / boardsize][move % boardsize];
             if (side == PLAYER2) {
