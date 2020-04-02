@@ -28,7 +28,6 @@ public class GameClient extends Application {
     private Stage stage;
     private GridPane gridPane = new GridPane();
     private Label gameLabel = new Label();
-    private Scene startScene, gameScene;
 
     private SceneView loginView, gamesView, boardView;
 
@@ -43,16 +42,8 @@ public class GameClient extends Application {
         loginView = new LoginView(this);
         loginView.CreateScene();
 
-
-        SceneView startView = new ChooseGameView(this);
-        startView.CreateScene();
-        startScene = startView.getScene();
-
-
         boardView = new BoardView(this);
         boardView.CreateScene();
-        gameScene = boardView.getScene();
-
 
         gamesView = new GamesView(this);
         gamesView.CreateScene();

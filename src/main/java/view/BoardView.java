@@ -14,6 +14,7 @@ public class BoardView extends SceneView {
     private Label GameLabel= new Label("Game");
     private GridPane GridPane = new GridPane();
 
+    private Button endGameButton;
 
     public BoardView(GameClient client) {
         super(client);
@@ -23,15 +24,12 @@ public class BoardView extends SceneView {
     public void CreateScene() {
         super.CreateScene();
 
-        Button backButton = CreateButton("Ga back to Main menu");
-        backButton.setOnMouseClicked((e) -> {
-            StrategicGameClient.getInstance().forfeit();
-            client.SwitchScene(GameClient.Scenes.GAMES);
-        });
+        endGameButton = CreateButton("forfeit");
+        endGameButton.setOnMouseClicked((e) -> forfeit());
 
         rootVBox.getChildren().add(GameLabel);
         rootVBox.getChildren().add(GridPane);
-        rootVBox.getChildren().add(backButton);
+        rootVBox.getChildren().add(endGameButton);
     }
 
     public void SetUpGame(String gameName, int size, Controller controller) {
@@ -49,6 +47,12 @@ public class BoardView extends SceneView {
                 GridPane.add(peg, peg.getZPosition(), peg.getXPosition());
             }
         }
+    }
+
+    private void forfeit(){
+        StrategicGameClient.getInstance().forfeit();
+        endGameButton.setText("Back te Main Menu");
+        endGameButton.setOnMouseClicked((e)->client.SwitchScene(GameClient.Scenes.GAMES));
     }
 
     public void GameOver(GameOverEvent e){

@@ -22,8 +22,10 @@ public class GamesView extends SceneView {
     }
 
 
-    ObservableList<String> gamesList= FXCollections.observableArrayList();
+    ObservableList<String> gamesList = FXCollections.observableArrayList();
     ObservableList<String> playerGameList = FXCollections.observableArrayList("mark", "peter", "balk");
+
+    boolean set = false;
 
     @Override
     public void CreateScene() {
@@ -50,46 +52,49 @@ public class GamesView extends SceneView {
             StrategicGameClient.getInstance().challenge(player, game);
         });
 
-        VBox GamesVBox = new VBox(gamesListLabel,gamesListView);
-        VBox playerVBox = new VBox(playerGameListLabel,playerGameListView);
-        HBox hBox = new HBox(GamesVBox,playerVBox);
+        VBox GamesVBox = new VBox(gamesListLabel, gamesListView);
+        VBox playerVBox = new VBox(playerGameListLabel, playerGameListView);
+        HBox hBox = new HBox(GamesVBox, playerVBox);
         hBox.setAlignment(Pos.TOP_CENTER);
 
         rootVBox.getChildren().add(hBox);
     }
 
-    private void UpdateListView(){
+    private void UpdateListView() {
         JSONArray jsonGameList = StrategicGameClient.getInstance().getGameList();
         gamesList.clear();
+
         List<String> listOfGames = JsonArrayToObservable(jsonGameList);
+
         gamesList.addAll(listOfGames);
 
         JSONArray jsonPlayerList = StrategicGameClient.getInstance().getPlayerList();
+
         playerGameList.clear();
-        for (String player : JsonArrayToObservable(jsonPlayerList))
-        {
-            for (String game : listOfGames){
+        for (String player : JsonArrayToObservable(jsonPlayerList)) {
+            for (String game : listOfGames) {
                 playerGameList.add(player + ", " + game);
             }
         }
     }
 
-    private List<String> JsonArrayToObservable(JSONArray jsonArray){
-        List<String> items =  jsonArray.toList().stream()
-                .map(object->(String)object)
+    private List<String> JsonArrayToObservable(JSONArray jsonArray) {
+        List<String> items = jsonArray.toList().stream()
+                .map(object -> (String) object)
                 .collect(Collectors.toList());
 
         return items;
     }
 
 
-
     @Override
-    public Scene getScene(){
-        UpdateListView();
+    public Scene getScene() {
+        if (!set) {
+            UpdateListView();
+            set = true;
+        }
 
-        System.out.println(gamesList.toString());
-        System.out.println(playerGameList.toString());
+        StrategicGameClient.getInstance().startWaiting();
 
         return super.getScene();
     }
