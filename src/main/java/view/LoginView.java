@@ -97,4 +97,5 @@ public class LoginView extends SceneView {
         rootVBox.getChildren().add(localButton);
     }
 
+
 }

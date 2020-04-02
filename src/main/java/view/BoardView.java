@@ -51,9 +51,14 @@ public class BoardView extends SceneView {
     }
 
     private void forfeit(){
-        StrategicGameClient.getInstance().forfeit();
-        endGameButton.setText("Back te Main Menu");
-        endGameButton.setOnMouseClicked((e)->client.SwitchScene(GameClient.Scenes.GAMES));
+        //only forfeit if game not ended
+        if(!endGameButton.getText().equals("Back te Main Menu")) {
+            StrategicGameClient.getInstance().forfeit();
+            endGameButton.setText("Back te Main Menu");
+            endGameButton.setOnMouseClicked((e) -> client.SwitchScene(GameClient.Scenes.GAMES));
+        } else{
+            client.SwitchScene(GameClient.Scenes.GAMES);
+        }
     }
 
     public void GameOver(GameOverEvent e){
