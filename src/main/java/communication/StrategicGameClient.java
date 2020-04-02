@@ -246,8 +246,6 @@ public class StrategicGameClient implements GameClient {
         } catch (NotOKResponseException e) {
             e.printStackTrace();
         }
-
-        endGame();
     }
 
     /**
