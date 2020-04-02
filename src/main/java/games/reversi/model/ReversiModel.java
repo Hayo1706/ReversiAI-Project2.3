@@ -1,5 +1,7 @@
 package games.reversi.model;
 
+import communication.StrategicGameClient;
+import communication.events.MatchStarted;
 import model.Model;
 import model.Peg;
 import player.LocalPlayer;
@@ -17,8 +19,10 @@ public class ReversiModel extends Model {
     int amountWhite = 0;
 
     //Model
-    public ReversiModel(int boardsize, View view, ai.AI AI) {
-        super(boardsize, view, AI);
+    public ReversiModel(int boardsize, View view, ai.AI AI, MatchStarted matchStarted) {
+        super(boardsize, view, AI,matchStarted);
+        StrategicGameClient.getInstance().getEventBus().addObserver(this);
+
     }
     //Model
 

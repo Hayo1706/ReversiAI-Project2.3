@@ -5,10 +5,8 @@ import communication.Observer;
 import communication.StrategicGameClient;
 import communication.events.*;
 import javafx.application.Platform;
-import javafx.scene.image.Image;
-import player.ExternalPlayer;
-import player.LocalPlayer;
 import player.Player;
+import view.BoardView;
 import view.View;
 
 import java.util.Random;
@@ -37,8 +35,8 @@ public abstract class Model implements Observer<Event>{
     //gui board
 
     //gamemode and username of loggedin person
-    public static String username = "Black";
-    public static int mode =HUMAN_VS_HUMAN;
+    public static String username = "";
+    public static int mode =IDLE;
 
 
     protected Peg[][] pegs;
@@ -52,10 +50,12 @@ public abstract class Model implements Observer<Event>{
     //name to be logged in with
     protected Player player1;
     protected Player player2;
+    protected MatchStarted matchStarted =null;
 
 
-
-    public Model(int boardsize, View view, AI AI ) {
+    public Model(int boardsize, View view, AI AI, MatchStarted matchStarted) {
+        StrategicGameClient.getInstance().getEventBus().addObserver(this);
+        this.matchStarted=matchStarted;
         pegs = new Peg[boardsize][boardsize];
         this.boardsize = boardsize;
         this.view = view;
@@ -70,35 +70,8 @@ public abstract class Model implements Observer<Event>{
     public void update(Event event) {
         if(mode==Model.HUMAN_VS_SERVER || mode==Model.AI_VS_SERVER) {
 
-            if(event instanceof MatchStarted){
-                MatchStarted matchStarted=(MatchStarted) event;
-                if(matchStarted.getGameType().equals("Tic-tac-toe")) {
 
-                    player1 = new LocalPlayer(Model.username);
-                    player2 = new ExternalPlayer(matchStarted.getOpponent());
-
-                    if (matchStarted.getPlayerToMove().equals(Model.username)) {
-                        side = PLAYER1;
-                        player1.setSymbol(new Image("black.png"));
-                        player2.setSymbol(new Image("white.png"));
-                        setText(player1.getName() + "'s turn!");
-
-
-                    } else {
-                        disable_pegs();
-                        player1.setSymbol(new Image("white.png"));
-                        player2.setSymbol(new Image("black.png"));
-                        side = PLAYER2;
-
-                        setText(player2.getName() + "'s turn!");
-
-
-
-                    }
-                }
-            }
-            else if(event instanceof Move){
-
+            if(event instanceof Move){
                 Move move=(Move) event;
                 if(move.getPlayer().equals(player2.getName())) {
                     //
@@ -132,18 +105,19 @@ public abstract class Model implements Observer<Event>{
                         setText(player1.getName() + " wins! " + player2.getName() + " lost connection!");
                     });
                 } else  if(win.getComment().equals("Turn timelimit reached")){
-                        Platform.runLater(()-> {
-                            setText(player1.getName() + " wins! " + player2.getName() + " took too long!");
-                        });
+                    Platform.runLater(()-> {
+                        setText(player1.getName() + " wins! " + player2.getName() + " took too long!");
+                    });
                 } else if(win.getComment().equals("Illegal move")){
                     Platform.runLater(()-> {
-                         setText(player1.getName() + " wins! " + player2.getName() + " played an illegal move!");
+                        setText(player1.getName() + " wins! " + player2.getName() + " played an illegal move!");
                     });
                 } else{
                     Platform.runLater(()-> {
                         setText(player1.getName() + " wins!");
                     });
                 }
+                ((BoardView) view).BackTomainMenu();
                 disable_pegs();
             }
 
@@ -151,20 +125,21 @@ public abstract class Model implements Observer<Event>{
                 Loss loss =(Loss) event;
                 if (loss.getComment().equals("Turn timelimit reached")) {
                     Platform.runLater(()-> {
-                    setText(player2.getName() + " wins! " + player1.getName() + " took too long!");
+                        setText(player2.getName() + " wins! " + player1.getName() + " took too long!");
                     });
                 } else {
                     Platform.runLater(()-> {
-                    setText(player2.getName() + " wins! ");
+                        setText(player2.getName() + " wins! ");
                     });
                 }
-
+                ((BoardView) view).BackTomainMenu();
                 disable_pegs();
             }
             else if(event instanceof Draw){
                 Platform.runLater(()-> {
-                setText("Nobody" + " wins! It's a draw!");
+                    setText("Nobody" + " wins! It's a draw!");
                 });
+                ((BoardView) view).BackTomainMenu();
                 disable_pegs();
             }
             else if(event instanceof YourTurn){
@@ -213,15 +188,13 @@ public abstract class Model implements Observer<Event>{
         mode = gamemode;
         //check if board can be enabled
         if (mode == IDLE || mode == AI_VS_SERVER) {
+            initSide();
             disable_pegs();
             //wait for update
         }
-        else if(mode==HUMAN_VS_SERVER){
-            //wait for update
-        } else {
+        else {
             initSide();
         }
-
 
 
 
@@ -285,7 +258,7 @@ public abstract class Model implements Observer<Event>{
     }
     //set the text above the board
     public void setText(String text) {
-            view.setText(text);
+        view.setText(text);
     }
     //disable all the pegs so that they are unclickable
     public void disable_pegs() {
@@ -308,6 +281,7 @@ public abstract class Model implements Observer<Event>{
     public boolean gameOver() {
         this.position = positionValue();
         if (position != UNCLEAR) {
+            ((BoardView) view).BackTomainMenu();
             Platform.runLater(() -> {
                 disable_pegs();
                 if (position == DRAW) {
