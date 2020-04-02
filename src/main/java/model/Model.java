@@ -333,22 +333,11 @@ public abstract class Model implements Observer<Event>{
         return side;
     }
 
-    public void setSide(int side) {
-        this.side = side;
-    }
 
     public int getMode() {
         return mode;
     }
-    public Player getPlayer1(){
-        return player1;
-    }
-    public Player getPlayer2(){
-        return player2;
-    }
-    public void backToMainMenu(){
-        view.BackTomainMenu();
-    }
+
     public abstract void setValidMoves();
 
 

@@ -81,12 +81,8 @@ public class TicTacToeController implements Controller {
     public boolean gameOver() {
         return model.gameOver();
     }
-
     public void disable_pegs() {
         model.disable_pegs();
-    }
-    public void enable_pegs() {
-        model.enable_pegs();
     }
     public int getBest() {
         return model.calculateBest();
