@@ -96,4 +96,5 @@ public class GamesView extends SceneView {
 
         return super.getScene();
     }
+
 }

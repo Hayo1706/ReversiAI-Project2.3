@@ -4,6 +4,7 @@ import communication.StrategicGameClient;
 import communication.events.Event;
 import communication.events.GameOverEvent;
 import controller.Controller;
+import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
@@ -62,5 +63,12 @@ public class BoardView extends SceneView {
     @Override
     public void setText(String s) {
         GameLabel.setText(s);
+    }
+
+
+    public void BackTomainMenu() {
+        Platform.runLater(()-> {
+            endGameButton.setText("Back te Main Menu");
+        });
     }
 }

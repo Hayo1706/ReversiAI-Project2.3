@@ -1,11 +1,13 @@
 package view;
 
+import com.sun.webkit.Timer;
 import communication.StrategicGameClient;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import model.Model;
 
 import java.io.IOException;
 
@@ -79,6 +81,8 @@ public class LoginView extends SceneView {
             try {
                 StrategicGameClient.getInstance().connect("localhost", 7789);
                 StrategicGameClient.getInstance().login("Dylan");
+                Model.mode= Model.HUMAN_VS_SERVER;
+                Model.username="Dylan";
             } catch (IOException exception) {
                 errorLabel.setText("Cannot connect to ip and port");
                 return;
@@ -92,4 +96,5 @@ public class LoginView extends SceneView {
         rootVBox.getChildren().add(loginButton);
         rootVBox.getChildren().add(localButton);
     }
+
 }

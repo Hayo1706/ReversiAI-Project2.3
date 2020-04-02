@@ -16,7 +16,7 @@ public class TicTactToePeg extends Peg {
     public void setTile(int i) {
             // set o
             if (i == 0) {
-                Image image = new Image("white.png");
+                Image image = new Image("o.png");
                 ImageView imageView = new ImageView(image);
                 imageView.smoothProperty().set(true);
                 imageView.setFitWidth(80);
@@ -27,7 +27,7 @@ public class TicTactToePeg extends Peg {
             }
             //set x
             else {
-                Image image = new Image("black.png");
+                Image image = new Image("x.png");
                 ImageView imageView = new ImageView(image);
                 imageView.setFitWidth(80);
                 imageView.setFitHeight(80);

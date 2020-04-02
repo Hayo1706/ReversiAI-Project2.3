@@ -1,5 +1,6 @@
 package games.reversi.model;
 
+import communication.events.MatchStarted;
 import javafx.scene.image.Image;
 import model.Model;
 import model.Peg;
@@ -18,8 +19,8 @@ public class ReversiModel extends Model {
     int amountWhite;
 
     //Model
-    public ReversiModel(int boardsize, View view, ai.AI AI) {
-        super(boardsize, view, AI);
+    public ReversiModel(int boardsize, View view, ai.AI AI, MatchStarted matchStarted) {
+        super(boardsize, view, AI,matchStarted);
     }
     //Model
 
