@@ -24,11 +24,6 @@ public class TicTacToeController implements Controller {
 
     public TicTacToeController(Model model) {
         this.model = model;
-        //At startup no square can be filled
-        //model.switch_gamemode(Model.IDLE);
-        //human vs human
-        //model.switch_gamemode(Model.HUMAN_VS_HUMAN);
-        //human vs ai
         model.switch_gamemode(GameClient.gameMode);
     }
 
@@ -47,16 +42,12 @@ public class TicTacToeController implements Controller {
             if (model.getMode()== Model.HUMAN_VS_HUMAN) {
 
 
-
-
                 model.playMove(peg.getXPosition()*3+peg.getZPosition());
                 gameOver();
 
             } else if (model.getMode()==Model.HUMAN_VS_AI) {
 
                 model.playMove(peg.getXPosition()*3+peg.getZPosition());
-
-
                 int best = model.calculateBest();
 
                     if (!gameOver()) {
@@ -65,73 +56,10 @@ public class TicTacToeController implements Controller {
                     }
 
             } else if (model.getMode()==Model.HUMAN_VS_SERVER) {
-                Runnable run=()-> {
-
-                    if(StrategicGameClient.getInstance().getLossQueue().size()>0) {
-                        model.setText(model.getPlayer2().getName() + " won! " + model.getPlayer1().getName() + " took too long!");
-                        Platform.runLater(()-> {
-
-                            disable_pegs();
-                            model.backToMainMenu();
-
-                        });
-                        StrategicGameClient.getInstance().getLossQueue().clear();
-                        return;
-                    }
-
-                    int move = peg.getXPosition() * 3 + peg.getZPosition();
-                    Platform.runLater(()-> {
-                        model.playMove(move);
-                        gameOver();
-                        disable_pegs();
-
-                    });
-
-
-
-                    StrategicGameClient.getInstance().doMove(move);
-
-                    try {
-                        StrategicGameClient.getInstance().getMoveQueue().take();
-                    } catch (InterruptedException e) {
-                    }
-
-
-                    Move playermove=null;
-                    try {
-                         playermove= StrategicGameClient.getInstance().getMoveQueue().poll(Model.TIMELIMIT, TimeUnit.SECONDS);
-
-                        if (playermove == null) {
-                            Win win = StrategicGameClient.getInstance().getWinQueue().take();
-                            if (win.getComment().equals("Player forfeited match")) {
-                                model.setText(model.getPlayer1().getName() + " wins! " + model.getPlayer2().getName() + " gave up!");
-                            } else if (win.getComment().equals("Client disconnected")) {
-                                model.setText(model.getPlayer1().getName() + " wins! " + model.getPlayer2().getName() + " lost connection!");
-                            } else {
-                                model.setText(model.getPlayer1().getName() + " wins! " + model.getPlayer2().getName() + " took too long!");
-                            }
-
-                            disable_pegs();
-                            model.backToMainMenu();
-                            return;
-                        }
-
-                    }catch (InterruptedException e) {
-                    }
-
-                    int opponentmove = Integer.parseInt(playermove.getMove());
-
-                    Platform.runLater(()-> {
-                        model.playMove(opponentmove);
-                        gameOver();
-                        enable_pegs();
-
-                    });
-
-
-
-                };
-                new Thread(run).start();
+                int move=peg.getXPosition()*3+peg.getZPosition();
+                model.playMove(move);
+                StrategicGameClient.getInstance().doMove(move);
+                disable_pegs();
 
             }
 
@@ -147,12 +75,8 @@ public class TicTacToeController implements Controller {
     public boolean gameOver() {
         return model.gameOver();
     }
-
     public void disable_pegs() {
         model.disable_pegs();
-    }
-    public void enable_pegs() {
-        model.enable_pegs();
     }
     public int getBest() {
         return model.calculateBest();

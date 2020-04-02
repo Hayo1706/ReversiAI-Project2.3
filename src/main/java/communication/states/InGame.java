@@ -103,6 +103,11 @@ public class InGame extends CommunicationState {
     }
 
     @Override
+    public void forfeit() {
+        client.forfeit();
+    }
+
+    @Override
     public void doMove(int index) {
         client.doMove(index);
     }

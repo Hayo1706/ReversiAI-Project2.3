@@ -1,10 +1,9 @@
 package games.reversi.model;
 
-import communication.events.MatchStarted;
+import javafx.scene.image.Image;
 import model.Model;
 import model.Peg;
 import player.LocalPlayer;
-import view.GameClient;
 import view.View;
 
 import java.util.HashSet;
@@ -22,10 +21,7 @@ public class ReversiModel extends Model {
         super(boardsize, view, AI);
     }
     //Model
-    public ReversiModel(int boardsize, View view, ai.AI AI,MatchStarted matchStarted) {
-        super(boardsize, view, AI,matchStarted);
 
-    }
 
     public void fill_pegs() {
         for (int i = 0; i < boardsize; i++) {
@@ -42,8 +38,11 @@ public class ReversiModel extends Model {
 
     public void initSide() {
         side = PLAYER1;
-        player1 = new LocalPlayer(GameClient.username);
-        player2 = new LocalPlayer("Guest");
+
+        player1 = new LocalPlayer("white");
+        player2 = new LocalPlayer("black");
+
+
         if (side == PLAYER1) {
             setText(player1.getName() + " 's turn!");
         } else {
@@ -51,11 +50,28 @@ public class ReversiModel extends Model {
         }
 
     }
-
-    public void play_ai_vs_server(){
-
+    public Image getFirstSymbol() {
+        return new Image("black.png");
     }
+
+
+    public Image getSecondSymbol() {
+        return new Image("white.png");
+    }
+
     public void playMove(int move) {
+
+        int otherSide = -1;
+
+        if(side == 0){
+            otherSide = 1;
+        } else {
+            otherSide = 0;
+        }
+
+        if(getValidMoves().isEmpty()){
+            side = otherSide;
+        }
 
         Peg peg = pegs[move / boardsize][move % boardsize];
             if (side == PLAYER2) {
@@ -72,6 +88,12 @@ public class ReversiModel extends Model {
                 setText("White's turn!");
             }
     }
+
+    /**
+     * @author Maurice Wijker
+     * @param x check and set peg on x (vertical)
+     * @param z check and set peg on z (horizontal)
+     */
 
     public void checkAndSet(int x,int z){
         if(checkHorizontalL(x,z))
@@ -92,10 +114,14 @@ public class ReversiModel extends Model {
             setDiagonalDL(x,z);
     }
 
+    /**
+     * @author Maurice Wijker
+     * sets moves that are available
+     */
+
     public void setValidMoves() {
         validMoves.clear();
         int side = getSide();
-        System.out.println(side);
         disable_pegs();
         Peg[][] pegs = get_pegs();
 
@@ -103,7 +129,6 @@ public class ReversiModel extends Model {
             for (int col = 0; col < 8; col++) {
                 if ((pegs[abs(row)][abs(col)].getPegState() == 2) && (checkHorizontalL(row,col) || checkHorizontalR(row,col)||
                         checkVerticalL(row,col)||checkVerticalR(row,col)||checkDiagonalDL(row,col)||checkDiagonalDR(row,col)||checkDiagonalUL(row,col)||checkDiagonalUR(row,col))) {
-                    System.out.println(row + " " + col);
                     pegs[abs(row)][abs(col)].setDisable(false);
                     pegs[abs(row)][abs(col)].setStyle("-fx-background-color: #3c8e55");
                     validMoves.add(row*8 + col);
@@ -111,6 +136,12 @@ public class ReversiModel extends Model {
             }
         }
     }
+
+    /**
+     * @author Maurice Wijker
+     * @param posX init row
+     * @param posZ init col
+     */
 
     private boolean checkHorizontalL(int posX, int posZ) {
         int side = getSide();
@@ -125,6 +156,12 @@ public class ReversiModel extends Model {
         }
         return false;
     }
+
+    /**
+     * @author Maurice Wijker
+     * @param posX init row
+     * @param posZ init col
+     */
     private void setHorizontalL(int posX, int posZ) {
         int side = getSide();
         for (int col = posZ - 1; col >= 0; col--) {
@@ -136,6 +173,11 @@ public class ReversiModel extends Model {
         }
     }
 
+    /**
+     * @author Maurice Wijker
+     * @param posX init row
+     * @param posZ init col
+     */
     private boolean checkHorizontalR(int posX, int posZ) {
         int side = getSide();
         if (posZ + 1 < 8 && get_pegs()[posX][posZ + 1].getPegState() == side) {
@@ -149,6 +191,12 @@ public class ReversiModel extends Model {
         }
         return false;
     }
+
+    /**
+     * @author Maurice Wijker
+     * @param posX init row
+     * @param posZ init col
+     */
     private void setHorizontalR(int posX, int posZ) {
         int side = getSide();
         for (int col = posZ + 1; col < 8; col++) {
@@ -158,6 +206,12 @@ public class ReversiModel extends Model {
                 return;
         }
     }
+
+    /**
+     * @author Maurice Wijker
+     * @param posX init row
+     * @param posZ init col
+     */
     private boolean checkVerticalL(int posX, int posZ) {
         int side = getSide();
         if (posX - 1 >= 0 && get_pegs()[posX - 1][posZ].getPegState() == side) {
@@ -172,6 +226,12 @@ public class ReversiModel extends Model {
         }
         return false;
     }
+
+    /**
+     * @author Maurice Wijker
+     * @param posX init row
+     * @param posZ init col
+     */
     private void setVerticalL(int posX, int posZ) {
         int side = getSide();
         for (int row = posX - 1; row >= -0; row--) {
@@ -182,7 +242,11 @@ public class ReversiModel extends Model {
         }
     }
 
-
+    /**
+     * @author Maurice Wijker
+     * @param posX init row
+     * @param posZ init col
+     */
     private boolean checkVerticalR(int posX, int posZ) {
         int side = getSide();
         if (posX + 1 < 8 && get_pegs()[posX + 1][posZ].getPegState() == side) {
@@ -196,6 +260,12 @@ public class ReversiModel extends Model {
         }
         return false;
     }
+
+    /**
+     * @author Maurice Wijker
+     * @param posX init row
+     * @param posZ init col
+     */
     private void setVerticalR(int posX, int posZ) {
         int side = getSide();
         for (int row = posX + 1; row < 8; row++) {
@@ -206,6 +276,11 @@ public class ReversiModel extends Model {
         }
     }
 
+    /**
+     * @author Maurice Wijker
+     * @param posX init row
+     * @param posZ init col
+     */
     private boolean checkDiagonalDR(int posX, int posZ) {
         int side = getSide();
         if (posX + 1 < 8 && posZ + 1 < 8 && get_pegs()[posX + 1][posZ + 1].getPegState() == side) {
@@ -219,6 +294,12 @@ public class ReversiModel extends Model {
         }
         return false;
     }
+
+    /**
+     * @author Maurice Wijker
+     * @param posX init row
+     * @param posZ init col
+     */
     private void setDiagonalDR(int posX, int posZ) {
         int side = getSide();
         for (int i = posX + 1, o = posZ + 1; i < 8 && o < 8; i++, o++) {
@@ -229,6 +310,12 @@ public class ReversiModel extends Model {
         }
     }
 
+
+    /**
+     * @author Maurice Wijker
+     * @param posX init row
+     * @param posZ init col
+     */
     private boolean checkDiagonalUL(int posX, int posZ) {
         int side = getSide();
         if (posX - 1 >= 0 && posZ - 1 >= 0 && get_pegs()[posX - 1][posZ - 1].getPegState() == side) {
@@ -242,6 +329,12 @@ public class ReversiModel extends Model {
         }
         return false;
     }
+
+    /**
+     * @author Maurice Wijker
+     * @param posX init row
+     * @param posZ init col
+     */
     private void setDiagonalUL(int posX, int posZ) {
         int side = getSide();
         for (int i = posX - 1, o = posZ - 1; i >= 0 && o >= 0; i--, o--) {
@@ -252,6 +345,11 @@ public class ReversiModel extends Model {
         }
     }
 
+    /**
+     * @author Maurice Wijker
+     * @param posX init row
+     * @param posZ init col
+     */
     private boolean checkDiagonalUR(int posX, int posZ) {
         int side = getSide();
         if (posX + 1 < 8 && posZ - 1 >= 0 && get_pegs()[posX + 1][posZ - 1].getPegState() == side) {
@@ -265,6 +363,12 @@ public class ReversiModel extends Model {
         }
         return false;
     }
+
+    /**
+     * @author Maurice Wijker
+     * @param posX init row
+     * @param posZ init col
+     */
     private void setDiagonalUR(int posX, int posZ) {
         int side = getSide();
         for (int i = posX + 1, o = posZ - 1; i < 8 && o >= 0; i++, o--) {
@@ -275,6 +379,12 @@ public class ReversiModel extends Model {
         }
     }
 
+
+    /**
+     * @author Maurice Wijker
+     * @param posX init row
+     * @param posZ init col
+     */
     private boolean checkDiagonalDL(int posX,int posZ){
         int side = getSide();
         if(posX-1 >= 0 && posZ+1 < 8 && get_pegs()[posX - 1][posZ + 1].getPegState() == side) {
@@ -288,6 +398,12 @@ public class ReversiModel extends Model {
         }
         return false;
     }
+
+    /**
+     * @author Maurice Wijker
+     * @param posX init row
+     * @param posZ init col
+     */
     private void setDiagonalDL(int posX,int posZ){
         int side = getSide();
         for (int i = posX-1,o = posZ+1; i >= 0 && o < 8; i--,o++) {
@@ -298,6 +414,10 @@ public class ReversiModel extends Model {
         }
     }
 
+    /**
+     * @author Maurice Wijker
+     * @return get validMoves in a Set
+     */
     public Set<Integer> getValidMoves() {
         return validMoves;
     }
@@ -309,10 +429,44 @@ public class ReversiModel extends Model {
 
 
     // Returns whether 'side' has won in this position
+
+    /**
+     * @author Maurice Wijker
+     *
+     * @return is it a win for side?
+     */
+
     public boolean isAWin(int side) {
-        // TODO: 28/03/2020
-        return false;
+
+        int amountOfWhite = 0;
+        int amountOfBlack = 0;
+        Peg[][] pegs = get_pegs();
+
+        //check if board has empty space
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if(get_pegs()[i][j].getPegState() == 2){
+                    return false;
+                }
+            }
+        }
+
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if(get_pegs()[i][j].getPegState() == 0){
+                    amountOfWhite++;
+                } else if(get_pegs()[i][j].getPegState() == 1){
+                    amountOfBlack++;
+                }
+            }
+        }
+
+        if(side == 0 && amountOfWhite > amountOfBlack){
+            return true;
+        } else if (side == 1 && amountOfBlack > amountOfWhite){
+            return true;
+        } else {
+            return false;
+        }
     }
-
-
 }

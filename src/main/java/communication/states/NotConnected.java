@@ -107,4 +107,9 @@ public class NotConnected extends CommunicationState {
     public void doMove(int index) {
 
     }
+
+    @Override
+    public void forfeit() {
+
+    }
 }

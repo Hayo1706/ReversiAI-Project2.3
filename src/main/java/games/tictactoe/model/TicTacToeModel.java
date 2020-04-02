@@ -1,13 +1,10 @@
 package games.tictactoe.model;
 
 import ai.AI;
-import communication.Observer;
-import communication.StrategicGameClient;
-import communication.events.*;
 import javafx.application.Platform;
+import javafx.scene.image.Image;
 import model.Model;
 import model.Peg;
-import player.ExternalPlayer;
 import player.LocalPlayer;
 import view.GameClient;
 import view.View;
@@ -22,19 +19,14 @@ public class TicTacToeModel extends Model
         //The games.tictactoe logic
 {
 
-
+    public void setValidMoves() { }
 
     public TicTacToeModel(int boardsize, View view, AI ai) {
         super(boardsize, view, ai);
     }
-    public TicTacToeModel(int boardsize, View view, ai.AI AI, MatchStarted matchStarted) {
-        super(boardsize, view, AI,matchStarted);
 
-
-    }
     public void initSide() {
-        enable_pegs();
-        if (mode == HUMAN_VS_AI) {
+        if (is_mode(HUMAN_VS_AI)) {
 
                 player1 = new LocalPlayer(GameClient.username);
                 player2 = new LocalPlayer("Computer");
@@ -42,6 +34,9 @@ public class TicTacToeModel extends Model
 
                 side = random.nextInt(2);
                 if (side == PLAYER2) {
+                    player1.setSymbol(getSecondSymbol());
+                    player2.setSymbol(getFirstSymbol());
+
                     setText(player2.getName() + "'s turn!");
 
                     int best = calculateBest();
@@ -51,81 +46,26 @@ public class TicTacToeModel extends Model
 
 
                 } else {
+                    player1.setSymbol(getFirstSymbol());
+                    player2.setSymbol(getSecondSymbol());
                     setText(player1.getName() + "'s turn!");
                 }
 
 
-        } else if (mode == HUMAN_VS_SERVER) {
-            player1=new LocalPlayer(GameClient.username);
-            player2=new ExternalPlayer(matchStarted.getOpponent());
-            if(matchStarted.getPlayerToMove().equals(GameClient.username)){
-                side=PLAYER1;
-                setText(player1.getName() + "'s turn!");
-            } else {
-
-                side=PLAYER2;
-                setText(player2.getName() + "'s turn!");
-
-
-                //get opponents move
-                Runnable opponent=()->{
-
-                    try {
-                        disable_pegs();
-                        Move playermove=StrategicGameClient.getInstance().getMoveQueue().poll(Model.TIMELIMIT, TimeUnit.SECONDS);
-                        if(playermove==null){
-                            Win win = StrategicGameClient.getInstance().getWinQueue().take();
-                            if (win.getComment().equals("Player forfeited match")) {
-                                setText(player1.getName() + " wins! " + player2.getName() + " gave up!");
-                            } else if (win.getComment().equals("Client disconnected")) {
-                                setText(player1.getName() + " wins! " + player2.getName() + " lost connection!");
-                            } else {
-                                setText(player1.getName() + " wins! " + player2.getName() + " took too long!");
-                            }
-
-
-                            view.BackTomainMenu();
-                            return;
-                        }
-
-                        int move=Integer.parseInt(playermove.getMove());
-                        Platform.runLater(()-> {
-                            playMove(move);
-
-
-                        });
-                    } catch (InterruptedException e){};
-                        enable_pegs();
-
-
-                };
-                new Thread(opponent).start();
-
-            }
-
-        } else if (mode == AI_VS_SERVER) {
-            disable_pegs();
-            player1=new LocalPlayer(GameClient.username);
-            player2=new ExternalPlayer(matchStarted.getOpponent());
-            if(matchStarted.getPlayerToMove().equals(GameClient.username)){
-                side=PLAYER1;
-                setText(player1.getName() + "'s turn!");
-            } else {
-
-                side=PLAYER2;
-                setText(player2.getName() + "'s turn!");
-
-            }
-            play_ai_vs_server();
-
-        } else if (mode == HUMAN_VS_HUMAN) {
+        } else if (is_mode(HUMAN_VS_HUMAN)) {
             side = random.nextInt(2);
             player1 = new LocalPlayer(GameClient.username);
             player2 = new LocalPlayer("Guest");
-            if (side == PLAYER1) {
-                setText(player1.getName() + " 's turn!");
-            } else {
+            if (side == PLAYER2) {
+                player1.setSymbol(getSecondSymbol());
+                player2.setSymbol(getFirstSymbol());
+
                 setText(player2.getName() + " 's turn!");
+            } else {
+                player1.setSymbol(getFirstSymbol());
+                player2.setSymbol(getSecondSymbol());
+
+                setText(player1.getName() + " 's turn!");
 
             }
         }
@@ -150,126 +90,34 @@ public class TicTacToeModel extends Model
     }
     public void playMove(int move) {
 
-            Peg peg = pegs[move / boardsize][move % boardsize];
+            TicTactToePeg peg = (TicTactToePeg) pegs[move / boardsize][move % boardsize];
 
             if (side == PLAYER2) {
 
-                peg.setTile(1);
+                peg.setTile(1,player2.getSymbol());
 
             } else {
-                peg.setTile(0);
+                peg.setTile(0,player1.getSymbol());
 
             }
 
-            if (side == PLAYER1) {
-                this.side = PLAYER2;
-                setText(player2.getName() + "'s turn!");
-
-            } else {
-                this.side = PLAYER1;
-                setText(player1.getName() + "'s turn!");
-            }
-
+            change_side();
     }
 
-    public void play_ai_vs_server() {
-        Runnable run=()->{
-            if(side==PLAYER2) {
-                try {
 
-                    Move playermove=StrategicGameClient.getInstance().getMoveQueue().poll(Model.TIMELIMIT, TimeUnit.SECONDS);
-                    if(playermove==null){
-                        Win win = StrategicGameClient.getInstance().getWinQueue().take();
-                        Platform.runLater(()-> {
-                                    if (win.getComment().equals("Player forfeited match")) {
-                                        setText(player1.getName() + " wins! " + player2.getName() + " gave up!");
-                                    } else if (win.getComment().equals("Client disconnected")) {
-                                        setText(player1.getName() + " wins! " + player2.getName() + " lost connection!");
-                                    } else {
-                                        setText(player1.getName() + " wins! " + player2.getName() + " took too long!");
-                                    }
-
-                                });
-                        view.BackTomainMenu();
-                        return;
-                    }
-
-                    int move = Integer.parseInt(playermove.getMove());
-
-                    Platform.runLater(()-> {
-
-                        playMove(move);
-
-                    });
-
-                } catch (InterruptedException e) {
-                }
-
-            }
-
-            while (!gameOver()){
-
-
-                Platform.runLater(()-> {
-                    if(!gameOver()) {
-                        int best = calculateBest();
-
-
-                        StrategicGameClient.getInstance().doMove(best);
-                        playMove(best);
-                        gameOver();
-                    }
-
-                });
-
-
-
-
-
-                try {
-                    StrategicGameClient.getInstance().getMoveQueue().take();
-                } catch (InterruptedException e) {
-                }
-
-
-                Move playermove = null;
-                try {
-                    playermove = StrategicGameClient.getInstance().getMoveQueue().take();
-                } catch (InterruptedException e) {
-                }
-
-                int opponentmove = Integer.parseInt(playermove.getMove());
-
-                    Platform.runLater(() -> {
-                        if(!gameOver()) {
-                        playMove(opponentmove);
-                        gameOver();
-                        }
-
-
-                    });
-
-
-
-            }
-
-        };
-        new Thread(run).start();
-
-
-    }
 
 
     public int calculateBest() {
 
-        AI.pegs_to_board(pegs);
+            AI.pegs_to_board(pegs);
+
         int best = AI.chooseMove();
 
         return best;
     }
 
 
-    // Returns whether 'side' has won in this position
+
     public boolean isAWin(int side) {
         //sides:
         //top
@@ -321,7 +169,14 @@ public class TicTacToeModel extends Model
         return false;
     }
 
+    public Image getFirstSymbol() {
+       return new Image("x.png");
+    }
 
+
+    public Image getSecondSymbol() {
+        return new Image("o.png");
+    }
 }
 
 
