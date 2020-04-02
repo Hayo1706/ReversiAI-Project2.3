@@ -23,18 +23,12 @@ import java.util.Optional;
 
 public class GameClient extends Application {
 
-    public static int gameMode = Model.AI_VS_SERVER;
-    public static String username = "Dylan";
     private Stage stage;
-    private GridPane gridPane = new GridPane();
-    private Label gameLabel = new Label();
 
     private SceneView loginView, gamesView, boardView;
 
     @Override
     public void start(Stage stage) {
-
-
         SetEvents();
 
         this.stage = stage;

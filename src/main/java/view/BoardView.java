@@ -1,14 +1,14 @@
 package view;
 
 import communication.StrategicGameClient;
-import communication.events.Event;
 import communication.events.GameOverEvent;
 import controller.Controller;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import model.Peg;
-import communication.events.Loss;
 
 public class BoardView extends SceneView {
     private Label GameLabel= new Label("Game");
@@ -24,8 +24,11 @@ public class BoardView extends SceneView {
     public void CreateScene() {
         super.CreateScene();
 
+        GameLabel.setAlignment(Pos.BASELINE_CENTER);
+
+//        SetEndGameButton();
         endGameButton = CreateButton("forfeit");
-        endGameButton.setOnMouseClicked((e) -> forfeit());
+        endGameButton.setOnMouseClicked((e) -> GameEnded(endGameButton));
 
         rootVBox.getChildren().add(GameLabel);
         rootVBox.getChildren().add(GridPane);
@@ -49,17 +52,31 @@ public class BoardView extends SceneView {
         }
     }
 
-    private void forfeit(){
+    private void SetEndGameButton(){
+        endGameButton = CreateButton("forfeit");
+        endGameButton.setOnMouseClicked((e) -> GameEnded(endGameButton));
+    }
+
+    private void GameEnded(Button endGameButton){
         StrategicGameClient.getInstance().forfeit();
+
         endGameButton.setText("Back te Main Menu");
+
         endGameButton.setOnMouseClicked((e)->client.SwitchScene(GameClient.Scenes.GAMES));
     }
 
     public void GameOver(GameOverEvent e){
         setText("Game Over" + e.getPlayerOneScore() + e.getPlayerTwoScore());
+        GameEnded(endGameButton);
     }
 
     @Override
+    public Scene getScene() {
+        SetEndGameButton();
+        return super.getScene();
+    }
+
+        @Override
     public void setText(String s) {
         GameLabel.setText(s);
     }
