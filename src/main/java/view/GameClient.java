@@ -126,10 +126,7 @@ public class GameClient extends Application implements View {
             LoadMainMenu();
             StrategicGameClient.getInstance().forfeit();
 
-            //clear ques for next play
-            StrategicGameClient.getInstance().getMoveQueue().clear();
-            StrategicGameClient.getInstance().getWinQueue().clear();
-            StrategicGameClient.getInstance().getLossQueue().clear();
+
 
         });
 

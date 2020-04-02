@@ -1,5 +1,6 @@
 package games.reversi.model;
 
+import javafx.scene.image.Image;
 import model.Model;
 import model.Peg;
 import player.LocalPlayer;
@@ -49,7 +50,14 @@ public class ReversiModel extends Model {
         }
 
     }
+    public Image getFirstSymbol() {
+        return new Image("black.png");
+    }
 
+
+    public Image getSecondSymbol() {
+        return new Image("white.png");
+    }
 
     public void playMove(int move) {
 

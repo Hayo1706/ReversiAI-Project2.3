@@ -50,11 +50,6 @@ public interface GameClient {
 
     void forfeit();
 
-    BlockingQueue<Move> getMoveQueue();
-
-    BlockingQueue<Win> getWinQueue();
-
-    BlockingQueue<Loss> getLossQueue();
 
     CommunicationState getState();
 

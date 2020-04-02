@@ -127,14 +127,4 @@ public class StrategicGameClientProxy implements GameClient {
         return realGameClient.getEventBus();
     }
 
-    @Override
-    public BlockingQueue<Move> getMoveQueue() {
-        return realGameClient.getMoveQueue();
-    }
-
-    @Override
-    public BlockingQueue<Win> getWinQueue() { return realGameClient.getWinQueue(); }
-
-    @Override
-    public BlockingQueue<Loss> getLossQueue() { return realGameClient.getLossQueue(); }
 }
