@@ -38,7 +38,7 @@ public abstract class Model implements Observer<Event>{
 
     //gamemode and username of loggedin person
     public static String username = "Black";
-    public static int mode =HUMAN_VS_HUMAN;
+    public static int mode =HUMAN_VS_AI;
 
 
     protected Peg[][] pegs;
@@ -79,15 +79,15 @@ public abstract class Model implements Observer<Event>{
 
                     if (matchStarted.getPlayerToMove().equals(Model.username)) {
                         side = PLAYER1;
-                        player1.setSymbol(getFirstSymbol());
-                        player2.setSymbol(getSecondSymbol());
+                        player1.setSymbol(new Image("black.png"));
+                        player2.setSymbol(new Image("white.png"));
                         setText(player1.getName() + "'s turn!");
 
 
                     } else {
                         disable_pegs();
-                        player1.setSymbol(getSecondSymbol());
-                        player2.setSymbol(getFirstSymbol());
+                        player1.setSymbol(new Image("white.png"));
+                        player2.setSymbol(new Image("black.png"));
                         side = PLAYER2;
 
                         setText(player2.getName() + "'s turn!");
@@ -239,11 +239,6 @@ public abstract class Model implements Observer<Event>{
     public void setSide(int side) {
         this.side = side;
     }
-
-    //get the symbol that needs to be set first on the board
-    public abstract Image getFirstSymbol();
-    //get the symbol that needs to be set second on the board
-    public abstract Image getSecondSymbol();
     //check if board is full
     protected boolean pegsIsFull() {
 
@@ -308,7 +303,7 @@ public abstract class Model implements Observer<Event>{
             }
         }
     }
-    //check if gameover and if so update the text above the board
+    //check if gameover, if so update the text above the board and disables it
     public boolean gameOver() {
         this.position = positionValue();
         if (position != UNCLEAR) {

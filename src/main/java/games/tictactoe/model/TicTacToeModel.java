@@ -27,54 +27,12 @@ public class TicTacToeModel extends Model
     }
 
     public void initSide() {
-        if (is_mode(HUMAN_VS_AI)) {
-
-                player1 = new LocalPlayer(Model.username);
-                player2 = new LocalPlayer("Computer");
-
-
-                side = random.nextInt(2);
-                if (side == PLAYER2) {
-                    player1.setSymbol(getSecondSymbol());
-                    player2.setSymbol(getFirstSymbol());
-
-                    setText(player2.getName() + "'s turn!");
-
-                    int best = calculateBest();
-                        Platform.runLater(()-> {
-                            playMove(best);
-                        });
-
-
-                } else {
-                    player1.setSymbol(getFirstSymbol());
-                    player2.setSymbol(getSecondSymbol());
-                    setText(player1.getName() + "'s turn!");
-                }
-
-
-        } else if (is_mode(HUMAN_VS_HUMAN)) {
-            side = random.nextInt(2);
-            player1 = new LocalPlayer(Model.username);
-            player2 = new LocalPlayer("Guest");
-            if (side == PLAYER2) {
-                player1.setSymbol(getSecondSymbol());
-                player2.setSymbol(getFirstSymbol());
-
-                setText(player2.getName() + " 's turn!");
-            } else {
-                player1.setSymbol(getFirstSymbol());
-                player2.setSymbol(getSecondSymbol());
-
-                setText(player1.getName() + " 's turn!");
-
-            }
-        }
-        //nothing: game is idle
-        else {
-
-        }
-
+        player1 = new LocalPlayer(Model.username);
+        player2 = new LocalPlayer(is_mode(HUMAN_VS_AI) ? "Computer" : "Guest");
+        side = 0;
+        player1.setSymbol(new Image("black.png"));
+        player2.setSymbol(new Image("white.png"));
+        setText(player1.getName() + "'s turn!");
     }
 
     public void fill_pegs() {
@@ -109,12 +67,8 @@ public class TicTacToeModel extends Model
 
 
     public int calculateBest() {
-
-            AI.pegs_to_board(pegs);
-
-        int best = AI.chooseMove();
-
-        return best;
+        AI.pegs_to_board(pegs);
+        return AI.chooseMove();
     }
 
 
