@@ -46,7 +46,6 @@ public class TicTacToeModel extends Model
                     int best = calculateBest();
                         Platform.runLater(()-> {
                             playMove(best);
-                            change_side();
                         });
 
 

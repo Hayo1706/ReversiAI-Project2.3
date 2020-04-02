@@ -57,7 +57,6 @@ public class TicTacToeController implements Controller {
 
                     if (!gameOver()) {
                         model.playMove(best);
-                        model.change_side();
                         gameOver();
                     }
 
