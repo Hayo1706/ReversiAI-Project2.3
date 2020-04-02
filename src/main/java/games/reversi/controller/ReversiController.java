@@ -32,6 +32,7 @@ public class ReversiController implements controller.Controller {
 
     public void nextTurn(Peg peg) {
 
+
         if (model.is_mode(Model.HUMAN_VS_AI)) {
 
 

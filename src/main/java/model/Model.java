@@ -38,7 +38,7 @@ public abstract class Model implements Observer<Event>{
 
     //gamemode and username of loggedin person
     public static String username = "Black";
-    public static int mode =HUMAN_VS_AI;
+    public static int mode =HUMAN_VS_HUMAN;
 
 
     protected Peg[][] pegs;
