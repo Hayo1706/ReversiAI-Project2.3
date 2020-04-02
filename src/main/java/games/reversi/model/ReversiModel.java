@@ -36,7 +36,6 @@ public class ReversiModel extends Model {
             }
         }
     }
-
     public void initSide() {
         side = PLAYER1;
 
@@ -50,14 +49,6 @@ public class ReversiModel extends Model {
             setText(player2.getName() + "'s turn!");
         }
 
-    }
-    public Image getFirstSymbol() {
-        return new Image("black.png");
-    }
-
-
-    public Image getSecondSymbol() {
-        return new Image("white.png");
     }
 
     public void playMove(int move) {

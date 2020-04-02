@@ -8,8 +8,6 @@ import model.Peg;
  */
 public interface Controller {
     //see Model for description
-    public boolean gameOver();
-    //see Model for description
     public void disable_pegs();
     //see Model for description
     Peg[][] get_pegs();

@@ -28,8 +28,7 @@ import java.util.Optional;
 
 public class GameClient extends Application implements View {
 
-    
-
+    public static String username = "Dylan";
     private Stage stage;
     private GridPane gridPane = new GridPane();
     private Label gameLabel = new Label();
@@ -124,7 +123,6 @@ public class GameClient extends Application implements View {
             StrategicGameClient.getInstance().forfeit();
 
 
-
         });
 
         VBox vBox = new VBox(gameLabel, gridPane, backButton);
@@ -153,7 +151,7 @@ public class GameClient extends Application implements View {
             SetUpGame(8, new ReversiController(model));
             stage.setTitle("Reversi");
         } else if (GameToPlay == 1) {
-            model=new TicTacToeModel(3, this, new TicTacToeAI());
+            TicTacToeModel model=new TicTacToeModel(3, this, new TicTacToeAI());
             SetUpGame(3, new TicTacToeController(model));
             stage.setTitle("TicTacToe");
         }
