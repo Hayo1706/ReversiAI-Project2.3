@@ -4,19 +4,20 @@ import games.reversi.model.ReversiModel;
 import games.reversi.view.Animation;
 import model.Model;
 import model.Peg;
-import view.GameClient;
+
+import static java.lang.StrictMath.abs;
 
 
 public class ReversiController implements controller.Controller {
-   Model model;
+   ReversiModel model;
 
 
-    public ReversiController(Model model) {
+    public ReversiController(ReversiModel model) {
         this.model = model;
         setupBoard();
         Animation animation = new Animation(model.get_pegs());
         animation.start();
-        model.switch_gamemode(GameClient.gameMode);
+        model.switch_gamemode(model.getMode());
         model.setValidMoves();
     }
 
@@ -43,10 +44,21 @@ public class ReversiController implements controller.Controller {
 
         }
 
+
+        model.setValidMoves();
+
+        //If no available moves are present, other player gets the turn.
+        if(model.getValidMoves().isEmpty()){
+            model.setSide(abs(model.getSide()-1));
+            model.setValidMoves();
+            if (model.getSide() == 0)
+                model.setText("White has no moves, Black's turn!");
+            else
+                model.setText("Black has no moves, White's turn!");
+        }
         if (gameOver()) {
             disable_pegs();
         }
-        model.setValidMoves();
     }
 
 

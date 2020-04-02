@@ -1,6 +1,7 @@
 package games.tictactoe.model;
 
 import ai.AI;
+import com.sun.webkit.Timer;
 import javafx.application.Platform;
 import javafx.scene.image.Image;
 import model.Model;
@@ -28,7 +29,7 @@ public class TicTacToeModel extends Model
     public void initSide() {
         if (is_mode(HUMAN_VS_AI)) {
 
-                player1 = new LocalPlayer(GameClient.username);
+                player1 = new LocalPlayer(Model.username);
                 player2 = new LocalPlayer("Computer");
 
 
@@ -54,7 +55,7 @@ public class TicTacToeModel extends Model
 
         } else if (is_mode(HUMAN_VS_HUMAN)) {
             side = random.nextInt(2);
-            player1 = new LocalPlayer(GameClient.username);
+            player1 = new LocalPlayer(Model.username);
             player2 = new LocalPlayer("Guest");
             if (side == PLAYER2) {
                 player1.setSymbol(getSecondSymbol());

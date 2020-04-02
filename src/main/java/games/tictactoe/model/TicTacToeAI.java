@@ -38,7 +38,7 @@ public class TicTacToeAI implements AI {
     //return the optimal move depending on the gamemode
     public int chooseMove() {
         Best best;
-        if (GameClient.gameMode== Model.AI_VS_SERVER){
+        if (Model.mode== Model.AI_VS_SERVER){
             best= chooseMove(PLAYER);
         } else {
              best = chooseMove(AI);

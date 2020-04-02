@@ -9,7 +9,6 @@ import javafx.scene.image.Image;
 import player.ExternalPlayer;
 import player.LocalPlayer;
 import player.Player;
-import view.GameClient;
 import view.View;
 
 import java.util.Random;
@@ -36,9 +35,14 @@ public abstract class Model implements Observer<Event>{
     //winstate
     protected static int PLAYER2_WIN = 3;
     //gui board
+
+    //gamemode and username of loggedin person
+    public static String username = "Black";
+    public static int mode =HUMAN_VS_HUMAN;
+
+
     protected Peg[][] pegs;
     protected int boardsize;
-    protected int mode = 0;
     protected int side = 0;
     protected Random random = new Random();
     protected View view;
@@ -70,10 +74,10 @@ public abstract class Model implements Observer<Event>{
                 MatchStarted matchStarted=(MatchStarted) event;
                 if(matchStarted.getGameType().equals("Tic-tac-toe")) {
 
-                    player1 = new LocalPlayer(GameClient.username);
+                    player1 = new LocalPlayer(Model.username);
                     player2 = new ExternalPlayer(matchStarted.getOpponent());
 
-                    if (matchStarted.getPlayerToMove().equals(GameClient.username)) {
+                    if (matchStarted.getPlayerToMove().equals(Model.username)) {
                         side = PLAYER1;
                         player1.setSymbol(getFirstSymbol());
                         player2.setSymbol(getSecondSymbol());
@@ -231,6 +235,10 @@ public abstract class Model implements Observer<Event>{
 
     //calculate the best move in the current board position
     public abstract int calculateBest();
+
+    public void setSide(int side) {
+        this.side = side;
+    }
 
     //get the symbol that needs to be set first on the board
     public abstract Image getFirstSymbol();

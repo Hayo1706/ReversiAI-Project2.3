@@ -24,7 +24,7 @@ public class TicTacToeController implements Controller {
 
     public TicTacToeController(Model model) {
         this.model = model;
-        model.switch_gamemode(GameClient.gameMode);
+        model.switch_gamemode(model.getMode());
     }
 
 
