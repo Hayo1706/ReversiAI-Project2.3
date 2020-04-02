@@ -1,7 +1,6 @@
 package view;
 
 import communication.StrategicGameClient;
-import communication.events.MatchStarted;
 import communication.events.ReceivedChallenge;
 import controller.Controller;
 import games.reversi.controller.ReversiController;
@@ -150,7 +149,7 @@ public class GameClient extends Application implements View {
         gridPane.getChildren().clear();
 
         if (GameToPlay == 0) {
-            model=new ReversiModel(8, this, new ReversiAI());
+            ReversiModel model=new ReversiModel(8, this, new ReversiAI());
             SetUpGame(8, new ReversiController(model));
             stage.setTitle("Reversi");
         } else if (GameToPlay == 1) {

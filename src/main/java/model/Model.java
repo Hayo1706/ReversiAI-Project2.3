@@ -9,7 +9,6 @@ import javafx.scene.image.Image;
 import player.ExternalPlayer;
 import player.LocalPlayer;
 import player.Player;
-import view.GameClient;
 import view.View;
 
 import java.util.Random;
@@ -38,8 +37,8 @@ public abstract class Model implements Observer<Event>{
     //gui board
 
     //gamemode and username of loggedin person
-    public static String username = "Dylan";
-    public static int mode =AI_VS_SERVER;
+    public static String username = "Black";
+    public static int mode =HUMAN_VS_HUMAN;
 
 
     protected Peg[][] pegs;
@@ -239,6 +238,10 @@ public abstract class Model implements Observer<Event>{
 
     //calculate the best move in the current board position
     public abstract int calculateBest();
+
+    public void setSide(int side) {
+        this.side = side;
+    }
 
     //get the symbol that needs to be set first on the board
     public abstract Image getFirstSymbol();

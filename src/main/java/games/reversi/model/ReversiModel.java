@@ -14,7 +14,8 @@ import static java.lang.Math.abs;
 
 public class ReversiModel extends Model {
     Set<Integer> validMoves = new HashSet<>();
-
+    int amountBlack;
+    int amountWhite;
 
     //Model
     public ReversiModel(int boardsize, View view, ai.AI AI) {
@@ -39,14 +40,14 @@ public class ReversiModel extends Model {
     public void initSide() {
         side = PLAYER1;
 
-        player1 = new LocalPlayer("white");
-        player2 = new LocalPlayer("black");
+        player1 = new LocalPlayer("Black");
+        player2 = new LocalPlayer("White");
 
 
         if (side == PLAYER1) {
-            setText(player1.getName() + " 's turn!");
+            setText(player1.getName() + "'s turn!");
         } else {
-            setText(player2.getName() + " 's turn!");
+            setText(player2.getName() + "'s turn!");
         }
 
     }
@@ -61,31 +62,19 @@ public class ReversiModel extends Model {
 
     public void playMove(int move) {
 
-        int otherSide = -1;
-
-        if(side == 0){
-            otherSide = 1;
-        } else {
-            otherSide = 0;
-        }
-
-        if(getValidMoves().isEmpty()){
-            side = otherSide;
-        }
-
         Peg peg = pegs[move / boardsize][move % boardsize];
             if (side == PLAYER2) {
 
                 peg.setTile(0);
                 checkAndSet(peg.getXPosition(),peg.getZPosition());
                 this.side = PLAYER1;
-                setText("Black's turn!");
+                setText("Black's turn!" + " " + "Black - "+ amountBlack + "| " + "White - "+ amountWhite);
             } else {
 
                 peg.setTile(1);
                 checkAndSet(peg.getXPosition(),peg.getZPosition());
                 this.side = PLAYER2;
-                setText("White's turn!");
+                setText("White's turn!" + " " + "Black - "+ amountBlack + "| " + "White - "+ amountWhite);
             }
     }
 
@@ -121,12 +110,16 @@ public class ReversiModel extends Model {
 
     public void setValidMoves() {
         validMoves.clear();
-        int side = getSide();
         disable_pegs();
         Peg[][] pegs = get_pegs();
 
+
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
+//                if(pegs[row][col].pegState == 0)
+//                    amountWhite++;
+//                else if(pegs[row][col].pegState == 1)
+//                    amountBlack++;
                 if ((pegs[abs(row)][abs(col)].getPegState() == 2) && (checkHorizontalL(row,col) || checkHorizontalR(row,col)||
                         checkVerticalL(row,col)||checkVerticalR(row,col)||checkDiagonalDL(row,col)||checkDiagonalDR(row,col)||checkDiagonalUL(row,col)||checkDiagonalUR(row,col))) {
                     pegs[abs(row)][abs(col)].setDisable(false);
@@ -438,10 +431,18 @@ public class ReversiModel extends Model {
 
     public boolean isAWin(int side) {
 
-        int amountOfWhite = 0;
-        int amountOfBlack = 0;
-        Peg[][] pegs = get_pegs();
+        amountBlack = 0;
+        amountWhite = 0;
 
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if(get_pegs()[i][j].getPegState() == 0){
+                    amountWhite++;
+                } else if(get_pegs()[i][j].getPegState() == 1){
+                    amountBlack++;
+                }
+            }
+        }
         //check if board has empty space
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -450,20 +451,9 @@ public class ReversiModel extends Model {
                 }
             }
         }
-
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                if(get_pegs()[i][j].getPegState() == 0){
-                    amountOfWhite++;
-                } else if(get_pegs()[i][j].getPegState() == 1){
-                    amountOfBlack++;
-                }
-            }
-        }
-
-        if(side == 0 && amountOfWhite > amountOfBlack){
+        if(side == 0 && amountWhite < amountBlack){
             return true;
-        } else if (side == 1 && amountOfBlack > amountOfWhite){
+        } else if (side == 1 && amountBlack < amountWhite){
             return true;
         } else {
             return false;
