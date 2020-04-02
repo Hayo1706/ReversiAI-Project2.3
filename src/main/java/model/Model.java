@@ -146,6 +146,7 @@ public abstract class Model implements Observer<Event>{
                 }
                 disable_pegs();
             }
+
             else if(event instanceof Loss){
                 Loss loss =(Loss) event;
                 if (loss.getComment().equals("Turn timelimit reached")) {
