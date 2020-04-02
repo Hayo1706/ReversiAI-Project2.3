@@ -177,11 +177,27 @@ public class GameClient extends Application implements View {
         }
     }
 
+
+    public void SwitchScene(Scenes scene) {
+        switch (scene) {
+            case LOGIN:
+                stage.setScene(loginView.getScene());
+                break;
+            case GAMES:
+                stage.setScene(gamesView.getScene());
+                break;
+            case GAME:
+                stage.setScene(boardView.getScene());
+                break;
+   }
+
+
     private void LoadMainMenu() {
         stage.setScene(StartScene);
         setText("");
         //remove model as observer
         StrategicGameClient.getInstance().getEventBus().removeObserver(model);
+
     }
 
     public void setText(String s) {
