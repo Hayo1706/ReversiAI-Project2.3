@@ -48,13 +48,11 @@ public class TicTacToeController implements Controller {
 
 
                 model.playMove(peg.getXPosition()*3+peg.getZPosition());
-                model.change_side();
                 gameOver();
 
             } else if (model.getMode()==Model.HUMAN_VS_AI) {
 
                 model.playMove(peg.getXPosition()*3+peg.getZPosition());
-                model.change_side();
                 int best = model.calculateBest();
 
                     if (!gameOver()) {
@@ -66,7 +64,6 @@ public class TicTacToeController implements Controller {
             } else if (model.getMode()==Model.HUMAN_VS_SERVER) {
                 int move=peg.getXPosition()*3+peg.getZPosition();
                 model.playMove(move);
-                model.change_side();
                 StrategicGameClient.getInstance().doMove(move);
                 disable_pegs();
 

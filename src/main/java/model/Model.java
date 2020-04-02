@@ -105,7 +105,6 @@ public abstract class Model implements Observer<Event>{
 
                             if(moveOk(opponentmove)) {
                                 playMove(opponentmove);
-                                change_side();
                             }
                         } catch (NumberFormatException e){}
 
@@ -173,7 +172,6 @@ public abstract class Model implements Observer<Event>{
                     Platform.runLater(() -> {
                         int best=calculateBest();
                         playMove(best);
-                        change_side();
                         StrategicGameClient.getInstance().doMove(best);
                     });
 

@@ -62,13 +62,13 @@ public class TicTacToeModel extends Model
             player1 = new LocalPlayer(GameClient.username);
             player2 = new LocalPlayer("Guest");
             if (side == PLAYER2) {
-                player1.setSymbol(new Image("o.png"));
-                player2.setSymbol(new Image("x.png"));
+                player1.setSymbol(getSecondSymbol());
+                player2.setSymbol(getFirstSymbol());
 
                 setText(player2.getName() + " 's turn!");
             } else {
-                player1.setSymbol(new Image("x.png"));
-                player2.setSymbol(new Image("o.png"));
+                player1.setSymbol(getFirstSymbol());
+                player2.setSymbol(getSecondSymbol());
 
                 setText(player1.getName() + " 's turn!");
 
@@ -106,7 +106,7 @@ public class TicTacToeModel extends Model
 
             }
 
-
+            change_side();
     }
 
 
