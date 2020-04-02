@@ -1,8 +1,6 @@
 package communication;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.util.Arrays;
 
@@ -10,12 +8,12 @@ import java.util.Arrays;
  * Created by Dylan Hiemstra
  */
 public class Connection {
-    private DataInputStream inputStream;
+    private BufferedReader inputStream;
     private DataOutputStream outputStream;
     private Thread listeningThread = null;
 
     public Connection(Socket socket) throws IOException {
-        inputStream = new DataInputStream(socket.getInputStream());
+        inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         outputStream = new DataOutputStream(socket.getOutputStream());
     }
 
@@ -36,22 +34,31 @@ public class Connection {
      * @return the Line
      */
     public String readLine() {
-        StringBuilder line = new StringBuilder();
-        int incomingByte;
-
+//        StringBuilder line = new StringBuilder();
+//        int incomingByte;
+//
+//        try {
+//            while ((incomingByte = inputStream.read()) != 10) {
+//                if (incomingByte == -1) break; // disconnected
+//                if (incomingByte == 13) continue; // skip carriage return
+//                line.append((char) incomingByte);
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        System.out.println("Response from server: " + line);
+//
+//        return line.toString();
+        String line = "";
         try {
-            while ((incomingByte = inputStream.read()) != 10) {
-                if (incomingByte == -1) break; // disconnected
-                if (incomingByte == 13) continue; // skip carriage return
-                line.append((char) incomingByte);
-            }
+            line = inputStream.readLine();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         System.out.println("Response from server: " + line);
-
-        return line.toString();
+        return line;
     }
 
     /**
@@ -121,7 +128,7 @@ public class Connection {
 
     public boolean hasBytesToRead() {
         try {
-            return inputStream.available() > 0;
+            return inputStream.ready();
         } catch (IOException e) {
             e.printStackTrace();
             return false;

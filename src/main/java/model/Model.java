@@ -144,7 +144,6 @@ public abstract class Model implements Observer<Event>{
                         setText(player1.getName() + " wins!");
                     });
                 }
-                view.BackTomainMenu();
                 disable_pegs();
             }
             else if(event instanceof Loss){
@@ -159,14 +158,12 @@ public abstract class Model implements Observer<Event>{
                     });
                 }
 
-                view.BackTomainMenu();
                 disable_pegs();
             }
             else if(event instanceof Draw){
                 Platform.runLater(()-> {
                 setText("Nobody" + " wins! It's a draw!");
                 });
-                view.BackTomainMenu();
                 disable_pegs();
             }
             else if(event instanceof YourTurn){
@@ -315,7 +312,6 @@ public abstract class Model implements Observer<Event>{
     public boolean gameOver() {
         this.position = positionValue();
         if (position != UNCLEAR) {
-            view.BackTomainMenu();
             Platform.runLater(() -> {
                 disable_pegs();
                 if (position == DRAW) {

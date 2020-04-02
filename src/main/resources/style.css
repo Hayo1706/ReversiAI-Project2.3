@@ -51,5 +51,18 @@
     -fx-font-weight: bold;
 
     -fx-text-alignment: center;
+}
 
+.title-label{
+    -fx-font-size: 20;
+    -fx-font-weight: bold;
+}
+
+.default-label{
+    -fx-font-size: 15;
+    -fx-font-weight: bold;
+}
+
+.error{
+    -fx-font-color: red;
 }

@@ -24,11 +24,6 @@ public class ListeningThread implements Runnable {
                 String[] command = line.split(" ");
                 System.out.println("Received command: " + Arrays.toString(command));
 
-                /**
-                 * TODO:
-                 *  - Sent event over event bus when we are in a match and update state
-                 *  - Go back to listeningMode after game ends
-                 */
 
                 JSONObject data;
 
