@@ -106,4 +106,9 @@ public class ChallengeSent extends CommunicationState {
     public void doMove(int index) {
 
     }
+
+    @Override
+    public void forfeit() {
+
+    }
 }

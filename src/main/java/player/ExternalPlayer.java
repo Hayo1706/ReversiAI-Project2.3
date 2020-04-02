@@ -7,5 +7,4 @@ public class ExternalPlayer extends Player {
     public ExternalPlayer(String name) {
         super(name);
     }
-    //connection logica
 }

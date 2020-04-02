@@ -52,4 +52,6 @@ public abstract class CommunicationState {
     public abstract void loss(Loss event);
 
     public abstract void draw(Draw event);
+
+    public abstract void forfeit();
 }

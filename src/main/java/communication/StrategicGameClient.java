@@ -39,7 +39,6 @@ public class StrategicGameClient implements GameClient {
 
     private Observable<Event> eventBus = new Observable<>();
 
-    private BlockingQueue<Move> moveQueue = new LinkedBlockingDeque<>();
 
     private StrategicGameClient() {
         setState(new NotConnected(this));
@@ -258,29 +257,53 @@ public class StrategicGameClient implements GameClient {
         connection.startListening();
     }
 
+    @Override
+    public void forfeit() {
+        connection.stopListening();
+
+        executeCommand(new Forfeit(this));
+
+        try {
+            connection.expectOK();
+        } catch (NotOKResponseException e) {
+            e.printStackTrace();
+        }
+
+        endGame();
+    }
+
+    /**
+     * End game
+     */
+    private void endGame() {
+        connection.startListening();
+        setState(new LoggedIn(this));
+    }
 
     @Override
     public void yourTurn(YourTurn event) { eventBus.notifyObservers(event); }
 
     @Override
     public void move(Move event) {
-        moveQueue.add(event);
         eventBus.notifyObservers(event);
     }
 
     @Override
     public void win(Win event) {
         eventBus.notifyObservers(event);
+        endGame();
     }
 
     @Override
     public void draw(Draw event) {
         eventBus.notifyObservers(event);
+        endGame();
     }
 
     @Override
     public void loss(Loss event) {
         eventBus.notifyObservers(event);
+        endGame();
     }
 
     public CommunicationState getState() {
@@ -305,8 +328,5 @@ public class StrategicGameClient implements GameClient {
         return eventBus;
     }
 
-    @Override
-    public BlockingQueue<Move> getMoveQueue() {
-        return moveQueue;
-    }
+
 }

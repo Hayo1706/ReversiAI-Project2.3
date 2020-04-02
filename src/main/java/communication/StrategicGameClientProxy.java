@@ -113,6 +113,11 @@ public class StrategicGameClientProxy implements GameClient {
     }
 
     @Override
+    public void forfeit() {
+        realGameClient.getState().forfeit();
+    }
+
+    @Override
     public Connection getConnection() {
         return null;
     }
@@ -122,8 +127,4 @@ public class StrategicGameClientProxy implements GameClient {
         return realGameClient.getEventBus();
     }
 
-    @Override
-    public BlockingQueue<Move> getMoveQueue() {
-        return realGameClient.getMoveQueue();
-    }
 }

@@ -10,7 +10,7 @@ import view.GameClient;
  */
 public class TicTacToeAI implements AI {
 
-
+    //the board
     private int[][] board = new int[3][3];
 
 
@@ -21,7 +21,7 @@ public class TicTacToeAI implements AI {
     }
 
 
-    //Method to convert the GUI pegs to a board array
+
     public void pegs_to_board(Peg[][] pegs) {
 
         clearBoard();
@@ -35,7 +35,7 @@ public class TicTacToeAI implements AI {
 
     }
 
-
+    //return the optimal move depending on the gamemode
     public int chooseMove() {
         Best best;
         if (GameClient.gameMode== Model.AI_VS_SERVER){
@@ -110,7 +110,7 @@ public class TicTacToeAI implements AI {
         return (move >= 0 && move <= 8 && board[move / 3][move % 3] == EMPTY);
 
     }
-
+    //print the board for debugging
     public void printBoard() {
         String s = "";
 
@@ -133,7 +133,7 @@ public class TicTacToeAI implements AI {
         }
     }
 
-
+    //check if board is full
     private boolean boardIsFull() {
 
         for (int row = 0; row < 3; row++) {
@@ -224,7 +224,7 @@ public class TicTacToeAI implements AI {
 
 
     }
-
+    //class to hold the best move
     private class Best {
         int row;
         int column;

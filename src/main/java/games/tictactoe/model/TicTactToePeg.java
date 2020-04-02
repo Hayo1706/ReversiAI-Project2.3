@@ -37,4 +37,14 @@ public class TicTactToePeg extends Peg {
             }
 
     }
+    public void setTile(int i,Image symbol) {
+        ImageView imageView = new ImageView(symbol);
+        imageView.smoothProperty().set(true);
+        imageView.setFitWidth(80);
+        imageView.setFitHeight(80);
+        setGraphic(imageView);
+        setDisable(true);
+        pegState = i;
+
+    }
 }

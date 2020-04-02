@@ -48,7 +48,8 @@ public interface GameClient {
 
     void doMove(int index);
 
-    BlockingQueue<Move> getMoveQueue();
+    void forfeit();
+
 
     CommunicationState getState();
 

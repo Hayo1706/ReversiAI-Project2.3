@@ -69,9 +69,9 @@ public class GameClient extends Application {
 
     private void StartGame(int GameToPlay, MatchStarted event) {
         if (GameToPlay == 0) {
-            ((BoardView) boardView).SetUpGame("Reversi", 8, new ReversiController(new ReversiModel(8, boardView, new ReversiAI(), event)));
+            ((BoardView) boardView).SetUpGame("Reversi", 8, new ReversiController(new ReversiModel(8, boardView, new ReversiAI())));//, event)));
         } else if (GameToPlay == 1) {
-            ((BoardView) boardView).SetUpGame("Tic Tac Toe", 3, new TicTacToeController(new TicTacToeModel(3, boardView, new TicTacToeAI(), event)));
+            ((BoardView) boardView).SetUpGame("Tic Tac Toe", 3, new TicTacToeController(new TicTacToeModel(3, boardView, new TicTacToeAI())));//, event)));
         }
 
         SwitchScene(Scenes.GAME);

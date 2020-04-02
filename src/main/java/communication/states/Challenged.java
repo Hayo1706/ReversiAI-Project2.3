@@ -107,5 +107,10 @@ public class Challenged extends CommunicationState {
 
     }
 
+    @Override
+    public void forfeit() {
+
+    }
+
 
 }

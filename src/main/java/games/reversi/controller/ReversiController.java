@@ -1,38 +1,30 @@
 package games.reversi.controller;
 
+import games.reversi.model.ReversiModel;
 import games.reversi.view.Animation;
-import javafx.application.Platform;
 import model.Model;
 import model.Peg;
 import view.GameClient;
 
-import static java.lang.Math.abs;
-
 
 public class ReversiController implements controller.Controller {
-    Model model;
+   Model model;
+
 
     public ReversiController(Model model) {
         this.model = model;
         setupBoard();
-        startupAnimation();
-        model.switch_gamemode(GameClient.gameMode);
-        checkMovesCloseby();
-
-
-    }
-
-    public void startupAnimation() {
         Animation animation = new Animation(model.get_pegs());
         animation.start();
+        model.switch_gamemode(GameClient.gameMode);
+        model.setValidMoves();
     }
 
-
     public void setupBoard() {
-        model.get_pegs()[3][3].setTile(0);
-        model.get_pegs()[4][4].setTile(0);
-        model.get_pegs()[3][4].setTile(1);
-        model.get_pegs()[4][3].setTile(1);
+        model.get_pegs()[3][3].setTile(1);
+        model.get_pegs()[4][4].setTile(1);
+        model.get_pegs()[3][4].setTile(0);
+        model.get_pegs()[4][3].setTile(0);
 
     }
 
@@ -42,8 +34,11 @@ public class ReversiController implements controller.Controller {
         if (model.is_mode(Model.HUMAN_VS_AI)) {
 
 
+
         } else if (model.is_mode(Model.HUMAN_VS_HUMAN)) {
             model.playMove(peg.getXPosition() * 8 + peg.getZPosition());
+
+
         } else if (model.is_mode(Model.HUMAN_VS_SERVER)) {
 
         }
@@ -51,7 +46,7 @@ public class ReversiController implements controller.Controller {
         if (gameOver()) {
             disable_pegs();
         }
-        checkMovesCloseby();
+        model.setValidMoves();
     }
 
 
@@ -72,75 +67,8 @@ public class ReversiController implements controller.Controller {
         System.out.println("\n");
     }
 
-
-    /**
-     * @return Is legal move to make
-     * @author Maurice Wijker
-     */
-    public boolean isValidMove(Peg peg) {
-        int z = peg.getZPosition(); // -> horizontal
-        int x = peg.getXPosition(); // -> vertical
-        int side = model.getSide();
-
-
-//
-//
-//
-//        //scan vertically down
-//        for (int i = x; i < 8; i++) {
-//            if (peg.getPegState() == model.get_pegs()[i][x].getPegState()) {
-//                return true;
-//            }
-
-        return false;
-
-    }
-
-    // player1 == black
-    //black == 1
-    //player1 = 0
-
-    public void checkMovesCloseby() {
-        int side = model.getSide();
-        System.out.println(side);
-        model.disable_pegs();
-        Peg[][] pegs = model.get_pegs();
-            for (int i = 0; i < 8; i++) {
-                for (int o = 0; o < 8; o++) {
-
-                    if ((pegs[i][o].getPegState() == 0 && side == 0) || (side == 1 && pegs[i][o].getPegState() == 1)) {
-                        for (int q= -1; q <= 1 && q+i < 8; q++) {
-                            for (int w= -1; w <= 1 && w+o < 8; w++) {
-                                if((pegs[abs(q + i)][abs(w + o)].getPegState() == 2) && (checkHorizontal(abs(q + i),abs(w + o))|| checkVertical(abs(q + i),abs(w + o)) || checkDiagonal(abs(q + i),abs(w + o)))) {
-                                    pegs[abs(q + i)][abs(w + o)].setDisable(false);
-                                    pegs[abs(q + i)][abs(w + o)].setStyle("-fx-background-color: #3c8e55");
-
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-    }
-    private boolean checkHorizontal(int posZ,int posX){
-        return true;
-    }
-
-    private boolean checkVertical(int posX,int posZ){
-        return true;
-    }
-    private boolean checkDiagonal(int posX,int posZ){
-        return true;
-    }
-
-
-
-
-
     public Peg[][] get_pegs() {
-
         return model.get_pegs();
-
     }
 
     public boolean gameOver() {
@@ -151,7 +79,4 @@ public class ReversiController implements controller.Controller {
         model.disable_pegs();
     }
 
-    public int getBest() {
-        return model.calculateBest();
-    }
 }
