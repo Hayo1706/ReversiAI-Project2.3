@@ -40,25 +40,23 @@ public class LoggedIn extends CommunicationState {
         return client.getPlayerList();
     }
 
-    @Override
-    public void startWaiting() {
-        client.startWaiting();
-    }
+
 
     @Override
     public void subscribe(String game) {
-        System.out.println("Need to be in waiting mode first!");
+        client.subscribe(game);
     }
 
     @Override
     public void challenge(String player, String game) {
-        System.out.println("Need to be in waiting mode first!");
+        client.challenge(player, game);
     }
 
     @Override
     public void challenged(JSONObject data) {
-        System.out.println("This should never happen");
+        client.challenged(data);
     }
+
 
     @Override
     public void acceptChallenge(ReceivedChallenge event) {
@@ -72,7 +70,7 @@ public class LoggedIn extends CommunicationState {
 
     @Override
     public void matchStarted(MatchStarted event) {
-        System.out.println("Not possible");
+        client.matchStarted(event);
     }
 
     @Override

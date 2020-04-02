@@ -72,7 +72,6 @@ public class LoginView extends SceneView {
             }
 
             client.SwitchScene(GameClient.Scenes.GAMES);
-            StrategicGameClient.getInstance().startWaiting();
         });
 
         Button localButton = CreateButton("play local as Dylan");
@@ -86,7 +85,6 @@ public class LoginView extends SceneView {
             }
 
             client.SwitchScene(GameClient.Scenes.GAMES);
-            StrategicGameClient.getInstance().startWaiting();
         });
 
         rootVBox.getChildren().add(nameBox);

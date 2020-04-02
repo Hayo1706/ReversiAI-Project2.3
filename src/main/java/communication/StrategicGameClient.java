@@ -39,7 +39,6 @@ public class StrategicGameClient implements GameClient {
 
     private Observable<Event> eventBus = new Observable<>();
 
-
     private StrategicGameClient() {
         setState(new NotConnected(this));
     }
@@ -103,7 +102,6 @@ public class StrategicGameClient implements GameClient {
      * Logout of the server
      */
     public void logout() {
-        connection.stopListening();
         executeCommand(new Logout(this));
 
         try {
@@ -152,21 +150,12 @@ public class StrategicGameClient implements GameClient {
     }
 
     /**
-     * Start listening for events
-     */
-    public void startWaiting() {
-        setState(new Waiting(this));
-        connection.startListening();
-    }
-
-    /**
      * Challenge someone
      *
      * @param player the player
      * @param game   the game
      */
     public void challenge(String player, String game) {
-        connection.stopListening();
         executeCommand(new SendChallenge(this, player, game));
 
         try {
@@ -177,7 +166,6 @@ public class StrategicGameClient implements GameClient {
         }
 
         setState(new ChallengeSent(this));
-        connection.startListening();
     }
 
     /**
@@ -186,7 +174,6 @@ public class StrategicGameClient implements GameClient {
      * @param game the game
      */
     public void subscribe(String game) {
-        connection.stopListening();
         executeCommand(new Subscribe(this, game));
 
         try {
@@ -197,7 +184,6 @@ public class StrategicGameClient implements GameClient {
         }
 
         setState(new Subscribed(this));
-        connection.startListening();
     }
 
     /**
@@ -217,8 +203,6 @@ public class StrategicGameClient implements GameClient {
      * @param event
      */
     public void acceptChallenge(ReceivedChallenge event) {
-        connection.stopListening();
-
         executeCommand(new AcceptChallenge(this, event.getChallengeNumber()));
 
         try {
@@ -226,15 +210,13 @@ public class StrategicGameClient implements GameClient {
         } catch (NotOKResponseException e) {
             e.printStackTrace();
         }
-
-        connection.startListening();
     }
 
     /**
      * Deny the challenge (there is not command for this)
      */
     public void denyChallenge() {
-        setState(new Waiting(this));
+        setState(new LoggedIn(this));
     }
 
     public void matchStarted(MatchStarted event) {
@@ -244,7 +226,6 @@ public class StrategicGameClient implements GameClient {
 
     @Override
     public void doMove(int index)  {
-        connection.stopListening();
 
         executeCommand(new DoMove(this, index));
 
@@ -253,13 +234,10 @@ public class StrategicGameClient implements GameClient {
         } catch (NotOKResponseException e) {
             e.printStackTrace();
         }
-
-        connection.startListening();
     }
 
     @Override
     public void forfeit() {
-        connection.stopListening();
 
         executeCommand(new Forfeit(this));
 
@@ -276,7 +254,6 @@ public class StrategicGameClient implements GameClient {
      * End game
      */
     private void endGame() {
-        connection.startListening();
         setState(new LoggedIn(this));
     }
 

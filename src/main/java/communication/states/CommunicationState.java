@@ -27,7 +27,7 @@ public abstract class CommunicationState {
 
     public abstract JSONArray getPlayerList();
 
-    public abstract void startWaiting();
+    // public abstract void startWaiting();
 
     public abstract void subscribe(String game);
 

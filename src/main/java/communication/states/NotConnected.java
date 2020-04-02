@@ -44,10 +44,7 @@ public class NotConnected extends CommunicationState {
         return new JSONArray();
     }
 
-    @Override
-    public void startWaiting() {
-        System.out.println("Need to login first!");
-    }
+
 
     @Override
     public void subscribe(String game) {

@@ -94,8 +94,6 @@ public class GamesView extends SceneView {
             set = true;
         }
 
-        StrategicGameClient.getInstance().startWaiting();
-
         return super.getScene();
     }
 }

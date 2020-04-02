@@ -44,10 +44,6 @@ public class StrategicGameClientProxy implements GameClient {
         return realGameClient.getState().getPlayerList();
     }
 
-    @Override
-    public void startWaiting() {
-        realGameClient.getState().startWaiting();
-    }
 
     @Override
     public void challenge(String player, String game) {
