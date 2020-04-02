@@ -67,12 +67,8 @@ public class TicTacToeModel extends Model
 
 
     public int calculateBest() {
-
-            AI.pegs_to_board(pegs);
-
-        int best = AI.chooseMove();
-
-        return best;
+        AI.pegs_to_board(pegs);
+        return AI.chooseMove();
     }
 
 
