@@ -22,8 +22,6 @@ public interface GameClient {
 
     JSONArray getPlayerList();
 
-    void startWaiting();
-
     void challenge(String player, String game);
 
     void subscribe(String game);

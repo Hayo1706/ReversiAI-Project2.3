@@ -24,8 +24,8 @@ public class Main {
                 System.out.println((String) player);
             }
 
-            StrategicGameClient.getInstance().startWaiting();
-            StrategicGameClient.getInstance().subscribe("Tic-tac-toe");
+         //   StrategicGameClient.getInstance().startWaiting();
+         //   StrategicGameClient.getInstance().subscribe("Tic-tac-toe");
 
         } catch (IOException e) {
             e.printStackTrace();

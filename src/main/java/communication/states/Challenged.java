@@ -42,10 +42,6 @@ public class Challenged extends CommunicationState {
         return null;
     }
 
-    @Override
-    public void startWaiting() {
-        System.out.println("Already waiting");
-    }
 
     @Override
     public void subscribe(String game) {

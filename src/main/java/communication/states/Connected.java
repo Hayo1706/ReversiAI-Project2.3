@@ -40,10 +40,7 @@ public class Connected extends CommunicationState {
         return client.getPlayerList();
     }
 
-    @Override
-    public void startWaiting() {
-        System.out.println("Need to login first!");
-    }
+
 
     @Override
     public void subscribe(String game) {
