@@ -16,7 +16,7 @@ public class ReversiController implements controller.Controller {
         setupBoard();
         Animation animation = new Animation(model.get_pegs());
         animation.start();
-        model.switch_gamemode(GameClient.gameMode);
+        model.switch_gamemode(model.getMode());
         model.setValidMoves();
     }
 

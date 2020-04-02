@@ -36,9 +36,14 @@ public abstract class Model implements Observer<Event>{
     //winstate
     protected static int PLAYER2_WIN = 3;
     //gui board
+
+    //gamemode and username of loggedin person
+    public static String username = "Dylan";
+    public static int mode =AI_VS_SERVER;
+
+
     protected Peg[][] pegs;
     protected int boardsize;
-    protected int mode = 0;
     protected int side = 0;
     protected Random random = new Random();
     protected View view;
@@ -70,10 +75,10 @@ public abstract class Model implements Observer<Event>{
                 MatchStarted matchStarted=(MatchStarted) event;
                 if(matchStarted.getGameType().equals("Tic-tac-toe")) {
 
-                    player1 = new LocalPlayer(GameClient.username);
+                    player1 = new LocalPlayer(Model.username);
                     player2 = new ExternalPlayer(matchStarted.getOpponent());
 
-                    if (matchStarted.getPlayerToMove().equals(GameClient.username)) {
+                    if (matchStarted.getPlayerToMove().equals(Model.username)) {
                         side = PLAYER1;
                         player1.setSymbol(getFirstSymbol());
                         player2.setSymbol(getSecondSymbol());

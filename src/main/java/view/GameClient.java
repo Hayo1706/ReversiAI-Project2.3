@@ -30,9 +30,7 @@ import java.util.Optional;
 public class GameClient extends Application implements View {
 
     
-    public static int gameMode = Model.HUMAN_VS_AI;
 
-    public static String username = "Dylan";
     private Stage stage;
     private GridPane gridPane = new GridPane();
     private Label gameLabel = new Label();
