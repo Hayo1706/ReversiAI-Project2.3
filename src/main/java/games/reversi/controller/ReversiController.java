@@ -79,7 +79,4 @@ public class ReversiController implements controller.Controller {
         model.disable_pegs();
     }
 
-    public int getBest() {
-        return model.calculateBest();
-    }
 }

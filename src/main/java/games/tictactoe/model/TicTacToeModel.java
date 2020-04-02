@@ -1,14 +1,10 @@
 package games.tictactoe.model;
 
 import ai.AI;
-import communication.Observer;
-import communication.StrategicGameClient;
-import communication.events.*;
 import javafx.application.Platform;
 import javafx.scene.image.Image;
 import model.Model;
 import model.Peg;
-import player.ExternalPlayer;
 import player.LocalPlayer;
 import view.GameClient;
 import view.View;
@@ -30,7 +26,7 @@ public class TicTacToeModel extends Model
     }
 
     public void initSide() {
-        if (mode == HUMAN_VS_AI) {
+        if (is_mode(HUMAN_VS_AI)) {
 
                 player1 = new LocalPlayer(GameClient.username);
                 player2 = new LocalPlayer("Computer");
@@ -56,7 +52,7 @@ public class TicTacToeModel extends Model
                 }
 
 
-        } else if (mode == HUMAN_VS_HUMAN) {
+        } else if (is_mode(HUMAN_VS_HUMAN)) {
             side = random.nextInt(2);
             player1 = new LocalPlayer(GameClient.username);
             player2 = new LocalPlayer("Guest");
@@ -121,7 +117,7 @@ public class TicTacToeModel extends Model
     }
 
 
-    // Returns whether 'side' has won in this position
+
     public boolean isAWin(int side) {
         //sides:
         //top

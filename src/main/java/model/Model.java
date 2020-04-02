@@ -32,8 +32,6 @@ public abstract class Model implements Observer<Event>{
     protected static int PLAYER1_WIN = 0;
     protected static int DRAW = 1;
     protected static int UNCLEAR = 2;
-    //timelimit for server
-    public static int TIMELIMIT=30;
 
     //winstate
     protected static int PLAYER2_WIN = 3;
@@ -64,6 +62,7 @@ public abstract class Model implements Observer<Event>{
 
 
     @Override
+    //update method for server connections
     public void update(Event event) {
         if(mode==Model.HUMAN_VS_SERVER || mode==Model.AI_VS_SERVER) {
 
@@ -182,7 +181,7 @@ public abstract class Model implements Observer<Event>{
         }
 
     }
-
+    //fill the board with it's initial pegs
     protected abstract void fill_pegs();
 
     //check if move ok
@@ -191,9 +190,9 @@ public abstract class Model implements Observer<Event>{
 
     }
 
-
+    //initialize the beginning position
     public abstract void initSide();
-
+    //change the side
     public void change_side(){
         if (side == PLAYER1) {
             this.side = PLAYER2;
@@ -206,7 +205,7 @@ public abstract class Model implements Observer<Event>{
 
     }
 
-
+    //set the gamemode
     public void switch_gamemode(int gamemode) {
 
         mode = gamemode;
@@ -225,23 +224,22 @@ public abstract class Model implements Observer<Event>{
 
 
     }
-
+    //get all the pegs in the model
     public Peg[][] get_pegs() {
         return pegs;
     }
 
-    public boolean is_mode(int gamemode) {
-        return gamemode == mode;
-    }
-
+    //play a move on the board
     public abstract void playMove(int move);
 
-
+    //calculate the best move in the current board position
     public abstract int calculateBest();
 
+    //get the symbol that needs to be set first on the board
     public abstract Image getFirstSymbol();
-
+    //get the symbol that needs to be set second on the board
     public abstract Image getSecondSymbol();
+    //check if board is full
     protected boolean pegsIsFull() {
 
         for (int row = 0; row < boardsize; row++) {
@@ -262,7 +260,7 @@ public abstract class Model implements Observer<Event>{
         Platform.runLater(() -> pegs[row][column].pegState = piece
         );
     }
-
+    //check if a peg on the board is empty
     public boolean squareIsEmpty(int row, int column) {
         return pegs[row][column].pegState == EMPTY;
     }
@@ -284,11 +282,11 @@ public abstract class Model implements Observer<Event>{
         }
 
     }
-
+    //set the text above the board
     public void setText(String text) {
             view.setText(text);
     }
-
+    //disable all the pegs so that they are unclickable
     public void disable_pegs() {
         for (int row = 0; row < boardsize; row++) {
             for (int col = 0; col < boardsize; col++) {
@@ -297,7 +295,7 @@ public abstract class Model implements Observer<Event>{
             }
         }
     }
-
+    //disable all the pegs so that they are clickable
     public void enable_pegs() {
         for (int row = 0; row < boardsize; row++) {
             for (int col = 0; col < boardsize; col++) {
@@ -305,7 +303,7 @@ public abstract class Model implements Observer<Event>{
             }
         }
     }
-
+    //check if gameover and if so update the text above the board
     public boolean gameOver() {
         this.position = positionValue();
         if (position != UNCLEAR) {
@@ -322,23 +320,27 @@ public abstract class Model implements Observer<Event>{
         }
         return this.position != UNCLEAR;
     }
-
+    //get the winner in the endgame
     protected String winner() {
         if (this.position == PLAYER1_WIN) return player1.getName();
         else if (this.position == PLAYER2_WIN) return player2.getName();
         else return "nobody";
     }
-
+    //get the side that must play in the current position
     public int getSide() {
         return side;
     }
 
-
+    //get the gamemode
     public int getMode() {
         return mode;
     }
-
+    //method for reversi and other games that are like it
     public abstract void setValidMoves();
+
+    public boolean is_mode(int mode){
+        return this.mode==mode;
+    }
 
 
 }
