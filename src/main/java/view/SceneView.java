@@ -55,4 +55,5 @@ public abstract class SceneView implements View {
     public Scene getScene(){
         return scene;
     }
+
 }

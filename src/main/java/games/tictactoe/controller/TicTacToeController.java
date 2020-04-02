@@ -1,17 +1,10 @@
 package games.tictactoe.controller;
 
 import communication.StrategicGameClient;
-import communication.events.*;
 import controller.Controller;
-import javafx.application.Platform;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import model.Model;
 import model.Peg;
-import view.GameClient;
 
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Singh van Offeren
@@ -78,7 +71,5 @@ public class TicTacToeController implements Controller {
     public void disable_pegs() {
         model.disable_pegs();
     }
-    public int getBest() {
-        return model.calculateBest();
-    }
+
 }
