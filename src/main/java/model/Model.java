@@ -127,7 +127,13 @@ public abstract class Model implements Observer<Event>{
                     Platform.runLater(()-> {
                         setText(player2.getName() + " wins! " + player1.getName() + " took too long!");
                     });
-                } else {
+                }
+                else if(loss.getComment().equals("Player, forfeited, match")){
+                    Platform.runLater(()-> {
+                        setText(player2.getName() + " wins! " + player1.getName() + " gave up!");
+                    });
+                }
+                else {
                     Platform.runLater(()-> {
                         setText(player2.getName() + " wins! ");
                     });
