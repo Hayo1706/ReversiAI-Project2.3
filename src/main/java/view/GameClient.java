@@ -110,6 +110,7 @@ public class GameClient extends Application {
                 stage.setScene(boardView.getScene());
                 break;
         }
+
     }
 
     public enum Scenes {
