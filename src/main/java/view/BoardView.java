@@ -25,7 +25,7 @@ public class BoardView extends SceneView {
 
         Button backButton = CreateButton("Ga back to Main menu");
         backButton.setOnMouseClicked((e) -> {
-            StrategicGameClient.getInstance();
+            StrategicGameClient.getInstance().forfeit();
             client.SwitchScene(GameClient.Scenes.GAMES);
         });
 
