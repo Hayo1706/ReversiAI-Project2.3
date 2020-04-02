@@ -424,10 +424,6 @@ public class ReversiModel extends Model {
 
     public boolean isAWin(int side) {
 
-
-        amountWhite = this.amountWhite;
-        amountBlack = this.amountBlack;
-
         //check if board has empty space
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
