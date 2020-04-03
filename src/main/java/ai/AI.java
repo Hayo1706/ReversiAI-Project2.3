@@ -7,17 +7,17 @@ import model.Peg;
  */
 public interface AI {
     //pegstate
-    public static final int PLAYER = 0;
-    public static final int AI = 1;
-    public static final int EMPTY = 2;
+    int PLAYER = 0;
+    int AI = 1;
+    int EMPTY = 2;
     //endstate
-    public static final int PLAYER_WIN = 0;
-    public static final int DRAW = 1;
-    public static final int UNCLEAR = 2;
-    public static final int AI_WIN = 3;
+    int PLAYER_WIN = 0;
+    int DRAW = 1;
+    int UNCLEAR = 2;
+    int AI_WIN = 3;
 
     //choose the best move in the current position
-    public int chooseMove();
+    int chooseMove();
     //Method to convert the GUI pegs to a board array
-    public void pegs_to_board(Peg[][] pegs);
+    void pegs_to_board(Peg[][] pegs);
 }

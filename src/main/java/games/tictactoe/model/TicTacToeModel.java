@@ -22,8 +22,6 @@ public class TicTacToeModel extends Model
         //The games.tictactoe logic
 {
 
-    public void setValidMoves() { }
-
     public TicTacToeModel(int boardsize, View view, AI ai, MatchStarted matchStarted) {
         super(boardsize, view, ai,matchStarted);
     }

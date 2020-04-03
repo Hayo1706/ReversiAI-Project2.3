@@ -321,8 +321,6 @@ public abstract class Model implements Observer<Event>{
     public int getMode() {
         return mode;
     }
-    //method for reversi and other games that are like it
-    public abstract void setValidMoves();
 
     public boolean is_mode(int mode){
         return this.mode==mode;

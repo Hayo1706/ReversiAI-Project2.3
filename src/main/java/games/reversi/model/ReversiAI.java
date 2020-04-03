@@ -8,12 +8,12 @@ public class ReversiAI implements ai.AI {
     ReversiModel model;
     Random random;
 
-//    public ReversiAI(ReversiModel model){
-//        this.model = model;
-//    }
+    public void setModel(ReversiModel model){
+        this.model = model;
+    }
 
     public int chooseMove() {
-       return random.nextInt(model.getValidMoves().size());
+       return 0;
     }
 
 

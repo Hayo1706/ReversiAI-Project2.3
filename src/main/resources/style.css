@@ -34,6 +34,11 @@
     -fx-border-width: 5;
     -fx-font-weight: bold;
     -fx-font-size: 15;
+    -fx-min-width: 250px;
+    -fx-padding: 10px;
+    -fx-border-insets: 5px;
+    -fx-background-insets: 5px;
+
 }
 .Client-button:hover{
     -fx-background-color: linear-gradient(#fff9bc, #ffee3d);
