@@ -3,6 +3,7 @@ package view;
 import communication.StrategicGameClient;
 import communication.events.GameOverEvent;
 import controller.Controller;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -11,7 +12,7 @@ import javafx.scene.layout.GridPane;
 import model.Peg;
 
 public class BoardView extends SceneView {
-    private Label GameLabel= new Label("Game");
+    private Label GameLabel = new Label("Game");
     private GridPane GridPane = new GridPane();
 
     private Button endGameButton;
@@ -24,11 +25,11 @@ public class BoardView extends SceneView {
     public void CreateScene() {
         super.CreateScene();
 
-        GameLabel.setAlignment(Pos.BASELINE_CENTER);
+        GameLabel.setAlignment(Pos.BASELINE_RIGHT);
 
 //        SetEndGameButton();
         endGameButton = CreateButton("forfeit");
-        endGameButton.setOnMouseClicked((e) -> GameEnded(endGameButton));
+        endGameButton.setOnMouseClicked((e) -> forfeit());
 
         rootVBox.getChildren().add(GameLabel);
         rootVBox.getChildren().add(GridPane);
@@ -44,7 +45,7 @@ public class BoardView extends SceneView {
             for (int o = 0; o < size; o++) {
                 Peg peg = controller.get_pegs()[i][o];
                 peg.setOnAction(
-                        actionEvent ->  {
+                        actionEvent -> {
                             controller.nextTurn(peg);
                         });
                 GridPane.add(peg, peg.getZPosition(), peg.getXPosition());
@@ -52,22 +53,19 @@ public class BoardView extends SceneView {
         }
     }
 
-    private void SetEndGameButton(){
-        endGameButton = CreateButton("forfeit");
-        endGameButton.setOnMouseClicked((e) -> GameEnded(endGameButton));
-    }
-
-    private void GameEnded(Button endGameButton){
+    public void forfeit() {
         StrategicGameClient.getInstance().forfeit();
-
-        endGameButton.setText("Back te Main Menu");
-
-        endGameButton.setOnMouseClicked((e)->client.SwitchScene(GameClient.Scenes.GAMES));
+        SetBackToMainMenu();
     }
 
-    public void GameOver(GameOverEvent e){
-        setText("Game Over" + e.getPlayerOneScore() + e.getPlayerTwoScore());
-        GameEnded(endGameButton);
+    private void SetEndGameButton() {
+        endGameButton.setText("forfeit");
+        endGameButton.setOnMouseClicked((e) -> forfeit());
+    }
+
+    public void SetBackToMainMenu() {
+        endGameButton.setText("Back te Main Menu");
+        endGameButton.setOnMouseClicked((e) -> client.SwitchScene(GameClient.Scenes.GAMES));
     }
 
     @Override
@@ -76,7 +74,7 @@ public class BoardView extends SceneView {
         return super.getScene();
     }
 
-        @Override
+    @Override
     public void setText(String s) {
         GameLabel.setText(s);
     }
