@@ -117,7 +117,9 @@ public abstract class Model implements Observer<Event>{
                         setText(player1.getName() + " wins!");
                     });
                 }
+                Platform.runLater(()-> {
                 ((BoardView) view).SetBackToMainMenu();
+                });
                 disable_pegs();
             }
 
@@ -138,14 +140,18 @@ public abstract class Model implements Observer<Event>{
                         setText(player2.getName() + " wins! ");
                     });
                 }
+                Platform.runLater(()-> {
                 ((BoardView) view).SetBackToMainMenu();
+            });
                 disable_pegs();
             }
             else if(event instanceof Draw){
                 Platform.runLater(()-> {
                     setText("Nobody" + " wins! It's a draw!");
                 });
-                ((BoardView) view).SetBackToMainMenu();
+                Platform.runLater(()-> {
+                            ((BoardView) view).SetBackToMainMenu();
+                        });
                 disable_pegs();
             }
             else if(event instanceof YourTurn){
