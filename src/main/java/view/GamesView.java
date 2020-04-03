@@ -21,11 +21,8 @@ public class GamesView extends SceneView {
         super(client);
     }
 
-
     ObservableList<String> gamesList = FXCollections.observableArrayList();
     ObservableList<String> playerGameList = FXCollections.observableArrayList("mark", "peter", "balk");
-
-    boolean set = false;
 
     @Override
     public void CreateScene() {
@@ -89,10 +86,7 @@ public class GamesView extends SceneView {
 
     @Override
     public Scene getScene() {
-        if (!set) {
-            UpdateListView();
-            set = true;
-        }
+        UpdateListView();
 
         return super.getScene();
     }
