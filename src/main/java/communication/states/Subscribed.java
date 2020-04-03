@@ -42,10 +42,6 @@ public class Subscribed extends CommunicationState {
         return null;
     }
 
-    @Override
-    public void startWaiting() {
-        System.out.println("Already in listening mode!");
-    }
 
     @Override
     public void subscribe(String game) {
@@ -59,17 +55,17 @@ public class Subscribed extends CommunicationState {
 
     @Override
     public void challenged(JSONObject data) {
-        System.out.println("Already subscribed. Can't be challenged by someone now!");
+        client.challenged(data);
     }
 
     @Override
     public void acceptChallenge(ReceivedChallenge event) {
-        System.out.println("Need to be challenged!");
+        client.acceptChallenge(event);
     }
 
     @Override
     public void denyChallenge() {
-        System.out.println("Need to be challenged!");
+        client.denyChallenge();
     }
 
     @Override

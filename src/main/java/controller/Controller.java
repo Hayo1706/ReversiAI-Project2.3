@@ -8,13 +8,11 @@ import model.Peg;
  */
 public interface Controller {
     //see Model for description
-    public boolean gameOver();
-    //see Model for description
-    public void disable_pegs();
+    void disable_pegs();
     //see Model for description
     Peg[][] get_pegs();
     //Set the begin state of the board
-    public void setupBoard();
+    void setupBoard();
     //handle a move on the gui
     void nextTurn(Peg peg);
 

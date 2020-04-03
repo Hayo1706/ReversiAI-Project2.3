@@ -1,11 +1,13 @@
 package view;
 
+import com.sun.webkit.Timer;
 import communication.StrategicGameClient;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import model.Model;
 
 import java.io.IOException;
 
@@ -72,7 +74,6 @@ public class LoginView extends SceneView {
             }
 
             client.SwitchScene(GameClient.Scenes.GAMES);
-            StrategicGameClient.getInstance().startWaiting();
         });
 
         Button localButton = CreateButton("play local as Dylan");
@@ -80,18 +81,56 @@ public class LoginView extends SceneView {
             try {
                 StrategicGameClient.getInstance().connect("localhost", 7789);
                 StrategicGameClient.getInstance().login("Dylan");
+                Model.mode= Model.HUMAN_VS_SERVER;
+                Model.username="Dylan";
             } catch (IOException exception) {
                 errorLabel.setText("Cannot connect to ip and port");
                 return;
             }
-
             client.SwitchScene(GameClient.Scenes.GAMES);
-            StrategicGameClient.getInstance().startWaiting();
+
+        });
+
+        Button humanvsaireversi= CreateButton("Human vs ai reversi");
+        humanvsaireversi.setOnMouseClicked(e -> {
+
+                Model.mode= Model.HUMAN_VS_AI;
+                Model.username="Dylan";
+                client.StartGame(0);
+        });
+        Button humanvsaitictactoe= CreateButton("Human vs ai tictactoe");
+        humanvsaitictactoe.setOnMouseClicked(e -> {
+
+            Model.mode= Model.HUMAN_VS_AI;
+            Model.username="Dylan";
+            client.StartGame(1);
+
+        });
+        Button humanvshumanreversi= CreateButton("Human vs human reversi");
+        humanvshumanreversi.setOnMouseClicked(e -> {
+
+            Model.mode= Model.HUMAN_VS_HUMAN;
+            Model.username="Dylan";
+            client.StartGame(0);
+        });
+        Button humanvshumantictactoe= CreateButton("Human vs human tic-tac-toe");
+        humanvshumantictactoe.setOnMouseClicked(e -> {
+
+            Model.mode= Model.HUMAN_VS_HUMAN;
+            Model.username="Dylan";
+            client.StartGame(1);
         });
 
         rootVBox.getChildren().add(nameBox);
         rootVBox.getChildren().add(ipBox);
         rootVBox.getChildren().add(loginButton);
         rootVBox.getChildren().add(localButton);
+        //temporary for testing
+        rootVBox.getChildren().add(humanvsaireversi);
+        rootVBox.getChildren().add(humanvsaitictactoe);
+        rootVBox.getChildren().add(humanvshumanreversi);
+        rootVBox.getChildren().add(humanvshumantictactoe);
     }
+
+
 }

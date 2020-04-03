@@ -1,6 +1,7 @@
 package games.reversi.model;
 
-import javafx.scene.image.Image;
+import communication.StrategicGameClient;
+import communication.events.MatchStarted;
 import model.Model;
 import model.Peg;
 import player.LocalPlayer;
@@ -14,12 +15,14 @@ import static java.lang.Math.abs;
 
 public class ReversiModel extends Model {
     Set<Integer> validMoves = new HashSet<>();
-    int amountBlack;
-    int amountWhite;
+    int amountBlack = 0;
+    int amountWhite = 0;
 
     //Model
-    public ReversiModel(int boardsize, View view, ai.AI AI) {
-        super(boardsize, view, AI);
+    public ReversiModel(int boardsize, View view, ai.AI AI, MatchStarted matchStarted) {
+        super(boardsize, view, AI,matchStarted);
+        StrategicGameClient.getInstance().getEventBus().addObserver(this);
+
     }
     //Model
 
@@ -36,7 +39,6 @@ public class ReversiModel extends Model {
             }
         }
     }
-
     public void initSide() {
         side = PLAYER1;
 
@@ -51,14 +53,6 @@ public class ReversiModel extends Model {
         }
 
     }
-    public Image getFirstSymbol() {
-        return new Image("black.png");
-    }
-
-
-    public Image getSecondSymbol() {
-        return new Image("white.png");
-    }
 
     public void playMove(int move) {
 
@@ -68,13 +62,16 @@ public class ReversiModel extends Model {
                 peg.setTile(0);
                 checkAndSet(peg.getXPosition(),peg.getZPosition());
                 this.side = PLAYER1;
-                setText("Black's turn!" + " " + "Black - "+ amountBlack + "| " + "White - "+ amountWhite);
+                updateAmountsOfPegsOnBoard();
+                setText("Black's turn!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
+
             } else {
 
                 peg.setTile(1);
                 checkAndSet(peg.getXPosition(),peg.getZPosition());
                 this.side = PLAYER2;
-                setText("White's turn!" + " " + "Black - "+ amountBlack + "| " + "White - "+ amountWhite);
+                updateAmountsOfPegsOnBoard();
+                setText("White's turn!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
             }
     }
 
@@ -431,18 +428,6 @@ public class ReversiModel extends Model {
 
     public boolean isAWin(int side) {
 
-        amountBlack = 0;
-        amountWhite = 0;
-
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                if(get_pegs()[i][j].getPegState() == 0){
-                    amountWhite++;
-                } else if(get_pegs()[i][j].getPegState() == 1){
-                    amountBlack++;
-                }
-            }
-        }
         //check if board has empty space
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -451,12 +436,34 @@ public class ReversiModel extends Model {
                 }
             }
         }
+
         if(side == 0 && amountWhite < amountBlack){
             return true;
         } else if (side == 1 && amountBlack < amountWhite){
             return true;
         } else {
             return false;
+        }
+    }
+
+    /**
+     * @author Maurice Wijker
+     *
+     * updates amount (white or black) of pegs on board
+     */
+    public void updateAmountsOfPegsOnBoard(){
+
+        this.amountBlack = 0;
+        this.amountWhite = 0;
+
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if(get_pegs()[i][j].getPegState() == 0){
+                    this.amountWhite++;
+                } else if(get_pegs()[i][j].getPegState() == 1){
+                    this.amountBlack++;
+                }
+            }
         }
     }
 }

@@ -32,6 +32,7 @@ public class ReversiController implements controller.Controller {
 
     public void nextTurn(Peg peg) {
 
+
         if (model.is_mode(Model.HUMAN_VS_AI)) {
 
 
@@ -56,7 +57,7 @@ public class ReversiController implements controller.Controller {
             else
                 model.setText("Black has no moves, White's turn!");
         }
-        if (gameOver()) {
+        if (model.gameOver()) {
             disable_pegs();
         }
     }
@@ -81,10 +82,6 @@ public class ReversiController implements controller.Controller {
 
     public Peg[][] get_pegs() {
         return model.get_pegs();
-    }
-
-    public boolean gameOver() {
-        return model.gameOver();
     }
 
     public void disable_pegs() {

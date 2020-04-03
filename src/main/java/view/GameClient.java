@@ -1,9 +1,7 @@
 package view;
 
 import communication.StrategicGameClient;
-import communication.commands.Login;
 import communication.events.*;
-import controller.Controller;
 import games.reversi.controller.ReversiController;
 import games.reversi.model.ReversiAI;
 import games.reversi.model.ReversiModel;
@@ -12,13 +10,12 @@ import games.tictactoe.model.TicTacToeAI;
 import games.tictactoe.model.TicTacToeModel;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.Model;
 
+import java.util.Iterator;
 import java.util.Optional;
 
 public class GameClient extends Application {
@@ -54,12 +51,15 @@ public class GameClient extends Application {
 
     private void StartGame(int GameToPlay, MatchStarted event) {
         if (GameToPlay == 0) {
-            ((BoardView) boardView).SetUpGame("Reversi", 8, new ReversiController(new ReversiModel(8, boardView, new ReversiAI())));//, event)));
+            ((BoardView) boardView).SetUpGame("Reversi", 8, new ReversiController(new ReversiModel(8, boardView, new ReversiAI(),event)));
         } else if (GameToPlay == 1) {
-            ((BoardView) boardView).SetUpGame("Tic Tac Toe", 3, new TicTacToeController(new TicTacToeModel(3, boardView, new TicTacToeAI())));//, event)));
+            ((BoardView) boardView).SetUpGame("Tic Tac Toe", 3, new TicTacToeController(new TicTacToeModel(3, boardView, new TicTacToeAI(),event)));
         }
-
         SwitchScene(Scenes.GAME);
+    }
+    //local start game, no connection
+    public void StartGame(int GameToPlay){
+        StartGame(GameToPlay,null);
     }
 
     private void SetEvents() {
@@ -86,8 +86,6 @@ public class GameClient extends Application {
                 } else if (matchStarted.getGameType().equals("Tic-tac-toe")) {
                     Platform.runLater(() -> StartGame(1, matchStarted));
                 }
-            } else if (event instanceof GameOverEvent) {
-                Platform.runLater(() -> ((BoardView) boardView).GameOver((GameOverEvent) event));
             }
         });
     }
@@ -98,6 +96,13 @@ public class GameClient extends Application {
                 stage.setScene(loginView.getScene());
                 break;
             case GAMES:
+                //unregister model as observer
+                Iterator iterator= StrategicGameClient.getInstance().getEventBus().getObservers().iterator();
+                while (iterator.hasNext()){
+                    if (iterator.next() instanceof Model){
+                        iterator.remove();
+                    }
+                }
                 stage.setScene(gamesView.getScene());
                 break;
             case GAME:
@@ -111,4 +116,5 @@ public class GameClient extends Application {
         GAMES,
         GAME,
     }
+
 }

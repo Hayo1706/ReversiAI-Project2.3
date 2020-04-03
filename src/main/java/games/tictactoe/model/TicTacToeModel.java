@@ -2,10 +2,12 @@ package games.tictactoe.model;
 
 import ai.AI;
 import com.sun.webkit.Timer;
+import communication.events.MatchStarted;
 import javafx.application.Platform;
 import javafx.scene.image.Image;
 import model.Model;
 import model.Peg;
+import player.ExternalPlayer;
 import player.LocalPlayer;
 import view.GameClient;
 import view.View;
@@ -22,35 +24,35 @@ public class TicTacToeModel extends Model
 
     public void setValidMoves() { }
 
-    public TicTacToeModel(int boardsize, View view, AI ai) {
-        super(boardsize, view, ai);
+    public TicTacToeModel(int boardsize, View view, AI ai, MatchStarted matchStarted) {
+        super(boardsize, view, ai,matchStarted);
     }
 
     public void initSide() {
         if (is_mode(HUMAN_VS_AI)) {
 
-                player1 = new LocalPlayer(Model.username);
-                player2 = new LocalPlayer("Computer");
+            player1 = new LocalPlayer(Model.username);
+            player2 = new LocalPlayer("Computer");
 
 
-                side = random.nextInt(2);
-                if (side == PLAYER2) {
-                    player1.setSymbol(getSecondSymbol());
-                    player2.setSymbol(getFirstSymbol());
+            side = random.nextInt(2);
+            if (side == PLAYER2) {
+                player1.setSymbol(getSecondSymbol());
+                player2.setSymbol(getFirstSymbol());
 
-                    setText(player2.getName() + "'s turn!");
+                setText(player2.getName() + "'s turn!");
 
-                    int best = calculateBest();
-                        Platform.runLater(()-> {
-                            playMove(best);
-                        });
+                int best = calculateBest();
+                Platform.runLater(()-> {
+                    playMove(best);
+                });
 
 
-                } else {
-                    player1.setSymbol(getFirstSymbol());
-                    player2.setSymbol(getSecondSymbol());
-                    setText(player1.getName() + "'s turn!");
-                }
+            } else {
+                player1.setSymbol(getFirstSymbol());
+                player2.setSymbol(getSecondSymbol());
+                setText(player1.getName() + "'s turn!");
+            }
 
 
         } else if (is_mode(HUMAN_VS_HUMAN)) {
@@ -70,9 +72,29 @@ public class TicTacToeModel extends Model
 
             }
         }
-        //nothing: game is idle
+        //online multiplayer
         else {
+            //init players when playing online
+            if(matchStarted!=null) {
+                player1 = new LocalPlayer(Model.username);
+                player2 = new ExternalPlayer(matchStarted.getOpponent());
 
+                if (matchStarted.getPlayerToMove().equals(Model.username)) {
+                    side = PLAYER1;
+                    player1.setSymbol(getFirstSymbol());
+                    player2.setSymbol(getSecondSymbol());
+                    setText(player1.getName() + "'s turn!");
+
+
+                } else {
+                    disable_pegs();
+                    player1.setSymbol(getSecondSymbol());
+                    player2.setSymbol(getFirstSymbol());
+                    side = PLAYER2;
+
+                    setText(player2.getName() + "'s turn!");
+                }
+            }
         }
 
     }
@@ -91,18 +113,18 @@ public class TicTacToeModel extends Model
     }
     public void playMove(int move) {
 
-            TicTactToePeg peg = (TicTactToePeg) pegs[move / boardsize][move % boardsize];
+        TicTactToePeg peg = (TicTactToePeg) pegs[move / boardsize][move % boardsize];
 
-            if (side == PLAYER2) {
+        if (side == PLAYER2) {
 
-                peg.setTile(1,player2.getSymbol());
+            peg.setTile(1,player2.getSymbol());
 
-            } else {
-                peg.setTile(0,player1.getSymbol());
+        } else {
+            peg.setTile(0,player1.getSymbol());
 
-            }
+        }
 
-            change_side();
+        change_side();
     }
 
 
@@ -110,7 +132,7 @@ public class TicTacToeModel extends Model
 
     public int calculateBest() {
 
-            AI.pegs_to_board(pegs);
+        AI.pegs_to_board(pegs);
 
         int best = AI.chooseMove();
 
@@ -171,7 +193,7 @@ public class TicTacToeModel extends Model
     }
 
     public Image getFirstSymbol() {
-       return new Image("x.png");
+        return new Image("x.png");
     }
 
 
@@ -179,14 +201,3 @@ public class TicTacToeModel extends Model
         return new Image("o.png");
     }
 }
-
-
-
-
-
-
-
-
-
-
-

@@ -3,6 +3,8 @@ package communication;
 import java.io.*;
 import java.net.Socket;
 import java.util.Arrays;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * Created by Dylan Hiemstra
@@ -10,11 +12,13 @@ import java.util.Arrays;
 public class Connection {
     private BufferedReader inputStream;
     private DataOutputStream outputStream;
-    private Thread listeningThread = null;
+    private BlockingQueue<String> responses = new LinkedBlockingDeque<>();
 
     public Connection(Socket socket) throws IOException {
         inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         outputStream = new DataOutputStream(socket.getOutputStream());
+
+        new Thread(new ListeningThread(inputStream, responses)).start();
     }
 
     /**
@@ -34,30 +38,14 @@ public class Connection {
      * @return the Line
      */
     public String readLine() {
-//        StringBuilder line = new StringBuilder();
-//        int incomingByte;
-//
-//        try {
-//            while ((incomingByte = inputStream.read()) != 10) {
-//                if (incomingByte == -1) break; // disconnected
-//                if (incomingByte == 13) continue; // skip carriage return
-//                line.append((char) incomingByte);
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        System.out.println("Response from server: " + line);
-//
-//        return line.toString();
-        String line = "";
+        String line = null;
+
         try {
-            line = inputStream.readLine();
-        } catch (IOException e) {
+            line = responses.take();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        System.out.println("Response from server: " + line);
         return line;
     }
 
@@ -112,26 +100,4 @@ public class Connection {
         throw new NoSVRResponseException(line);
     }
 
-    public void startListening() {
-        if (listeningThread == null) {
-            listeningThread = new Thread(new ListeningThread(this));
-            listeningThread.start();
-        }
-    }
-
-    public void stopListening() {
-        if (listeningThread != null) {
-            listeningThread.interrupt();
-            listeningThread = null;
-        }
-    }
-
-    public boolean hasBytesToRead() {
-        try {
-            return inputStream.ready();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
 }
