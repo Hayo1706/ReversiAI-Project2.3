@@ -87,7 +87,7 @@ public class LoginView extends SceneView {
                 errorLabel.setText("Cannot connect to ip and port");
                 return;
             }
-
+            client.SwitchScene(GameClient.Scenes.GAMES);
 
         });
 
