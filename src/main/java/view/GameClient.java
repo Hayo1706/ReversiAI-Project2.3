@@ -13,7 +13,9 @@ import javafx.application.Platform;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import model.Model;
 
+import java.util.Iterator;
 import java.util.Optional;
 
 public class GameClient extends Application {
@@ -85,8 +87,6 @@ public class GameClient extends Application {
                 } else if (matchStarted.getGameType().equals("Tic-tac-toe")) {
                     Platform.runLater(() -> StartGame(1, matchStarted));
                 }
-            } else if (event instanceof GameOverEvent) {
-                Platform.runLater(() -> ((BoardView) boardView).GameOver((GameOverEvent) event));
             }
         });
     }
@@ -97,6 +97,13 @@ public class GameClient extends Application {
                 stage.setScene(loginView.getScene());
                 break;
             case GAMES:
+                //unregister model as observer
+                Iterator iterator= StrategicGameClient.getInstance().getEventBus().getObservers().iterator();
+                while (iterator.hasNext()){
+                    if (iterator.next() instanceof Model){
+                        iterator.remove();
+                    }
+                }
                 stage.setScene(gamesView.getScene());
                 break;
             case GAME:

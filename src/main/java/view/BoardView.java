@@ -8,8 +8,11 @@ import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import model.Model;
 import model.Peg;
 import communication.events.Loss;
+
+import java.util.Iterator;
 
 public class BoardView extends SceneView {
     private Label GameLabel= new Label("Game");
@@ -51,19 +54,27 @@ public class BoardView extends SceneView {
     }
 
     private void forfeit(){
+
         //only forfeit if game not ended
         if(!endGameButton.getText().equals("Back te Main Menu")) {
             StrategicGameClient.getInstance().forfeit();
             endGameButton.setText("Back te Main Menu");
-            endGameButton.setOnMouseClicked((e) -> client.SwitchScene(GameClient.Scenes.GAMES));
+            endGameButton.setOnMouseClicked((e) ->
+                    {
+                        endGameButton.setText("forfeit");
+                        endGameButton.setOnMouseClicked((ex) -> forfeit());
+                        client.SwitchScene(GameClient.Scenes.GAMES);
+
+                    }
+            );
+
         } else{
             client.SwitchScene(GameClient.Scenes.GAMES);
         }
+
     }
 
-    public void GameOver(GameOverEvent e){
-        setText("Game Over" + e.getPlayerOneScore() + e.getPlayerTwoScore());
-    }
+
 
     @Override
     public void setText(String s) {

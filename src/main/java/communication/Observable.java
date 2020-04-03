@@ -23,4 +23,7 @@ public class Observable<E> {
             observer.update(obj);
         }
     }
+    public List<Observer<E>> getObservers(){
+        return observers;
+    }
 }
