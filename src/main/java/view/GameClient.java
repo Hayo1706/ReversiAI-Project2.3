@@ -55,11 +55,10 @@ public class GameClient extends Application {
         } else if (GameToPlay == 1) {
             ((BoardView) boardView).SetUpGame("Tic Tac Toe", 3, new TicTacToeController(new TicTacToeModel(3, boardView, new TicTacToeAI(),event)));
         }
-
         SwitchScene(Scenes.GAME);
     }
     //local start game, no connection
-    private void StartGame(int GameToPlay){
+    public void StartGame(int GameToPlay){
         StartGame(GameToPlay,null);
     }
 

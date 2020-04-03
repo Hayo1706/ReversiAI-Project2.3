@@ -25,7 +25,7 @@ public abstract class SceneView implements View {
         title.getStyleClass().clear();
         title.getStyleClass().add("title-label");
         rootVBox.setAlignment(Pos.TOP_CENTER);
-        scene = new Scene(rootVBox,500,500);
+        scene = new Scene(rootVBox,600,600);
         scene.getStylesheets().add("style.css");
     }
 

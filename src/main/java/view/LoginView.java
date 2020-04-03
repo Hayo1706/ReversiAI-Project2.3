@@ -88,13 +88,48 @@ public class LoginView extends SceneView {
                 return;
             }
 
-            client.SwitchScene(GameClient.Scenes.GAMES);
+
+        });
+
+        Button humanvsaireversi= CreateButton("Human vs ai reversi");
+        humanvsaireversi.setOnMouseClicked(e -> {
+
+                Model.mode= Model.HUMAN_VS_AI;
+                Model.username="Dylan";
+                client.StartGame(0);
+        });
+        Button humanvsaitictactoe= CreateButton("Human vs ai tictactoe");
+        humanvsaitictactoe.setOnMouseClicked(e -> {
+
+            Model.mode= Model.HUMAN_VS_AI;
+            Model.username="Dylan";
+            client.StartGame(1);
+
+        });
+        Button humanvshumanreversi= CreateButton("Human vs human reversi");
+        humanvshumanreversi.setOnMouseClicked(e -> {
+
+            Model.mode= Model.HUMAN_VS_HUMAN;
+            Model.username="Dylan";
+            client.StartGame(0);
+        });
+        Button humanvshumantictactoe= CreateButton("Human vs human tic-tac-toe");
+        humanvshumantictactoe.setOnMouseClicked(e -> {
+
+            Model.mode= Model.HUMAN_VS_HUMAN;
+            Model.username="Dylan";
+            client.StartGame(1);
         });
 
         rootVBox.getChildren().add(nameBox);
         rootVBox.getChildren().add(ipBox);
         rootVBox.getChildren().add(loginButton);
         rootVBox.getChildren().add(localButton);
+        //temporary for testing
+        rootVBox.getChildren().add(humanvsaireversi);
+        rootVBox.getChildren().add(humanvsaitictactoe);
+        rootVBox.getChildren().add(humanvshumanreversi);
+        rootVBox.getChildren().add(humanvshumantictactoe);
     }
 
 

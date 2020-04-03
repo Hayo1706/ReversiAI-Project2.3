@@ -54,24 +54,26 @@ public class BoardView extends SceneView {
     }
 
     private void forfeit(){
+        if(!(Model.mode == Model.HUMAN_VS_HUMAN || Model.mode==Model.HUMAN_VS_AI)) {
+            //only forfeit if game not ended
+            if (!endGameButton.getText().equals("Back te Main Menu")) {
+                StrategicGameClient.getInstance().forfeit();
+                endGameButton.setText("Back te Main Menu");
+                endGameButton.setOnMouseClicked((e) ->
+                        {
+                            endGameButton.setText("forfeit");
+                            endGameButton.setOnMouseClicked((ex) -> forfeit());
+                            client.SwitchScene(GameClient.Scenes.GAMES);
 
-        //only forfeit if game not ended
-        if(!endGameButton.getText().equals("Back te Main Menu")) {
-            StrategicGameClient.getInstance().forfeit();
-            endGameButton.setText("Back te Main Menu");
-            endGameButton.setOnMouseClicked((e) ->
-                    {
-                        endGameButton.setText("forfeit");
-                        endGameButton.setOnMouseClicked((ex) -> forfeit());
-                        client.SwitchScene(GameClient.Scenes.GAMES);
+                        }
+                );
 
-                    }
-            );
-
-        } else{
-            client.SwitchScene(GameClient.Scenes.GAMES);
+            } else {
+                client.SwitchScene(GameClient.Scenes.GAMES);
+            }
+        } else {
+            client.SwitchScene(GameClient.Scenes.LOGIN);
         }
-
     }
 
 
