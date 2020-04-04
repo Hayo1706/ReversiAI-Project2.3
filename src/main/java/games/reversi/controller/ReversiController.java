@@ -39,7 +39,7 @@ public class ReversiController implements controller.Controller {
             model.playMove(peg.getXPosition() * 8 + peg.getZPosition());
             model.addToValidMoves();
             if(checkIfValidMoves())
-                model.playMove(model.getValidMoves().get(model.calculateBest()));
+                model.playMove(model.calculateBest());
 
 
 
