@@ -18,6 +18,7 @@ public class ReversiController implements controller.Controller {
         Animation animation = new Animation(model.get_pegs());
         animation.start();
         model.switch_gamemode(model.getMode());
+        model.addToValidMoves();
         model.setValidMoves();
     }
 
@@ -35,31 +36,43 @@ public class ReversiController implements controller.Controller {
 
         if (model.is_mode(Model.HUMAN_VS_AI)) {
 
+            model.playMove(peg.getXPosition() * 8 + peg.getZPosition());
+            model.addToValidMoves();
+            if(checkIfValidMoves())
+                model.playMove(model.calculateBest());
+
 
 
         } else if (model.is_mode(Model.HUMAN_VS_HUMAN)) {
             model.playMove(peg.getXPosition() * 8 + peg.getZPosition());
 
 
+
         } else if (model.is_mode(Model.HUMAN_VS_SERVER)) {
 
         }
+        model.addToValidMoves();
+        if(checkIfValidMoves())
+            model.setValidMoves();
 
+        if (model.gameOver()) {
+            disable_pegs();
+        }
+    }
 
-        model.setValidMoves();
-
+    public boolean checkIfValidMoves(){
         //If no available moves are present, other player gets the turn.
         if(model.getValidMoves().isEmpty()){
             model.setSide(abs(model.getSide()-1));
+            model.addToValidMoves();
             model.setValidMoves();
             if (model.getSide() == 0)
                 model.setText("White has no moves, Black's turn!");
             else
                 model.setText("Black has no moves, White's turn!");
+            return false;
         }
-        if (model.gameOver()) {
-            disable_pegs();
-        }
+        return true;
     }
 
 

@@ -22,8 +22,6 @@ public class TicTacToeModel extends Model
         //The games.tictactoe logic
 {
 
-    public void setValidMoves() { }
-
     public TicTacToeModel(int boardsize, View view, AI ai, MatchStarted matchStarted) {
         super(boardsize, view, ai,matchStarted);
     }
@@ -31,7 +29,7 @@ public class TicTacToeModel extends Model
     public void initSide() {
         if (is_mode(HUMAN_VS_AI)) {
 
-            player1 = new LocalPlayer(Model.username);
+            player1 = new LocalPlayer("Player");
             player2 = new LocalPlayer("Computer");
 
 
@@ -56,9 +54,9 @@ public class TicTacToeModel extends Model
 
 
         } else if (is_mode(HUMAN_VS_HUMAN)) {
-            side = random.nextInt(2);
-            player1 = new LocalPlayer(Model.username);
-            player2 = new LocalPlayer("Guest");
+            side = 0;
+            player1 = new LocalPlayer("Player 1");
+            player2 = new LocalPlayer("Player 2");
             if (side == PLAYER2) {
                 player1.setSymbol(getSecondSymbol());
                 player2.setSymbol(getFirstSymbol());

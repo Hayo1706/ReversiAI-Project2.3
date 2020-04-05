@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import model.Model;
 import model.Peg;
 
 public class BoardView extends SceneView {
@@ -65,7 +66,11 @@ public class BoardView extends SceneView {
 
     public void SetBackToMainMenu() {
         endGameButton.setText("Back te Main Menu");
-        endGameButton.setOnMouseClicked((e) -> client.SwitchScene(GameClient.Scenes.GAMES));
+        if(Model.mode==Model.HUMAN_VS_HUMAN || Model.mode==Model.HUMAN_VS_AI) {
+            endGameButton.setOnMouseClicked((e) -> client.SwitchScene(GameClient.Scenes.LOGIN));
+        } else{
+            endGameButton.setOnMouseClicked((e) -> client.SwitchScene(GameClient.Scenes.GAMES));
+        }
     }
 
     @Override
