@@ -65,7 +65,7 @@ public class LoginView extends SceneView {
         nameField.setPromptText("Peter");
 
         TextField ipField = new TextField();
-        ipField.setPromptText("localhost");
+        ipField.setPromptText("127.0.0.1");
         ipField.textProperty().addListener((observableValue, oldString, newString) -> {
             if (!newString.matches("^\\d+(\\.|\\d+)*$") && !newString.isBlank()) {
                 ipField.setText(oldString);
@@ -98,9 +98,17 @@ public class LoginView extends SceneView {
                     return;
                 }
 
-                int Port = Integer.parseInt(portField.getText());
+                String ip = "";
+                int port = 0;
 
-                StrategicGameClient.getInstance().connect(ipField.getText(), Port);
+                if (portField.getText().isEmpty() && ipField.getText().isEmpty()){
+                    ip = "127.0.0.1";
+                    port = 7789;
+                }else {
+                    ip = ipField.getText();
+                    port = Integer.parseInt(portField.getText());
+                }
+                StrategicGameClient.getInstance().connect(ip, port);
                 StrategicGameClient.getInstance().login(playerName);
 
                 Model.username = playerName;
