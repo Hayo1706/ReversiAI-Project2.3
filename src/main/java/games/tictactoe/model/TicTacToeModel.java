@@ -55,8 +55,8 @@ public class TicTacToeModel extends Model
 
         } else if (is_mode(HUMAN_VS_HUMAN)) {
             side = 0;
-            player1 = new LocalPlayer("Player 1");
-            player2 = new LocalPlayer("Player 2");
+            player1 = new LocalPlayer(username);
+            player2 = new LocalPlayer(username2);
             if (side == PLAYER2) {
                 player1.setSymbol(getSecondSymbol());
                 player2.setSymbol(getFirstSymbol());

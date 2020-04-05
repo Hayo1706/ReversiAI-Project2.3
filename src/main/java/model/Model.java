@@ -36,6 +36,7 @@ public abstract class Model implements Observer<Event>{
 
     //gamemode and username of loggedin person
     public static String username = "";
+    public static String username2 = "";
     public static int mode =IDLE;
 
 

@@ -3,6 +3,7 @@ package view;
 import communication.StrategicGameClient;
 import controller.Controller;
 import javafx.geometry.HPos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -52,7 +53,10 @@ public class BoardView extends SceneView {
 
     public void forfeit() {
         if (Model.mode == Model.HUMAN_VS_HUMAN || Model.mode == Model.HUMAN_VS_AI) {
-            // TODO forfeit local game?
+            for (Node node:GridPane.getChildren()) {
+                Peg peg=(Peg) node;
+                peg.setDisable(true);
+            }
         } else {
             StrategicGameClient.getInstance().forfeit();
         }
