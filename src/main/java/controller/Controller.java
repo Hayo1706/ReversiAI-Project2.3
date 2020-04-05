@@ -15,5 +15,6 @@ public interface Controller {
     void setupBoard();
     //handle a move on the gui
     void nextTurn(Peg peg);
-
+    //get the side form model
+    int getSide();
 }

@@ -14,7 +14,7 @@ import model.Peg;
 public class BoardView extends SceneView {
     private Label GameLabel = new Label("Game");
     private GridPane GridPane = new GridPane();
-
+    private Controller controller;
     private Button endGameButton;
 
     public BoardView(GameClient client) {
@@ -35,7 +35,7 @@ public class BoardView extends SceneView {
 
     public void SetUpGame(String gameName, int size, Controller controller) {
         title.setText(gameName);
-
+        this.controller=controller;
         GridPane.getChildren().clear();
 
         for (int i = 0; i < size; i++) {
@@ -57,6 +57,18 @@ public class BoardView extends SceneView {
                 Peg peg=(Peg) node;
                 peg.setDisable(true);
             }
+            //display who wins
+            if(Model.mode==Model.HUMAN_VS_AI){
+                setText("Computer wins! Player gave up!");
+            }
+            else if(controller.getSide()==0){
+                setText(Model.username2 + " wins! " + Model.username + " gave up!");
+            }
+            else{
+                setText(Model.username + " wins! " + Model.username2 + " gave up!");
+            }
+
+
         } else {
             StrategicGameClient.getInstance().forfeit();
         }

@@ -72,4 +72,8 @@ public class TicTacToeController implements Controller {
         model.disable_pegs();
     }
 
+
+    public int getSide() {
+        return model.getSide();
+    }
 }
