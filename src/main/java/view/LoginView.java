@@ -13,6 +13,7 @@ import javafx.scene.layout.VBox;
 import model.Model;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 public class LoginView extends SceneView {
     public LoginView(GameClient client) {
@@ -36,7 +37,6 @@ public class LoginView extends SceneView {
         VBox offlineBox = CreateOffline();
 
         playMode.valueProperty().addListener((observableValue, oldValue, newValue) -> {
-            System.out.println(newValue);
             loginPane.getChildren().clear();
             switch (newValue) {
                 default:
@@ -61,35 +61,38 @@ public class LoginView extends SceneView {
         Label ipLabel = CreateLabel("Ip:");
         Label portLabel = CreateLabel("Port:");
 
+        Label errorLabel = CreateLabel("");
 
         TextField nameField = new TextField();
         nameField.setPromptText("Peter");
 
         TextField ipField = new TextField();
         ipField.setPromptText("localhost");
-        // miss later voor checking
-//        ipField.textProperty().addListener((observableValue, oldString, newString) -> {
-//            if (!newString.matches("^\\d+(\\.\\d+)*$")){
-//                ipField.setText(newString.replace("[^\\d|\\.]", ""));
-//            }
-//        });
+        ipField.textProperty().addListener((observableValue, oldString, newString) -> {
+            System.out.println("new: " + newString);
+            System.out.println("old: " + oldString);
+
+            if (!newString.matches("^\\d+(\\.|\\d+)*$") && !newString.isBlank()){
+                ipField.setText(oldString);
+                errorLabel.setText("only numbers and dots for the ip \n (connecting to localhost can be dod with 127.0.0.1)");
+            }
+        });
 
 
         TextField portField = new TextField();
         portField.setPromptText("7789");
-        // miss later voor checking
-//        portField.textProperty().addListener((observableValue, oldString, newString) -> {
-//                if (!newString.matches("\\d*")){
-//                    portField.setText(newString.replace("[^\\d]", ""));
-//                }
-//        });
+        portField.textProperty().addListener((observableValue, oldString, newString) -> {
+                if (!newString.matches("\\d*")){
+                    portField.setText(oldString);// newString.replace("[^\\d]", ""));
+                    errorLabel.setText("port only contains digits");
+                }
+        });
 
         HBox nameBox = new HBox(nameLabel, nameField);
         nameBox.setAlignment(Pos.TOP_CENTER);
         HBox ipBox = new HBox(ipLabel, ipField, portLabel, portField);
         ipBox.setAlignment(Pos.TOP_CENTER);
 
-        Label errorLabel = CreateLabel("");
 
         Button StartButton = CreateButton("Start");
         StartButton.setOnMouseClicked(e -> {
