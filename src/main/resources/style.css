@@ -69,5 +69,5 @@
 }
 
 .error{
-    -fx-font-color: red;
+    -fx-text-fill: #ff0000;
 }
