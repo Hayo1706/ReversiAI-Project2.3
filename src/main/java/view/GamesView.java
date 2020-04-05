@@ -6,10 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Cell;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.Model;
@@ -31,6 +28,19 @@ public class GamesView extends SceneView {
         super.CreateScene();
 
         title.setText("available Games");
+
+        Label aILabel = CreateLabel("Let the ai play?");
+        CheckBox aICheckbox = new CheckBox();
+        aICheckbox.selectedProperty().addListener((observableValue, oldValue, newValue) -> {
+            if (newValue){
+                Model.mode = Model.AI_VS_SERVER;
+            }else{
+                Model.mode = Model.HUMAN_VS_SERVER;
+            }
+        });
+
+        HBox aIHBox = new HBox(aILabel,aICheckbox);
+        aIHBox.setAlignment(Pos.CENTER);
 
         Label gamesListLabel = CreateLabel("Games available:");
         Label playerGameListLabel = CreateLabel("Players ready to play game:");
@@ -65,6 +75,7 @@ public class GamesView extends SceneView {
         HBox buttonBox = new HBox(refreshButton,backButton);
         buttonBox.setAlignment(Pos.CENTER);
 
+        rootVBox.getChildren().add(aIHBox);
         rootVBox.getChildren().add(hBox);
         rootVBox.getChildren().add(buttonBox);
     }

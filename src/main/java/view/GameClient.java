@@ -64,6 +64,7 @@ public class GameClient extends Application {
 
         SwitchScene(Scenes.GAME);
     }
+
     //local start game, no connection
     public void StartGame(Games GameToPlay){
         StartGame(GameToPlay,null);

@@ -27,9 +27,6 @@ public class BoardView extends SceneView {
     public void CreateScene() {
         super.CreateScene();
 
-//        GameLabel.setAlignment(Pos.CENTER);
-
-//        SetEndGameButton();
         endGameButton = CreateButton("forfeit");
         endGameButton.setOnMouseClicked((e) -> forfeit());
 
@@ -57,7 +54,12 @@ public class BoardView extends SceneView {
     }
 
     public void forfeit() {
-        StrategicGameClient.getInstance().forfeit();
+        if (Model.mode == Model.HUMAN_VS_HUMAN || Model.mode == Model.HUMAN_VS_AI) {
+            // TODO forfeit local game?
+        } else {
+            StrategicGameClient.getInstance().forfeit();
+        }
+
         SetBackToMainMenu();
     }
 
@@ -68,9 +70,9 @@ public class BoardView extends SceneView {
 
     public void SetBackToMainMenu() {
         endGameButton.setText("Back te Main Menu");
-        if(Model.mode==Model.HUMAN_VS_HUMAN || Model.mode==Model.HUMAN_VS_AI) {
+        if (Model.mode == Model.HUMAN_VS_HUMAN || Model.mode == Model.HUMAN_VS_AI) {
             endGameButton.setOnMouseClicked((e) -> client.SwitchScene(GameClient.Scenes.GAMESOFFLINE));
-        } else{
+        } else {
             endGameButton.setOnMouseClicked((e) -> client.SwitchScene(GameClient.Scenes.GAMESONLINE));
         }
     }
