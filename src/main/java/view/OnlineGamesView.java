@@ -53,7 +53,6 @@ public class OnlineGamesView extends SceneView {
         ListView playerGameListView = new ListView();
         playerGameListView.setItems(playerGameList);
         playerGameListView.setOnMouseClicked(mouseEvent -> {
-            System.out.println(playerGameListView.getSelectionModel().getSelectedItem());
             var splitted = playerGameListView.getSelectionModel().getSelectedItem().toString().split(",");
             var player = splitted[0];
             var game = splitted[1];
