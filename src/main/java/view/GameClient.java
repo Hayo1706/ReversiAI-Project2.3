@@ -22,7 +22,7 @@ public class GameClient extends Application {
 
     private Stage stage;
 
-    private SceneView loginView, gamesView, boardView;
+    private SceneView loginView, OnlineGamesView, boardView, OfflineGamesView;
 
     @Override
     public void start(Stage stage) {
@@ -36,12 +36,15 @@ public class GameClient extends Application {
         boardView = new BoardView(this);
         boardView.CreateScene();
 
-        gamesView = new GamesView(this);
-        gamesView.CreateScene();
+        OnlineGamesView = new GamesView(this);
+        OnlineGamesView.CreateScene();
+
+        OfflineGamesView = new OfflineGamesView(this);
+        OfflineGamesView.CreateScene();
 
 
         stage.setResizable(false);
-        stage.setTitle("!!!Games!!!");
+        stage.setTitle("!!!GAMESONLINE!!!");
         stage.initStyle(StageStyle.DECORATED);
 
         stage.show();
@@ -49,16 +52,20 @@ public class GameClient extends Application {
         SwitchScene(Scenes.LOGIN);
     }
 
-    private void StartGame(int GameToPlay, MatchStarted event) {
-        if (GameToPlay == 0) {
-            ((BoardView) boardView).SetUpGame("Reversi", 8, new ReversiController(new ReversiModel(8, boardView, new ReversiAI(),event)));
-        } else if (GameToPlay == 1) {
-            ((BoardView) boardView).SetUpGame("Tic Tac Toe", 3, new TicTacToeController(new TicTacToeModel(3, boardView, new TicTacToeAI(),event)));
+    private void StartGame(Games gameToPlay, MatchStarted event) {
+        switch (gameToPlay) {
+            case TICTACTOE:
+                ((BoardView) boardView).SetUpGame("Tic Tac Toe", 3, new TicTacToeController(new TicTacToeModel(3, boardView, new TicTacToeAI(),event)));
+                break;
+            case REVERSI:
+                ((BoardView) boardView).SetUpGame("Reversi", 8, new ReversiController(new ReversiModel(8, boardView, new ReversiAI(),event)));
+                break;
         }
+
         SwitchScene(Scenes.GAME);
     }
     //local start game, no connection
-    public void StartGame(int GameToPlay){
+    public void StartGame(Games GameToPlay){
         StartGame(GameToPlay,null);
     }
 
@@ -82,9 +89,9 @@ public class GameClient extends Application {
                 MatchStarted matchStarted = (MatchStarted) event;
 
                 if (matchStarted.getGameType().equals("Reversi")) {
-                    Platform.runLater(() -> StartGame(0, matchStarted));
+                    Platform.runLater(() -> StartGame(Games.REVERSI, matchStarted));
                 } else if (matchStarted.getGameType().equals("Tic-tac-toe")) {
-                    Platform.runLater(() -> StartGame(1, matchStarted));
+                    Platform.runLater(() -> StartGame(Games.TICTACTOE, matchStarted));
                 }
             }
         });
@@ -95,7 +102,7 @@ public class GameClient extends Application {
             case LOGIN:
                 stage.setScene(loginView.getScene());
                 break;
-            case GAMES:
+            case GAMESONLINE:
                 //unregister model as observer
                 Iterator iterator= StrategicGameClient.getInstance().getEventBus().getObservers().iterator();
                 while (iterator.hasNext()){
@@ -103,7 +110,10 @@ public class GameClient extends Application {
                         iterator.remove();
                     }
                 }
-                stage.setScene(gamesView.getScene());
+                stage.setScene(OnlineGamesView.getScene());
+                break;
+            case GAMESOFFLINE:
+                stage.setScene(OfflineGamesView.getScene());
                 break;
             case GAME:
                 stage.setScene(boardView.getScene());
@@ -113,8 +123,14 @@ public class GameClient extends Application {
 
     public enum Scenes {
         LOGIN,
-        GAMES,
+        GAMESONLINE,
+        GAMESOFFLINE,
         GAME,
+    }
+
+    public enum Games{
+        TICTACTOE,
+        REVERSI
     }
 
 }

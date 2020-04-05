@@ -6,11 +6,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Cell;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import model.Model;
 import org.json.JSONArray;
 
 import java.util.List;
@@ -49,16 +51,22 @@ public class GamesView extends SceneView {
             StrategicGameClient.getInstance().challenge(player, game);
         });
 
-        var refreshButton = CreateButton("refresh");
-        refreshButton.setOnMouseClicked((e)->UpdateListView());
-
         VBox GamesVBox = new VBox(gamesListLabel, gamesListView);
         VBox playerVBox = new VBox(playerGameListLabel, playerGameListView);
         HBox hBox = new HBox(GamesVBox, playerVBox);
         hBox.setAlignment(Pos.TOP_CENTER);
 
+        var refreshButton = CreateButton("refresh");
+        refreshButton.setOnMouseClicked((e) -> UpdateListView());
+
+        Button backButton = CreateButton("Back to login screen");
+        backButton.setOnMouseClicked((e) -> client.SwitchScene(GameClient.Scenes.LOGIN));
+
+        HBox buttonBox = new HBox(refreshButton,backButton);
+        buttonBox.setAlignment(Pos.CENTER);
+
         rootVBox.getChildren().add(hBox);
-        rootVBox.getChildren().add(refreshButton);
+        rootVBox.getChildren().add(buttonBox);
     }
 
     private void UpdateListView() {
@@ -73,8 +81,10 @@ public class GamesView extends SceneView {
 
         playerGameList.clear();
         for (String player : JsonArrayToObservable(jsonPlayerList)) {
-            for (String game : listOfGames) {
-                playerGameList.add(player + ", " + game);
+            if (!player.equals(Model.username)) {
+                for (String game : listOfGames) {
+                    playerGameList.add(player + ", " + game);
+                }
             }
         }
     }
