@@ -4,6 +4,7 @@ import communication.StrategicGameClient;
 import communication.events.GameOverEvent;
 import controller.Controller;
 import javafx.application.Platform;
+import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -26,7 +27,7 @@ public class BoardView extends SceneView {
     public void CreateScene() {
         super.CreateScene();
 
-        GameLabel.setAlignment(Pos.BASELINE_RIGHT);
+//        GameLabel.setAlignment(Pos.CENTER);
 
 //        SetEndGameButton();
         endGameButton = CreateButton("forfeit");
@@ -50,6 +51,7 @@ public class BoardView extends SceneView {
                             controller.nextTurn(peg);
                         });
                 GridPane.add(peg, peg.getZPosition(), peg.getXPosition());
+                GridPane.setHalignment(peg, HPos.CENTER);
             }
         }
     }
@@ -67,9 +69,9 @@ public class BoardView extends SceneView {
     public void SetBackToMainMenu() {
         endGameButton.setText("Back te Main Menu");
         if(Model.mode==Model.HUMAN_VS_HUMAN || Model.mode==Model.HUMAN_VS_AI) {
-            endGameButton.setOnMouseClicked((e) -> client.SwitchScene(GameClient.Scenes.LOGIN));
+            endGameButton.setOnMouseClicked((e) -> client.SwitchScene(GameClient.Scenes.GAMESOFFLINE));
         } else{
-            endGameButton.setOnMouseClicked((e) -> client.SwitchScene(GameClient.Scenes.GAMES));
+            endGameButton.setOnMouseClicked((e) -> client.SwitchScene(GameClient.Scenes.GAMESONLINE));
         }
     }
 
