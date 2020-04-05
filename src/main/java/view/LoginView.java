@@ -60,6 +60,7 @@ public class LoginView extends SceneView {
         Label portLabel = CreateLabel("Port:");
 
         Label errorLabel = CreateLabel("");
+        errorLabel.getStyleClass().add("error");
 
         TextField nameField = new TextField();
         nameField.setPromptText("Peter");
@@ -98,8 +99,8 @@ public class LoginView extends SceneView {
                     return;
                 }
 
-                String ip = "";
-                int port = 0;
+                String ip;
+                int port;
 
                 if (portField.getText().isEmpty() && ipField.getText().isEmpty()){
                     ip = "127.0.0.1";
@@ -149,6 +150,7 @@ public class LoginView extends SceneView {
         nameBox2.setAlignment(Pos.TOP_CENTER);
 
         Label errorLabel = CreateLabel("");
+        errorLabel.getStyleClass().add("error");
 
         Button StartButton = CreateButton("Start");
         StartButton.setOnMouseClicked(e -> {
