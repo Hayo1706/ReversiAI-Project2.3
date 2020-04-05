@@ -95,14 +95,12 @@ public class LoginView extends SceneView {
         humanvsaireversi.setOnMouseClicked(e -> {
 
                 Model.mode= Model.HUMAN_VS_AI;
-                Model.username="Dylan";
                 client.StartGame(0);
         });
         Button humanvsaitictactoe= CreateButton("Human vs ai tictactoe");
         humanvsaitictactoe.setOnMouseClicked(e -> {
 
             Model.mode= Model.HUMAN_VS_AI;
-            Model.username="Dylan";
             client.StartGame(1);
 
         });
@@ -110,14 +108,12 @@ public class LoginView extends SceneView {
         humanvshumanreversi.setOnMouseClicked(e -> {
 
             Model.mode= Model.HUMAN_VS_HUMAN;
-            Model.username="Dylan";
             client.StartGame(0);
         });
         Button humanvshumantictactoe= CreateButton("Human vs human tic-tac-toe");
         humanvshumantictactoe.setOnMouseClicked(e -> {
 
             Model.mode= Model.HUMAN_VS_HUMAN;
-            Model.username="Dylan";
             client.StartGame(1);
         });
 
