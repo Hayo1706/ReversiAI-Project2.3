@@ -16,6 +16,9 @@ public class LoginView extends SceneView {
         super(client);
     }
 
+    private TextField nameField;
+    private Label errorLabel;
+
     @Override
     public void CreateScene() {
 
@@ -27,7 +30,7 @@ public class LoginView extends SceneView {
         Label portLabel = CreateLabel("Port:");
 
 
-        TextField nameField = new TextField();
+        nameField = new TextField();
         nameField.setPromptText("Peter");
 
         TextField ipField = new TextField();
@@ -54,7 +57,7 @@ public class LoginView extends SceneView {
         HBox ipBox = new HBox(ipLabel, ipField, portLabel, portField);
         ipBox.setAlignment(Pos.TOP_CENTER);
 
-        Label errorLabel = new Label();
+        errorLabel = new Label();
         errorLabel.getStyleClass().clear();
         errorLabel.getStyleClass().add("error");
 
@@ -81,41 +84,19 @@ public class LoginView extends SceneView {
             try {
                 StrategicGameClient.getInstance().connect("localhost", 7789);
                 StrategicGameClient.getInstance().login("Dylan");
-                Model.mode= Model.HUMAN_VS_SERVER;
-                Model.username="Dylan";
+                Model.mode = Model.HUMAN_VS_SERVER;
+                Model.username = "Dylan";
             } catch (IOException exception) {
                 errorLabel.setText("Cannot connect to ip and port");
                 return;
             }
             client.SwitchScene(GameClient.Scenes.GAMES);
-
         });
 
-        Button humanvsaireversi= CreateButton("Human vs ai reversi");
-        humanvsaireversi.setOnMouseClicked(e -> {
-
-                Model.mode= Model.HUMAN_VS_AI;
-                client.StartGame(0);
-        });
-        Button humanvsaitictactoe= CreateButton("Human vs ai tictactoe");
-        humanvsaitictactoe.setOnMouseClicked(e -> {
-
-            Model.mode= Model.HUMAN_VS_AI;
-            client.StartGame(1);
-
-        });
-        Button humanvshumanreversi= CreateButton("Human vs human reversi");
-        humanvshumanreversi.setOnMouseClicked(e -> {
-
-            Model.mode= Model.HUMAN_VS_HUMAN;
-            client.StartGame(0);
-        });
-        Button humanvshumantictactoe= CreateButton("Human vs human tic-tac-toe");
-        humanvshumantictactoe.setOnMouseClicked(e -> {
-
-            Model.mode= Model.HUMAN_VS_HUMAN;
-            client.StartGame(1);
-        });
+        Button humanvsaireversi = CreatePlayOfflineButton("Human vs ai reversi",Model.HUMAN_VS_AI,"Dylan",0);
+        Button humanvsaitictactoe = CreatePlayOfflineButton("Human vs ai tictactoe",Model.HUMAN_VS_AI,"Dylan",1);
+        Button humanvshumanreversi = CreatePlayOfflineButton("Human vs human reversi",Model.HUMAN_VS_HUMAN,"Dylan",0);
+        Button humanvshumantictactoe = CreatePlayOfflineButton("Human vs human tic-tac-toe",Model.HUMAN_VS_HUMAN,"Dylan",1);
 
         rootVBox.getChildren().add(nameBox);
         rootVBox.getChildren().add(ipBox);
@@ -128,5 +109,23 @@ public class LoginView extends SceneView {
         rootVBox.getChildren().add(humanvshumantictactoe);
     }
 
+    private Button CreatePlayOfflineButton(String text, int mode, String name, int GameToPlay) {
 
+        Button button = CreateButton(text);
+        button.setOnMouseClicked(e -> PlayLocal(mode, name, GameToPlay));
+
+        return button;
+    }
+
+    private void PlayLocal(int mode, String name, int GameToPlay) {
+        Model.mode = mode;
+
+        if (nameField.getText().isEmpty() || nameField.getText().isBlank()){
+            errorLabel.setText("please fill in your name");
+            return;
+        }
+
+        Model.username = name;
+        client.StartGame(GameToPlay);
+    }
 }

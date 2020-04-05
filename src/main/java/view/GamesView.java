@@ -49,12 +49,16 @@ public class GamesView extends SceneView {
             StrategicGameClient.getInstance().challenge(player, game);
         });
 
+        var refreshButton = CreateButton("refresh");
+        refreshButton.setOnMouseClicked((e)->UpdateListView());
+
         VBox GamesVBox = new VBox(gamesListLabel, gamesListView);
         VBox playerVBox = new VBox(playerGameListLabel, playerGameListView);
         HBox hBox = new HBox(GamesVBox, playerVBox);
         hBox.setAlignment(Pos.TOP_CENTER);
 
         rootVBox.getChildren().add(hBox);
+        rootVBox.getChildren().add(refreshButton);
     }
 
     private void UpdateListView() {
