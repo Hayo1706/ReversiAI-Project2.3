@@ -70,9 +70,6 @@ public class LoginView extends SceneView {
         TextField ipField = new TextField();
         ipField.setPromptText("127.0.0.1");
         ipField.textProperty().addListener((observableValue, oldString, newString) -> {
-            System.out.println("new: " + newString);
-            System.out.println("old: " + oldString);
-
             if (!newString.matches("^\\d+(\\.|\\d+)*$") && !newString.isBlank()){
                 ipField.setText(oldString);
                 errorLabel.setText("only numbers and dots for the ip \n (connecting to localhost can be dod with 127.0.0.1)");
