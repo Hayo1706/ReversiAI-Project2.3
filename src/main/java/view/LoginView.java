@@ -159,7 +159,7 @@ public class LoginView extends SceneView {
             }
 
             Model.username = name1;
-//            Model.username = name1; How about name 2?
+            Model.username2=name2;
 
             client.SwitchScene(GameClient.Scenes.GAMESOFFLINE);
         });
