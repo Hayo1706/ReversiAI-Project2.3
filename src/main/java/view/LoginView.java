@@ -1,6 +1,6 @@
 package view;
 
-import com.sun.webkit.Timer;
+
 import communication.StrategicGameClient;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -13,7 +13,7 @@ import javafx.scene.layout.VBox;
 import model.Model;
 
 import java.io.IOException;
-import java.util.regex.Pattern;
+
 
 public class LoginView extends SceneView {
     public LoginView(GameClient client) {
@@ -157,7 +157,6 @@ public class LoginView extends SceneView {
                 errorLabel.setText("please fill in you names");
                 return;
             }
-
             Model.username = name1;
             Model.username2=name2;
 

@@ -2,7 +2,6 @@ package view;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import model.Model;
 
@@ -38,7 +37,6 @@ public class OfflineGamesView extends SceneView {
 
         Button playVsAI = CreateButton("Play " + gameName + " vs AI");
         playVsAI.setOnMouseClicked((e) -> {
-            System.out.println("vs ai");
             Model.mode = Model.HUMAN_VS_AI;
             client.StartGame(game);
         });

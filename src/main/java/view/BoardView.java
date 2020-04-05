@@ -1,11 +1,8 @@
 package view;
 
 import communication.StrategicGameClient;
-import communication.events.GameOverEvent;
 import controller.Controller;
-import javafx.application.Platform;
 import javafx.geometry.HPos;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -60,7 +57,6 @@ public class BoardView extends SceneView {
                 Peg peg=(Peg) node;
                 peg.setDisable(true);
             }
-
         } else {
             StrategicGameClient.getInstance().forfeit();
         }

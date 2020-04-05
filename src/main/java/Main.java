@@ -28,6 +28,6 @@ public class Main {
 
         //Application.launch(DebugBar.class);
 
-         Application.launch(GameClient.class);
+        Application.launch(GameClient.class);
     }
 }
