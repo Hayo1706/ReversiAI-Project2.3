@@ -36,12 +36,11 @@ public class GameClient extends Application {
         boardView = new BoardView(this);
         boardView.CreateScene();
 
-        OnlineGamesView = new GamesView(this);
+        OnlineGamesView = new OnlineGamesView(this);
         OnlineGamesView.CreateScene();
 
         OfflineGamesView = new OfflineGamesView(this);
         OfflineGamesView.CreateScene();
-
 
         stage.setResizable(false);
         stage.setTitle("!!!GAMESONLINE!!!");
@@ -55,10 +54,10 @@ public class GameClient extends Application {
     private void StartGame(Games gameToPlay, MatchStarted event) {
         switch (gameToPlay) {
             case TICTACTOE:
-                ((BoardView) boardView).SetUpGame("Tic Tac Toe", 3, new TicTacToeController(new TicTacToeModel(3, boardView, new TicTacToeAI(),event)));
+                ((BoardView) boardView).SetUpGame("Tic Tac Toe", 3, new TicTacToeController(new TicTacToeModel(3, boardView, new TicTacToeAI(), event)));
                 break;
             case REVERSI:
-                ((BoardView) boardView).SetUpGame("Reversi", 8, new ReversiController(new ReversiModel(8, boardView, new ReversiAI(),event)));
+                ((BoardView) boardView).SetUpGame("Reversi", 8, new ReversiController(new ReversiModel(8, boardView, new ReversiAI(), event)));
                 break;
         }
 
@@ -66,8 +65,8 @@ public class GameClient extends Application {
     }
 
     //local start game, no connection
-    public void StartGame(Games GameToPlay){
-        StartGame(GameToPlay,null);
+    public void StartGame(Games GameToPlay) {
+        StartGame(GameToPlay, null);
     }
 
     private void SetEvents() {
@@ -103,19 +102,22 @@ public class GameClient extends Application {
             case LOGIN:
                 stage.setScene(loginView.getScene());
                 break;
+
             case GAMESONLINE:
                 //unregister model as observer
-                Iterator iterator= StrategicGameClient.getInstance().getEventBus().getObservers().iterator();
-                while (iterator.hasNext()){
-                    if (iterator.next() instanceof Model){
+                Iterator iterator = StrategicGameClient.getInstance().getEventBus().getObservers().iterator();
+                while (iterator.hasNext()) {
+                    if (iterator.next() instanceof Model) {
                         iterator.remove();
                     }
                 }
                 stage.setScene(OnlineGamesView.getScene());
                 break;
+
             case GAMESOFFLINE:
                 stage.setScene(OfflineGamesView.getScene());
                 break;
+
             case GAME:
                 stage.setScene(boardView.getScene());
                 break;
@@ -129,9 +131,8 @@ public class GameClient extends Application {
         GAME,
     }
 
-    public enum Games{
+    public enum Games {
         TICTACTOE,
         REVERSI
     }
-
 }

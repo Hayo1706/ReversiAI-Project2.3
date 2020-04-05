@@ -17,20 +17,20 @@ public abstract class SceneView implements View {
     private Scene scene;
 
 
-    public SceneView(GameClient client){
+    public SceneView(GameClient client) {
         this.client = client;
     }
 
-    public void CreateScene(){
+    public void CreateScene() {
         title.getStyleClass().clear();
         title.getStyleClass().add("title-label");
         rootVBox.setAlignment(Pos.TOP_CENTER);
-        scene = new Scene(rootVBox,600,600);
+        scene = new Scene(rootVBox, 600, 600);
         scene.getStylesheets().add("style.css");
     }
 
     @Override
-    public void setText(String text){
+    public void setText(String text) {
         title.setText(text);
     }
 
@@ -43,7 +43,7 @@ public abstract class SceneView implements View {
         return button;
     }
 
-    protected Label CreateLabel(String text){
+    protected Label CreateLabel(String text) {
         var label = new Label(text);
 
         label.getStyleClass().clear();
@@ -52,7 +52,7 @@ public abstract class SceneView implements View {
         return label;
     }
 
-    public Scene getScene(){
+    public Scene getScene() {
         return scene;
     }
 

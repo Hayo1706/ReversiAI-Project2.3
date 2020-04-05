@@ -1,11 +1,8 @@
 package view;
 
 import communication.StrategicGameClient;
-import communication.events.GameOverEvent;
 import controller.Controller;
-import javafx.application.Platform;
 import javafx.geometry.HPos;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;

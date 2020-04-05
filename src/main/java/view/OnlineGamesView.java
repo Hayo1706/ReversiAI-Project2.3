@@ -1,6 +1,5 @@
 package view;
 
-import com.sun.javafx.scene.control.LabeledText;
 import communication.StrategicGameClient;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,8 +14,8 @@ import org.json.JSONArray;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GamesView extends SceneView {
-    public GamesView(GameClient client) {
+public class OnlineGamesView extends SceneView {
+    public OnlineGamesView(GameClient client) {
         super(client);
     }
 
@@ -32,14 +31,14 @@ public class GamesView extends SceneView {
         Label aILabel = CreateLabel("Let the ai play?");
         CheckBox aICheckbox = new CheckBox();
         aICheckbox.selectedProperty().addListener((observableValue, oldValue, newValue) -> {
-            if (newValue){
+            if (newValue) {
                 Model.mode = Model.AI_VS_SERVER;
-            }else{
+            } else {
                 Model.mode = Model.HUMAN_VS_SERVER;
             }
         });
 
-        HBox aIHBox = new HBox(aILabel,aICheckbox);
+        HBox aIHBox = new HBox(aILabel, aICheckbox);
         aIHBox.setAlignment(Pos.CENTER);
 
         Label gamesListLabel = CreateLabel("Games available:");
@@ -72,7 +71,7 @@ public class GamesView extends SceneView {
         Button backButton = CreateButton("Back to login screen");
         backButton.setOnMouseClicked((e) -> client.SwitchScene(GameClient.Scenes.LOGIN));
 
-        HBox buttonBox = new HBox(refreshButton,backButton);
+        HBox buttonBox = new HBox(refreshButton, backButton);
         buttonBox.setAlignment(Pos.CENTER);
 
         rootVBox.getChildren().add(aIHBox);
@@ -108,12 +107,10 @@ public class GamesView extends SceneView {
         return items;
     }
 
-
     @Override
     public Scene getScene() {
         UpdateListView();
 
         return super.getScene();
     }
-
 }
