@@ -4,19 +4,18 @@ import communication.StrategicGameClient;
 import controller.Controller;
 import model.Model;
 import model.Peg;
+import player.Player;
 
 
 /**
  * Created by Singh van Offeren
  */
-public class TicTacToeController implements Controller {
+public class TicTacToeController extends Controller {
 
-
-    public Model model;
 
 
     public TicTacToeController(Model model) {
-        this.model = model;
+        super(model);
         model.switch_gamemode(model.getMode());
     }
 
@@ -36,16 +35,16 @@ public class TicTacToeController implements Controller {
 
 
                 model.playMove(peg.getXPosition()*3+peg.getZPosition());
-                gameOver();
+                model.gameOver();
 
             } else if (model.getMode()==Model.HUMAN_VS_AI) {
 
                 model.playMove(peg.getXPosition()*3+peg.getZPosition());
                 int best = model.calculateBest();
 
-                    if (!gameOver()) {
+                    if (!model.gameOver()) {
                         model.playMove(best);
-                        gameOver();
+                        model.gameOver();
                     }
 
             } else if (model.getMode()==Model.HUMAN_VS_SERVER) {
@@ -60,16 +59,9 @@ public class TicTacToeController implements Controller {
 
     }
 
-    public Peg[][] get_pegs() {
 
-        return model.get_pegs();
-    }
 
-    public boolean gameOver() {
-        return model.gameOver();
-    }
-    public void disable_pegs() {
-        model.disable_pegs();
-    }
+
+
 
 }
