@@ -1,11 +1,11 @@
 package games.reversi.controller;
 
+import communication.StrategicGameClient;
 import controller.Controller;
 import games.reversi.model.ReversiModel;
 import games.reversi.view.Animation;
 import model.Model;
 import model.Peg;
-import player.Player;
 
 import static java.lang.StrictMath.abs;
 
@@ -52,8 +52,11 @@ public class ReversiController extends Controller {
 
 
         } else if (model.is_mode(Model.HUMAN_VS_SERVER)) {
-
+                int move=peg.getXPosition()*8+peg.getZPosition();
+                model.playMove(move);
+                StrategicGameClient.getInstance().doMove(move);
         }
+
         ((ReversiModel)model).addToValidMoves();
         if(checkIfValidMoves())
             ((ReversiModel)model).setValidMoves();

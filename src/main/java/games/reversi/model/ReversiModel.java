@@ -5,6 +5,7 @@ import communication.events.MatchStarted;
 import javafx.application.Platform;
 import model.Model;
 import model.Peg;
+import player.ExternalPlayer;
 import player.LocalPlayer;
 import view.BoardView;
 import view.View;
@@ -16,8 +17,8 @@ import static java.lang.Math.abs;
 
 public class ReversiModel extends Model {
     ArrayList<Integer> validMoves = new ArrayList<>();
-    int amountBlack = 0;
-    int amountWhite = 0;
+    int amountBlack = 2;
+    int amountWhite = 2;
     ReversiAI AI;
 
     //Model
@@ -46,16 +47,56 @@ public class ReversiModel extends Model {
     public void initSide() {
         side = PLAYER1;
 
-        player1 = new LocalPlayer("Black");
-        player2 = new LocalPlayer("White");
+        if (is_mode(HUMAN_VS_AI)) {
+
+            player1 = new LocalPlayer("White");
+            player2 = new LocalPlayer("Black");
 
 
-        if (side == PLAYER1) {
-            setText(player1.getName() + "'s turn!");
-        } else {
-            setText(player2.getName() + "'s turn!");
+            side = random.nextInt(2);
+            if (side == PLAYER2) {
+                setText(player2.getName() + "'s turn!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
+                int best = calculateBest();
+                Platform.runLater(()-> {
+                    playMove(best);
+                });
+
+
+            } else {
+                setText(player1.getName() + "'s turn!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
+            }
+
+        } else if (is_mode(HUMAN_VS_HUMAN)) {
+            side = 0;
+            player1 = new LocalPlayer(username);
+            player2 = new LocalPlayer(username2);
+            if (side == PLAYER2) {
+                setText(player2.getName() + " 's turn!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
+            } else {
+                setText(player1.getName() + " 's turn!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
+
+            }
         }
+        //online multiplayer
+        else {
+            //init players when playing online
+            if(matchStarted!=null) {
+                player1 = new LocalPlayer(Model.username);
+                player2 = new ExternalPlayer(matchStarted.getOpponent());
 
+                if (matchStarted.getPlayerToMove().equals(Model.username)) {
+                    side = PLAYER1;
+                    setText(player1.getName() + "'s turn!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
+
+
+                } else {
+                    disable_pegs();
+                    side = PLAYER2;
+
+                    setText(player2.getName() + "'s turn!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
+                }
+            }
+        }
     }
 
     public void playMove(int move) {
@@ -467,7 +508,10 @@ public class ReversiModel extends Model {
         }
     }
 
+
+
     //check if gameover, if so update the text above the board and disables it
+    @Override
     public boolean gameOver() {
         this.position = positionValue();
         if (position != UNCLEAR) {
@@ -475,7 +519,6 @@ public class ReversiModel extends Model {
             Platform.runLater(() -> {
                 disable_pegs();
                 if (position == DRAW) {
-
                     setText(" It's a draw, " + winner() + " wins!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
                 } else {
                     setText(" Match over, " + winner() + " wins!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);

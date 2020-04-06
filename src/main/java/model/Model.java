@@ -65,7 +65,6 @@ public abstract class Model implements Observer<Event>{
 
     }
 
-
     @Override
     //update method for server connections
     public void update(Event event) {
@@ -92,7 +91,6 @@ public abstract class Model implements Observer<Event>{
                     }
                 }
             }
-
 
             else if(event instanceof Win){
 
@@ -163,14 +161,11 @@ public abstract class Model implements Observer<Event>{
                         playMove(best);
                         StrategicGameClient.getInstance().doMove(best);
                     });
-
-
                 }
             }
-
         }
-
     }
+
     //fill the board with it's initial pegs
     protected abstract void fill_pegs();
 
@@ -313,6 +308,7 @@ public abstract class Model implements Observer<Event>{
     public Player getPlayer1(){
         return player1;
     }
+
     public Player getPlayer2(){
         return player2;
     }

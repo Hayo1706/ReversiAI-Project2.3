@@ -188,6 +188,7 @@ public class TicTacToeModel extends Model
     }
 
     //check if gameover, if so update the text above the board and disables it
+    @Override
     public boolean gameOver() {
         this.position = positionValue();
         if (position != UNCLEAR) {
