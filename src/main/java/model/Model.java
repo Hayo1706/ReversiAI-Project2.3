@@ -285,29 +285,17 @@ public abstract class Model implements Observer<Event>{
             }
         }
     }
-    //check if gameover, if so update the text above the board and disables it
-    public boolean gameOver() {
-        this.position = positionValue();
-        if (position != UNCLEAR) {
-            ((BoardView) view).SetBackToMainMenu();
-            Platform.runLater(() -> {
-                disable_pegs();
-                if (position == DRAW) {
 
-                    setText(" It's a draw, " + winner() + " wins!");
-                } else {
-                    setText(" Match over, " + winner() + " wins!");
-                }
-            });
-        }
-        return this.position != UNCLEAR;
-    }
+    //check if gameover, if so update the text above the board and disables it
+    public abstract boolean gameOver();
+
     //get the winner in the endgame
     protected String winner() {
         if (this.position == PLAYER1_WIN) return player1.getName();
         else if (this.position == PLAYER2_WIN) return player2.getName();
         else return "nobody";
     }
+
     //get the side that must play in the current position
     public int getSide() {
         return side;
