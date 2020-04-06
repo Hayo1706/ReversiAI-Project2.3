@@ -23,9 +23,12 @@ public class ReversiAI implements ai.AI, Serializable {
             File file = new File("src/main/resources/AI.txt");
             FileWriter fw = new FileWriter(file,true);
             bw = new BufferedWriter(fw);
-
-            String[] boardString = allMoves.get(allMoves.size()-1);
-
+            int i = 2;
+            String[] boardString = allMoves.get(allMoves.size() - 1);
+            while (checkFile(String.join("",boardString))) {
+                boardString = allMoves.get(allMoves.size() - i);
+                i++;
+            }
             bw.write(String.join("",boardString));
             bw.newLine();
             boardString = rotate90(boardString);
@@ -141,11 +144,7 @@ public class ReversiAI implements ai.AI, Serializable {
             return miniMax(position, depth - 1, true, finalMoves, alpha,  beta);
         return minEval;
     }
-
-
-    public int evaluateBoardPegs(boolean countAmountOfPegs,AIMove eval){
-        int[][] toCount = eval.getBoard();
-        String stringValue = String.join("",eval.getStringValue());
+    public boolean checkFile(String stringValue){
         BufferedReader objReader = null;
         boolean found = false;
         try {
@@ -169,7 +168,13 @@ public class ReversiAI implements ai.AI, Serializable {
                 ex.printStackTrace();
             }
         }
-        if (found) {
+        return found;
+    }
+
+
+    public int evaluateBoardPegs(boolean countAmountOfPegs,AIMove eval){
+        int[][] toCount = eval.getBoard();
+        if (checkFile(String.join("",eval.getStringValue()))) {
             System.out.println("I learned that!");
             return -1000;
         }
@@ -186,14 +191,14 @@ public class ReversiAI implements ai.AI, Serializable {
         }
         else{
             int[][] values = {
-                    {99,-15,8,6,6,8,-15,99},
+                    {99,-15,14,6,6,14,-15,99},
                     {-15,-24,-4,-3,-3,-4,-24,-15},
-                    {8,-4,7,4,4,7,-4,8},
+                    {14,-4,10,4,4,10,-4,14},
                     {6,-3,4,0,0,4,-3,6},
                     {6,-3,4,0,0,4,-3,6},
-                    {8,-4,7,4,4,7,-4,8},
+                    {14,-4,10,4,4,10,-4,14},
                     {-15,-24,-4,-3,-3,-4,-24,-15},
-                    {99,-15,8,6,6,8,-15,99}
+                    {99,-15,14,6,6,14,-15,99}
             };
             if(toCount[0][7] != 2){
                 values[0][6] = 8;
