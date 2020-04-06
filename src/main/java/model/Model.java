@@ -176,7 +176,7 @@ public abstract class Model implements Observer<Event>{
 
     //check if move ok
     public boolean moveOk(int move) {
-        return (move >= 0 && move <= 8 && pegs[move / 3][move % 3].pegState == EMPTY);
+        return (move >= 0 && move <= boardsize*boardsize-1 && pegs[move / boardsize][move % boardsize].pegState == EMPTY);
 
     }
 
