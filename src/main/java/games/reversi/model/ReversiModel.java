@@ -2,14 +2,14 @@ package games.reversi.model;
 
 import communication.StrategicGameClient;
 import communication.events.MatchStarted;
+import javafx.application.Platform;
 import model.Model;
 import model.Peg;
 import player.LocalPlayer;
+import view.BoardView;
 import view.View;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 import static java.lang.Math.abs;
 
@@ -422,6 +422,22 @@ public class ReversiModel extends Model {
         return validMoves;
     }
 
+    /**
+     * @author Maurice Wijker
+     * @return cur amountofblacks on board
+     */
+    public int getAmountBlack() {
+        return amountBlack;
+    }
+
+    /**
+     * @author Maurice Wijker
+     * @return cur amountofwhites on board
+     */
+    public int getAmountWhite() {
+        return amountWhite;
+    }
+
     public int calculateBest() {
         return AI.chooseMove();
     }
@@ -437,13 +453,8 @@ public class ReversiModel extends Model {
 
     public boolean isAWin(int side) {
 
-        //check if board has empty space
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                if(get_pegs()[i][j].getPegState() == 2){
-                    return false;
-                }
-            }
+        if(!getValidMoves().isEmpty()){
+            return false;
         }
 
         if(side == 0 && amountWhite < amountBlack){
@@ -455,6 +466,25 @@ public class ReversiModel extends Model {
             return false;
         }
     }
+
+    //check if gameover, if so update the text above the board and disables it
+    public boolean gameOver() {
+        this.position = positionValue();
+        if (position != UNCLEAR) {
+            ((BoardView) view).SetBackToMainMenu();
+            Platform.runLater(() -> {
+                disable_pegs();
+                if (position == DRAW) {
+
+                    setText(" It's a draw, " + winner() + " wins!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
+                } else {
+                    setText(" Match over, " + winner() + " wins!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
+                }
+            });
+        }
+        return this.position != UNCLEAR;
+    }
+
 
     /**
      * @author Maurice Wijker

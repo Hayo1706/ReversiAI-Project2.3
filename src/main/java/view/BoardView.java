@@ -3,6 +3,7 @@ package view;
 import communication.StrategicGameClient;
 import controller.Controller;
 import javafx.geometry.HPos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -13,7 +14,7 @@ import model.Peg;
 public class BoardView extends SceneView {
     private Label GameLabel = new Label("Game");
     private GridPane GridPane = new GridPane();
-
+    private Controller controller;
     private Button endGameButton;
 
     public BoardView(GameClient client) {
@@ -34,7 +35,7 @@ public class BoardView extends SceneView {
 
     public void SetUpGame(String gameName, int size, Controller controller) {
         title.setText(gameName);
-
+        this.controller=controller;
         GridPane.getChildren().clear();
 
         for (int i = 0; i < size; i++) {
@@ -52,7 +53,19 @@ public class BoardView extends SceneView {
 
     public void forfeit() {
         if (Model.mode == Model.HUMAN_VS_HUMAN || Model.mode == Model.HUMAN_VS_AI) {
-            // TODO forfeit local game?
+            controller.disable_pegs();
+            //display who wins
+            if(Model.mode==Model.HUMAN_VS_AI){
+                setText("Computer wins! Player gave up!");
+            }
+            else if(controller.getSide()==0){
+                setText(controller.getPlayer2().getName() + " wins! " + controller.getPlayer1().getName() + " gave up!");
+            }
+            else{
+                setText(controller.getPlayer1().getName() + " wins! " + controller.getPlayer2().getName() + " gave up!");
+            }
+
+
         } else {
             StrategicGameClient.getInstance().forfeit();
         }
@@ -66,7 +79,7 @@ public class BoardView extends SceneView {
     }
 
     public void SetBackToMainMenu() {
-        endGameButton.setText("Back te Main Menu");
+        endGameButton.setText("Back to Main Menu");
         if (Model.mode == Model.HUMAN_VS_HUMAN || Model.mode == Model.HUMAN_VS_AI) {
             endGameButton.setOnMouseClicked((e) -> client.SwitchScene(GameClient.Scenes.GAMESOFFLINE));
         } else {

@@ -1,5 +1,6 @@
 package view;
 
+
 import communication.StrategicGameClient;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -12,6 +13,7 @@ import javafx.scene.layout.VBox;
 import model.Model;
 
 import java.io.IOException;
+
 
 public class LoginView extends SceneView {
     public LoginView(GameClient client) {
@@ -67,7 +69,10 @@ public class LoginView extends SceneView {
         TextField ipField = new TextField();
         ipField.setPromptText("localhost");
         ipField.textProperty().addListener((observableValue, oldString, newString) -> {
-            if (!newString.matches("^\\d+(\\.|\\d+)*$") && !newString.isBlank()) {
+            System.out.println("new: " + newString);
+            System.out.println("old: " + oldString);
+
+            if (!newString.matches("^\\d+(\\.|\\d+)*$") && !newString.isBlank()){
                 ipField.setText(oldString);
                 errorLabel.setText("only numbers and dots for the ip \n (connecting to localhost can be dod with 127.0.0.1)");
             }
@@ -77,10 +82,10 @@ public class LoginView extends SceneView {
         TextField portField = new TextField();
         portField.setPromptText("7789");
         portField.textProperty().addListener((observableValue, oldString, newString) -> {
-            if (!newString.matches("\\d*")) {
-                portField.setText(oldString);// newString.replace("[^\\d]", ""));
-                errorLabel.setText("port only contains digits");
-            }
+                if (!newString.matches("\\d*")){
+                    portField.setText(oldString);// newString.replace("[^\\d]", ""));
+                    errorLabel.setText("port only contains digits");
+                }
         });
 
         HBox nameBox = new HBox(nameLabel, nameField);
@@ -93,7 +98,7 @@ public class LoginView extends SceneView {
         StartButton.setOnMouseClicked(e -> {
             try {
                 String playerName = nameField.getText();
-                if (playerName.isEmpty() || playerName.isBlank()) {
+                if (playerName.isEmpty() || playerName.isBlank()){
                     errorLabel.setText("please fill in you names");
                     return;
                 }
@@ -148,18 +153,17 @@ public class LoginView extends SceneView {
             String name2 = nameField2.getText();
 
             if (name1.isBlank() || name1.isEmpty() ||
-                    name2.isBlank() || name2.isEmpty()) {
+                    name2.isBlank() || name2.isEmpty()){
                 errorLabel.setText("please fill in you names");
                 return;
             }
-
             Model.username = name1;
-//            Model.username = name1; TODO How about name 2?
+            Model.username2=name2;
 
             client.SwitchScene(GameClient.Scenes.GAMESOFFLINE);
         });
 
-        VBox offlineVBox = new VBox(titleLabel, nameBox1, nameBox2, errorLabel, StartButton);
+        VBox offlineVBox = new VBox(titleLabel, nameBox1, nameBox2,errorLabel,StartButton);
         offlineVBox.setAlignment(Pos.TOP_CENTER);
         return offlineVBox;
     }

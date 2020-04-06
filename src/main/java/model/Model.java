@@ -36,6 +36,7 @@ public abstract class Model implements Observer<Event>{
 
     //gamemode and username of loggedin person
     public static String username = "";
+    public static String username2 = "";
     public static int mode =IDLE;
 
 
@@ -175,7 +176,7 @@ public abstract class Model implements Observer<Event>{
 
     //check if move ok
     public boolean moveOk(int move) {
-        return (move >= 0 && move <= 8 && pegs[move / 3][move % 3].pegState == EMPTY);
+        return (move >= 0 && move <= boardsize*boardsize-1 && pegs[move / boardsize][move % boardsize].pegState == EMPTY);
 
     }
 
@@ -240,12 +241,7 @@ public abstract class Model implements Observer<Event>{
     // Returns whether 'side' has won in this position
     public abstract boolean isAWin(int side);
 
-    // Play a move, possibly clearing a square
-    // Play a move, possibly clearing a square
-    protected void place(int row, int column, int piece) {
-        Platform.runLater(() -> pegs[row][column].pegState = piece
-        );
-    }
+
     //check if a peg on the board is empty
     public boolean squareIsEmpty(int row, int column) {
         return pegs[row][column].pegState == EMPTY;
@@ -289,29 +285,17 @@ public abstract class Model implements Observer<Event>{
             }
         }
     }
-    //check if gameover, if so update the text above the board and disables it
-    public boolean gameOver() {
-        this.position = positionValue();
-        if (position != UNCLEAR) {
-            ((BoardView) view).SetBackToMainMenu();
-            Platform.runLater(() -> {
-                disable_pegs();
-                if (position == DRAW) {
 
-                    setText(" It's a draw, " + winner() + " wins!");
-                } else {
-                    setText(" Match over, " + winner() + " wins!");
-                }
-            });
-        }
-        return this.position != UNCLEAR;
-    }
+    //check if gameover, if so update the text above the board and disables it
+    public abstract boolean gameOver();
+
     //get the winner in the endgame
     protected String winner() {
         if (this.position == PLAYER1_WIN) return player1.getName();
         else if (this.position == PLAYER2_WIN) return player2.getName();
         else return "nobody";
     }
+
     //get the side that must play in the current position
     public int getSide() {
         return side;
@@ -326,5 +310,10 @@ public abstract class Model implements Observer<Event>{
         return this.mode==mode;
     }
 
-
+    public Player getPlayer1(){
+        return player1;
+    }
+    public Player getPlayer2(){
+        return player2;
+    }
 }

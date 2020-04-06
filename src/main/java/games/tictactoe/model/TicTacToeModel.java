@@ -1,7 +1,6 @@
 package games.tictactoe.model;
 
 import ai.AI;
-import com.sun.webkit.Timer;
 import communication.events.MatchStarted;
 import javafx.application.Platform;
 import javafx.scene.image.Image;
@@ -9,10 +8,8 @@ import model.Model;
 import model.Peg;
 import player.ExternalPlayer;
 import player.LocalPlayer;
-import view.GameClient;
+import view.BoardView;
 import view.View;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Singh van Offeren
@@ -23,7 +20,7 @@ public class TicTacToeModel extends Model
 {
 
     public TicTacToeModel(int boardsize, View view, AI ai, MatchStarted matchStarted) {
-        super(boardsize, view, ai,matchStarted);
+        super(boardsize, view, ai, matchStarted);
     }
 
     public void initSide() {
@@ -55,8 +52,8 @@ public class TicTacToeModel extends Model
 
         } else if (is_mode(HUMAN_VS_HUMAN)) {
             side = 0;
-            player1 = new LocalPlayer("Player 1");
-            player2 = new LocalPlayer("Player 2");
+            player1 = new LocalPlayer(username);
+            player2 = new LocalPlayer(username2);
             if (side == PLAYER2) {
                 player1.setSymbol(getSecondSymbol());
                 player2.setSymbol(getFirstSymbol());
@@ -188,6 +185,24 @@ public class TicTacToeModel extends Model
         }
 
         return false;
+    }
+
+    //check if gameover, if so update the text above the board and disables it
+    public boolean gameOver() {
+        this.position = positionValue();
+        if (position != UNCLEAR) {
+            ((BoardView) view).SetBackToMainMenu();
+            Platform.runLater(() -> {
+                disable_pegs();
+                if (position == DRAW) {
+
+                    setText(" It's a draw, " + winner() + " wins!");
+                } else {
+                    setText(" Match over, " + winner() + " wins!");
+                }
+            });
+        }
+        return this.position != UNCLEAR;
     }
 
     public Image getFirstSymbol() {

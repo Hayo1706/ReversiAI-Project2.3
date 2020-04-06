@@ -104,6 +104,8 @@ public class GameClient extends Application {
                 break;
 
             case GAMESONLINE:
+                //switch to human vs server
+                Model.mode=Model.HUMAN_VS_SERVER;
                 //unregister model as observer
                 Iterator iterator = StrategicGameClient.getInstance().getEventBus().getObservers().iterator();
                 while (iterator.hasNext()) {

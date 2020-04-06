@@ -1,19 +1,22 @@
 package games.reversi.controller;
 
+import controller.Controller;
 import games.reversi.model.ReversiModel;
 import games.reversi.view.Animation;
 import model.Model;
 import model.Peg;
+import player.Player;
 
 import static java.lang.StrictMath.abs;
 
 
-public class ReversiController implements controller.Controller {
-   ReversiModel model;
+public class ReversiController extends Controller {
+
 
 
     public ReversiController(ReversiModel model) {
-        this.model = model;
+        super(model);
+
         setupBoard();
         Animation animation = new Animation(model.get_pegs());
         animation.start();
@@ -37,9 +40,9 @@ public class ReversiController implements controller.Controller {
         if (model.is_mode(Model.HUMAN_VS_AI)) {
 
             model.playMove(peg.getXPosition() * 8 + peg.getZPosition());
-            model.addToValidMoves();
+            ((ReversiModel)model).addToValidMoves();
             if(checkIfValidMoves())
-                model.playMove(model.calculateBest());
+                ((ReversiModel)model).playMove(model.calculateBest());
 
 
 
@@ -51,9 +54,9 @@ public class ReversiController implements controller.Controller {
         } else if (model.is_mode(Model.HUMAN_VS_SERVER)) {
 
         }
-        model.addToValidMoves();
+        ((ReversiModel)model).addToValidMoves();
         if(checkIfValidMoves())
-            model.setValidMoves();
+            ((ReversiModel)model).setValidMoves();
 
         if (model.gameOver()) {
             disable_pegs();
@@ -62,10 +65,10 @@ public class ReversiController implements controller.Controller {
 
     public boolean checkIfValidMoves(){
         //If no available moves are present, other player gets the turn.
-        if(model.getValidMoves().isEmpty()){
+        if(((ReversiModel)model).getValidMoves().isEmpty()){
             model.setSide(abs(model.getSide()-1));
-            model.addToValidMoves();
-            model.setValidMoves();
+            ((ReversiModel)model).addToValidMoves();
+            ((ReversiModel)model).setValidMoves();
             if (model.getSide() == 0)
                 model.setText("White has no moves, Black's turn!");
             else
@@ -93,12 +96,10 @@ public class ReversiController implements controller.Controller {
         System.out.println("\n");
     }
 
-    public Peg[][] get_pegs() {
-        return model.get_pegs();
-    }
 
-    public void disable_pegs() {
-        model.disable_pegs();
-    }
+
+
+
+
 
 }
