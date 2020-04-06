@@ -241,12 +241,7 @@ public abstract class Model implements Observer<Event>{
     // Returns whether 'side' has won in this position
     public abstract boolean isAWin(int side);
 
-    // Play a move, possibly clearing a square
-    // Play a move, possibly clearing a square
-    protected void place(int row, int column, int piece) {
-        Platform.runLater(() -> pegs[row][column].pegState = piece
-        );
-    }
+
     //check if a peg on the board is empty
     public boolean squareIsEmpty(int row, int column) {
         return pegs[row][column].pegState == EMPTY;
@@ -327,5 +322,10 @@ public abstract class Model implements Observer<Event>{
         return this.mode==mode;
     }
 
-
+    public Player getPlayer1(){
+        return player1;
+    }
+    public Player getPlayer2(){
+        return player2;
+    }
 }

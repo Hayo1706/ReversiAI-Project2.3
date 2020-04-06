@@ -62,10 +62,10 @@ public class BoardView extends SceneView {
                 setText("Computer wins! Player gave up!");
             }
             else if(controller.getSide()==0){
-                setText(Model.username2 + " wins! " + Model.username + " gave up!");
+                setText(controller.getPlayer2().getName() + " wins! " + controller.getPlayer1().getName() + " gave up!");
             }
             else{
-                setText(Model.username + " wins! " + Model.username2 + " gave up!");
+                setText(controller.getPlayer1().getName() + " wins! " + controller.getPlayer2().getName() + " gave up!");
             }
 
 
