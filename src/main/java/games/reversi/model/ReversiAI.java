@@ -58,7 +58,7 @@ public class ReversiAI implements ai.AI, Serializable {
     public int chooseMove() {
         pegs_to_board(model.get_pegs());
 
-        AIMove o = miniMax(new AIMove(boardAI),5,true, evaluateBoardPegsEmpty(boardAI) <= 5,-1000,1000);
+        AIMove o = miniMax(new AIMove(boardAI),4,true, evaluateBoardPegsEmpty(boardAI) <= 5,-1000,1000);
         allMoves.add(o.getStringValue());
         //String.join("",o.getStringValue())
 //        tempBoard = Arrays.stream(board).map(int[]::clone).toArray(int[][]::new);
@@ -169,8 +169,10 @@ public class ReversiAI implements ai.AI, Serializable {
                 ex.printStackTrace();
             }
         }
-        if (found)
+        if (found) {
+            System.out.println("I learned that!");
             return -1000;
+        }
         if(countAmountOfPegs){
 
             int amWhite = 0;
@@ -184,14 +186,14 @@ public class ReversiAI implements ai.AI, Serializable {
         }
         else{
             int[][] values = {
-                    {99,-8,8,6,6,8,-8,99},
-                    {-8,-24,-4,-3,-3,-4,-24,-8},
+                    {99,-15,8,6,6,8,-15,99},
+                    {-15,-24,-4,-3,-3,-4,-24,-15},
                     {8,-4,7,4,4,7,-4,8},
                     {6,-3,4,0,0,4,-3,6},
                     {6,-3,4,0,0,4,-3,6},
                     {8,-4,7,4,4,7,-4,8},
-                    {-8,-24,-4,-3,-3,-4,-24,-8},
-                    {99,-8,8,6,6,8,-8,99}
+                    {-15,-24,-4,-3,-3,-4,-24,-15},
+                    {99,-15,8,6,6,8,-15,99}
             };
             if(toCount[0][7] != 2){
                 values[0][6] = 8;
