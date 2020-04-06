@@ -18,12 +18,14 @@ public class ReversiModel extends Model {
     ArrayList<Integer> validMoves = new ArrayList<>();
     int amountBlack = 0;
     int amountWhite = 0;
+    ReversiAI AI;
 
     //Model
     public ReversiModel(int boardsize, View view, ReversiAI AI, MatchStarted matchStarted) {
         super(boardsize, view, AI,matchStarted);
         StrategicGameClient.getInstance().getEventBus().addObserver(this);
         AI.setModel(this);
+        this.AI = AI;
 
     }
     //Model
@@ -59,7 +61,8 @@ public class ReversiModel extends Model {
     public void playMove(int move) {
         Peg peg = pegs[move / boardsize][move % boardsize];
             if (side == PLAYER2) {
-
+                if(!validMoves.contains(move))
+                    System.out.println("NEE ZIT ER NIET IN");
                 peg.setTile(0);
                 checkAndSet(peg.getXPosition(),peg.getZPosition());
                 this.side = PLAYER1;
@@ -67,7 +70,8 @@ public class ReversiModel extends Model {
                 setText("Black's turn!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
 
             } else {
-
+                if(!validMoves.contains(move))
+                    System.out.println("NEE ZIT ER NIET IN");
                 peg.setTile(1);
                 checkAndSet(peg.getXPosition(),peg.getZPosition());
                 this.side = PLAYER2;
@@ -443,6 +447,7 @@ public class ReversiModel extends Model {
         }
 
         if(side == 0 && amountWhite < amountBlack){
+            AI.notifyLoss();
             return true;
         } else if (side == 1 && amountBlack < amountWhite){
             return true;

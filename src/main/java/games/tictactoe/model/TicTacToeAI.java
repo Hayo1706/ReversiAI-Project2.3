@@ -35,6 +35,11 @@ public class TicTacToeAI implements AI {
 
     }
 
+    @Override
+    public void notifyLoss() {
+
+    }
+
     //return the optimal move depending on the gamemode
     public int chooseMove() {
         Best best;
