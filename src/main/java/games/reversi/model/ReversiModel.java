@@ -449,14 +449,9 @@ public class ReversiModel extends Model {
 
     public boolean isAWin(int side) {
 
-//        //check if board has empty space
-//        for (int i = 0; i < 8; i++) {
-//            for (int j = 0; j < 8; j++) {
-//                if(get_pegs()[i][j].getPegState() == 2){
-//                    return false;
-//                }
-//            }
-//        }
+        if(!getValidMoves().isEmpty()){
+            return false;
+        }
 
         if(side == 0 && amountWhite < amountBlack){
             return true;
