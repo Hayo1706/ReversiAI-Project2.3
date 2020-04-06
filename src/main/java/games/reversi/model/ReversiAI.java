@@ -21,7 +21,7 @@ public class ReversiAI implements ai.AI, Serializable {
         BufferedWriter bw = null;
         try {
             File file = new File("src/main/resources/AI.txt");
-            FileWriter fw = new FileWriter(file);
+            FileWriter fw = new FileWriter(file,true);
             bw = new BufferedWriter(fw);
 
             String[] boardString = allMoves.get(allMoves.size()-1);
