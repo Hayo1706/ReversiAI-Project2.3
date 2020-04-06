@@ -79,7 +79,7 @@ public class BoardView extends SceneView {
     }
 
     public void SetBackToMainMenu() {
-        endGameButton.setText("Back te Main Menu");
+        endGameButton.setText("Back to Main Menu");
         if (Model.mode == Model.HUMAN_VS_HUMAN || Model.mode == Model.HUMAN_VS_AI) {
             endGameButton.setOnMouseClicked((e) -> client.SwitchScene(GameClient.Scenes.GAMESOFFLINE));
         } else {
