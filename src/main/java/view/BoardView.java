@@ -53,10 +53,7 @@ public class BoardView extends SceneView {
 
     public void forfeit() {
         if (Model.mode == Model.HUMAN_VS_HUMAN || Model.mode == Model.HUMAN_VS_AI) {
-            for (Node node:GridPane.getChildren()) {
-                Peg peg=(Peg) node;
-                peg.setDisable(true);
-            }
+            controller.disable_pegs();
             //display who wins
             if(Model.mode==Model.HUMAN_VS_AI){
                 setText("Computer wins! Player gave up!");
