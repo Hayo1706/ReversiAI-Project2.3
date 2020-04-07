@@ -1,6 +1,7 @@
 package model;
 
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 
 public abstract class Peg extends Button {
     //2 == empty
@@ -37,4 +38,5 @@ public abstract class Peg extends Button {
     }
     //fill the peg with an image
     public abstract void setTile(int i);
+    public abstract void setTile(int i, Image symbol);
 }

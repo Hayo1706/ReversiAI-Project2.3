@@ -37,4 +37,14 @@ public class ReversiPeg extends Peg {
             pegState = 1;
         }
     }
+    public void setTile(int i,Image symbol) {
+        ImageView imageView = new ImageView(symbol);
+        imageView.smoothProperty().set(true);
+        imageView.setFitWidth(40);
+        imageView.setFitHeight(40);
+        setGraphic(imageView);
+        setDisable(true);
+        pegState = i;
+
+    }
 }

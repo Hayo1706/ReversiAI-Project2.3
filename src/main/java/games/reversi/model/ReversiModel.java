@@ -3,6 +3,7 @@ package games.reversi.model;
 import communication.StrategicGameClient;
 import communication.events.*;
 import javafx.application.Platform;
+import javafx.scene.image.Image;
 import model.Model;
 import model.Peg;
 import player.ExternalPlayer;
@@ -82,13 +83,18 @@ public class ReversiModel extends Model {
                 player2 = new ExternalPlayer(matchStarted.getOpponent());
 
                 if (matchStarted.getPlayerToMove().equals(Model.username)) {
-                    side = PLAYER1;
+                    side=PLAYER1;
+                    player1.setSymbol(getFirstSymbol());
+                    player2.setSymbol(getSecondSymbol());
                     setText(player1.getName() + "'s turn!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
 
                 } else {
                     disable_pegs();
-                    side = PLAYER2;
+                    side=PLAYER2;
+                    player1.setSymbol(getSecondSymbol());
+                    player2.setSymbol(getFirstSymbol());
                     setText(player2.getName() + "'s turn!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
+
                 }
             }
         }
@@ -99,7 +105,7 @@ public class ReversiModel extends Model {
             if (side == PLAYER2) {
                 if(!validMoves.contains(move))
                     System.out.println("NEE ZIT ER NIET IN");
-                peg.setTile(0);
+                peg.setTile(0,player2.getSymbol());
                 checkAndSet(peg.getXPosition(),peg.getZPosition());
                 this.side = PLAYER1;
                 updateAmountPegsBoard();
@@ -107,7 +113,7 @@ public class ReversiModel extends Model {
             } else {
                 if(!validMoves.contains(move))
                     System.out.println("NEE ZIT ER NIET IN");
-                peg.setTile(1);
+                peg.setTile(1,player1.getSymbol());
                 checkAndSet(peg.getXPosition(),peg.getZPosition());
                 this.side = PLAYER2;
                 updateAmountPegsBoard();
@@ -651,5 +657,13 @@ public class ReversiModel extends Model {
                 }
             }
         }
+    }
+    public Image getFirstSymbol() {
+        return new Image("black.png");
+    }
+
+
+    public Image getSecondSymbol() {
+        return new Image("white.png");
     }
 }
