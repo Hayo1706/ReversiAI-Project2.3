@@ -2,12 +2,12 @@ package view;
 
 import communication.StrategicGameClient;
 import controller.Controller;
-import javafx.geometry.HPos;
-import javafx.scene.Node;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import model.Model;
 import model.Peg;
 
@@ -28,8 +28,11 @@ public class BoardView extends SceneView {
         endGameButton = CreateButton("forfeit");
         endGameButton.setOnMouseClicked((e) -> forfeit());
 
+        StackPane stack = new StackPane(GridPane);
+        GridPane.setAlignment(Pos.BASELINE_CENTER);
+
         rootVBox.getChildren().add(GameLabel);
-        rootVBox.getChildren().add(GridPane);
+        rootVBox.getChildren().add(stack);
         rootVBox.getChildren().add(endGameButton);
     }
 
@@ -46,7 +49,6 @@ public class BoardView extends SceneView {
                             controller.nextTurn(peg);
                         });
                 GridPane.add(peg, peg.getZPosition(), peg.getXPosition());
-                GridPane.setHalignment(peg, HPos.CENTER);
             }
         }
     }
