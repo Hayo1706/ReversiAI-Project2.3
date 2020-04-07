@@ -1,29 +1,32 @@
 package games.reversi.model;
 
 import communication.StrategicGameClient;
-import communication.events.MatchStarted;
+import communication.events.*;
+import javafx.application.Platform;
 import model.Model;
 import model.Peg;
+import player.ExternalPlayer;
 import player.LocalPlayer;
+import view.BoardView;
 import view.View;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 import static java.lang.Math.abs;
 
 
 public class ReversiModel extends Model {
     ArrayList<Integer> validMoves = new ArrayList<>();
-    int amountBlack = 0;
-    int amountWhite = 0;
+    int amountBlack = 2;
+    int amountWhite = 2;
+    ReversiAI AI;
 
     //Model
     public ReversiModel(int boardsize, View view, ReversiAI AI, MatchStarted matchStarted) {
         super(boardsize, view, AI,matchStarted);
         StrategicGameClient.getInstance().getEventBus().addObserver(this);
         AI.setModel(this);
+        this.AI = AI;
 
     }
     //Model
@@ -44,22 +47,63 @@ public class ReversiModel extends Model {
     public void initSide() {
         side = PLAYER1;
 
-        player1 = new LocalPlayer("Black");
-        player2 = new LocalPlayer("White");
+        if (is_mode(HUMAN_VS_AI)) {
+
+            player1 = new LocalPlayer("White");
+            player2 = new LocalPlayer("Black");
 
 
-        if (side == PLAYER1) {
-            setText(player1.getName() + "'s turn!");
-        } else {
-            setText(player2.getName() + "'s turn!");
+            side = random.nextInt(2);
+            if (side == PLAYER2) {
+                setText(player2.getName() + "'s turn!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
+                int best = calculateBest();
+                Platform.runLater(()-> {
+                    playMove(best);
+                });
+
+
+            } else {
+                setText(player1.getName() + "'s turn!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
+            }
+
+        } else if (is_mode(HUMAN_VS_HUMAN)) {
+            side = 0;
+            player1 = new LocalPlayer(username);
+            player2 = new LocalPlayer(username2);
+            if (side == PLAYER2) {
+                setText(player2.getName() + " 's turn!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
+            } else {
+                setText(player1.getName() + " 's turn!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
+
+            }
         }
+        //online multiplayer
+        else {
+            //init players when playing online
+            if(matchStarted!=null) {
+                player1 = new LocalPlayer(Model.username);
+                player2 = new ExternalPlayer(matchStarted.getOpponent());
 
+                if (matchStarted.getPlayerToMove().equals(Model.username)) {
+                    side = PLAYER1;
+                    setText(player1.getName() + "'s turn!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
+
+
+                } else {
+                    disable_pegs();
+                    side = PLAYER2;
+
+                    setText(player2.getName() + "'s turn!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
+                }
+            }
+        }
     }
 
     public void playMove(int move) {
         Peg peg = pegs[move / boardsize][move % boardsize];
             if (side == PLAYER2) {
-
+                if(!validMoves.contains(move))
+                    System.out.println("NEE ZIT ER NIET IN");
                 peg.setTile(0);
                 checkAndSet(peg.getXPosition(),peg.getZPosition());
                 this.side = PLAYER1;
@@ -67,7 +111,8 @@ public class ReversiModel extends Model {
                 setText("Black's turn!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
 
             } else {
-
+                if(!validMoves.contains(move))
+                    System.out.println("NEE ZIT ER NIET IN");
                 peg.setTile(1);
                 checkAndSet(peg.getXPosition(),peg.getZPosition());
                 this.side = PLAYER2;
@@ -418,6 +463,22 @@ public class ReversiModel extends Model {
         return validMoves;
     }
 
+    /**
+     * @author Maurice Wijker
+     * @return cur amountofblacks on board
+     */
+    public int getAmountBlack() {
+        return amountBlack;
+    }
+
+    /**
+     * @author Maurice Wijker
+     * @return cur amountofwhites on board
+     */
+    public int getAmountWhite() {
+        return amountWhite;
+    }
+
     public int calculateBest() {
         return AI.chooseMove();
     }
@@ -433,16 +494,12 @@ public class ReversiModel extends Model {
 
     public boolean isAWin(int side) {
 
-        //check if board has empty space
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                if(get_pegs()[i][j].getPegState() == 2){
-                    return false;
-                }
-            }
+        if(!getValidMoves().isEmpty()){
+            return false;
         }
 
         if(side == 0 && amountWhite < amountBlack){
+            AI.notifyLoss();
             return true;
         } else if (side == 1 && amountBlack < amountWhite){
             return true;
@@ -450,6 +507,27 @@ public class ReversiModel extends Model {
             return false;
         }
     }
+
+
+
+    //check if gameover, if so update the text above the board and disables it
+    @Override
+    public boolean gameOver() {
+        this.position = positionValue();
+        if (position != UNCLEAR) {
+            ((BoardView) view).SetBackToMainMenu();
+            Platform.runLater(() -> {
+                disable_pegs();
+                if (position == DRAW) {
+                    setText(" It's a draw, " + winner() + " wins!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
+                } else {
+                    setText(" Match over, " + winner() + " wins!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
+                }
+            });
+        }
+        return this.position != UNCLEAR;
+    }
+
 
     /**
      * @author Maurice Wijker
@@ -467,6 +545,98 @@ public class ReversiModel extends Model {
                     this.amountWhite++;
                 } else if(get_pegs()[i][j].getPegState() == 1){
                     this.amountBlack++;
+                }
+            }
+        }
+    }
+
+    public void update(Event event) {
+        if (mode == Model.HUMAN_VS_SERVER || mode == Model.AI_VS_SERVER) {
+
+
+            if (event instanceof Move) {
+                Move move = (Move) event;
+                if (move.getPlayer().equals(player2.getName())) {
+                    //
+                    Platform.runLater(() -> {
+                        try {
+                            int opponentmove = Integer.parseInt(move.getMove());
+
+                            if (moveOk(opponentmove)) {
+                                playMove(opponentmove);
+                            }
+                        } catch (NumberFormatException e) {
+                        }
+
+                    });
+
+                    if (mode != AI_VS_SERVER) {
+                        enable_pegs();
+                    }
+                }
+            } else if (event instanceof Win) {
+
+                Win win = (Win) event;
+                if (win.getComment().equals("Player forfeited match")) {
+                    Platform.runLater(() -> {
+                        setText(player1.getName() + " wins! " + player2.getName() + " gave up!");
+                    });
+                } else if (win.getComment().equals("Client disconnected")) {
+                    Platform.runLater(() -> {
+                        setText(player1.getName() + " wins! " + player2.getName() + " lost connection!");
+                    });
+                } else if (win.getComment().equals("Turn timelimit reached")) {
+                    Platform.runLater(() -> {
+                        setText(player1.getName() + " wins! " + player2.getName() + " took too long!");
+                    });
+                } else if (win.getComment().equals("Illegal move")) {
+                    Platform.runLater(() -> {
+                        setText(player1.getName() + " wins! " + player2.getName() + " played an illegal move!");
+                    });
+                } else {
+                    Platform.runLater(() -> {
+                        setText(player1.getName() + " wins!");
+                    });
+                }
+                Platform.runLater(() -> {
+                    ((BoardView) view).SetBackToMainMenu();
+                });
+                disable_pegs();
+            } else if (event instanceof Loss) {
+                Loss loss = (Loss) event;
+                if (loss.getComment().equals("Turn timelimit reached")) {
+                    Platform.runLater(() -> {
+                        setText(player2.getName() + " wins! " + player1.getName() + " took too long!");
+                    });
+                } else if (loss.getComment().equals("Player forfeited match")) {
+                    Platform.runLater(() -> {
+                        setText(player2.getName() + " wins! " + player1.getName() + " gave up!");
+                    });
+                } else {
+                    Platform.runLater(() -> {
+                        setText(player2.getName() + " wins! ");
+                    });
+                }
+                Platform.runLater(() -> {
+                    ((BoardView) view).SetBackToMainMenu();
+                });
+                disable_pegs();
+            } else if (event instanceof Draw) {
+                Platform.runLater(() -> {
+                    setText("Nobody" + " wins! It's a draw!");
+                });
+                Platform.runLater(() -> {
+                    ((BoardView) view).SetBackToMainMenu();
+                });
+                disable_pegs();
+            } else if (event instanceof YourTurn) {
+                if (mode == AI_VS_SERVER) {
+
+                    Platform.runLater(() -> {
+                        int best = calculateBest();
+                        playMove(best);
+                        StrategicGameClient.getInstance().doMove(best);
+                    });
                 }
             }
         }

@@ -1,18 +1,16 @@
 package games.tictactoe.model;
 
 import ai.AI;
-import com.sun.webkit.Timer;
-import communication.events.MatchStarted;
+import communication.StrategicGameClient;
+import communication.events.*;
 import javafx.application.Platform;
 import javafx.scene.image.Image;
 import model.Model;
 import model.Peg;
 import player.ExternalPlayer;
 import player.LocalPlayer;
-import view.GameClient;
+import view.BoardView;
 import view.View;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Singh van Offeren
@@ -23,7 +21,7 @@ public class TicTacToeModel extends Model
 {
 
     public TicTacToeModel(int boardsize, View view, AI ai, MatchStarted matchStarted) {
-        super(boardsize, view, ai,matchStarted);
+        super(boardsize, view, ai, matchStarted);
     }
 
     public void initSide() {
@@ -190,6 +188,25 @@ public class TicTacToeModel extends Model
         return false;
     }
 
+    //check if gameover, if so update the text above the board and disables it
+    @Override
+    public boolean gameOver() {
+        this.position = positionValue();
+        if (position != UNCLEAR) {
+            ((BoardView) view).SetBackToMainMenu();
+            Platform.runLater(() -> {
+                disable_pegs();
+                if (position == DRAW) {
+
+                    setText(" It's a draw, " + winner() + " wins!");
+                } else {
+                    setText(" Match over, " + winner() + " wins!");
+                }
+            });
+        }
+        return this.position != UNCLEAR;
+    }
+
     public Image getFirstSymbol() {
         return new Image("x.png");
     }
@@ -197,5 +214,99 @@ public class TicTacToeModel extends Model
 
     public Image getSecondSymbol() {
         return new Image("o.png");
+    }
+
+    @Override
+    public void update(Event event) {
+
+        if (mode == Model.HUMAN_VS_SERVER || mode == Model.AI_VS_SERVER) {
+
+
+            if (event instanceof Move) {
+                Move move = (Move) event;
+                if (move.getPlayer().equals(player2.getName())) {
+                    //
+                    Platform.runLater(() -> {
+                        try {
+                            int opponentmove = Integer.parseInt(move.getMove());
+
+                            if (moveOk(opponentmove)) {
+                                playMove(opponentmove);
+                            }
+                        } catch (NumberFormatException e) {
+                        }
+
+                    });
+
+                    if (mode != AI_VS_SERVER) {
+                        enable_pegs();
+                    }
+                }
+            } else if (event instanceof Win) {
+
+                Win win = (Win) event;
+                if (win.getComment().equals("Player forfeited match")) {
+                    Platform.runLater(() -> {
+                        setText(player1.getName() + " wins! " + player2.getName() + " gave up!");
+                    });
+                } else if (win.getComment().equals("Client disconnected")) {
+                    Platform.runLater(() -> {
+                        setText(player1.getName() + " wins! " + player2.getName() + " lost connection!");
+                    });
+                } else if (win.getComment().equals("Turn timelimit reached")) {
+                    Platform.runLater(() -> {
+                        setText(player1.getName() + " wins! " + player2.getName() + " took too long!");
+                    });
+                } else if (win.getComment().equals("Illegal move")) {
+                    Platform.runLater(() -> {
+                        setText(player1.getName() + " wins! " + player2.getName() + " played an illegal move!");
+                    });
+                } else {
+                    Platform.runLater(() -> {
+                        setText(player1.getName() + " wins!");
+                    });
+                }
+                Platform.runLater(() -> {
+                    ((BoardView) view).SetBackToMainMenu();
+                });
+                disable_pegs();
+            } else if (event instanceof Loss) {
+                Loss loss = (Loss) event;
+                if (loss.getComment().equals("Turn timelimit reached")) {
+                    Platform.runLater(() -> {
+                        setText(player2.getName() + " wins! " + player1.getName() + " took too long!");
+                    });
+                } else if (loss.getComment().equals("Player forfeited match")) {
+                    Platform.runLater(() -> {
+                        setText(player2.getName() + " wins! " + player1.getName() + " gave up!");
+                    });
+                } else {
+                    Platform.runLater(() -> {
+                        setText(player2.getName() + " wins! ");
+                    });
+                }
+                Platform.runLater(() -> {
+                    ((BoardView) view).SetBackToMainMenu();
+                });
+                disable_pegs();
+            } else if (event instanceof Draw) {
+                Platform.runLater(() -> {
+                    setText("Nobody" + " wins! It's a draw!");
+                });
+                Platform.runLater(() -> {
+                    ((BoardView) view).SetBackToMainMenu();
+                });
+                disable_pegs();
+            } else if (event instanceof YourTurn) {
+                if (mode == AI_VS_SERVER) {
+
+                    Platform.runLater(() -> {
+                        int best = calculateBest();
+                        playMove(best);
+                        StrategicGameClient.getInstance().doMove(best);
+                    });
+                }
+            }
+        }
     }
 }
