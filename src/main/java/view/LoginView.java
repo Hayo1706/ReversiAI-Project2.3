@@ -62,16 +62,14 @@ public class LoginView extends SceneView {
         Label portLabel = CreateLabel("Port:");
 
         Label errorLabel = CreateLabel("");
+        errorLabel.getStyleClass().add("error");
 
         TextField nameField = new TextField();
         nameField.setPromptText("Peter");
 
         TextField ipField = new TextField();
-        ipField.setPromptText("localhost");
+        ipField.setPromptText("127.0.0.1");
         ipField.textProperty().addListener((observableValue, oldString, newString) -> {
-            System.out.println("new: " + newString);
-            System.out.println("old: " + oldString);
-
             if (!newString.matches("^\\d+(\\.|\\d+)*$") && !newString.isBlank()){
                 ipField.setText(oldString);
                 errorLabel.setText("only numbers and dots for the ip \n (connecting to localhost can be dod with 127.0.0.1)");
@@ -103,9 +101,17 @@ public class LoginView extends SceneView {
                     return;
                 }
 
-                int Port = Integer.parseInt(portField.getText());
+                String ip;
+                int port;
 
-                StrategicGameClient.getInstance().connect(ipField.getText(), Port);
+                if (portField.getText().isEmpty() && ipField.getText().isEmpty()){
+                    ip = "127.0.0.1";
+                    port = 7789;
+                }else {
+                    ip = ipField.getText();
+                    port = Integer.parseInt(portField.getText());
+                }
+                StrategicGameClient.getInstance().connect(ip, port);
                 StrategicGameClient.getInstance().login(playerName);
 
                 Model.username = playerName;
@@ -146,6 +152,7 @@ public class LoginView extends SceneView {
         nameBox2.setAlignment(Pos.TOP_CENTER);
 
         Label errorLabel = CreateLabel("");
+        errorLabel.getStyleClass().add("error");
 
         Button StartButton = CreateButton("Start");
         StartButton.setOnMouseClicked(e -> {
