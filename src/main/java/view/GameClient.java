@@ -11,6 +11,7 @@ import games.tictactoe.model.TicTacToeModel;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.Model;
@@ -26,6 +27,8 @@ public class GameClient extends Application {
 
     @Override
     public void start(Stage stage) {
+        stage.getIcons().add(new Image("hand.png"));
+
         SetEvents();
 
         this.stage = stage;
