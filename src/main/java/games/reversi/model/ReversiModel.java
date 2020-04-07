@@ -39,19 +39,16 @@ public class ReversiModel extends Model {
                 peg.setMinSize(60, 60);
                 pegs[i][o] = peg;
                 //i = row
-                //o=column
-
+                //o = column
             }
         }
     }
     public void initSide() {
         side = PLAYER1;
-
         if (is_mode(HUMAN_VS_AI)) {
 
             player1 = new LocalPlayer("White");
             player2 = new LocalPlayer("Black");
-
 
             side = random.nextInt(2);
             if (side == PLAYER2) {
@@ -88,11 +85,9 @@ public class ReversiModel extends Model {
                     side = PLAYER1;
                     setText(player1.getName() + "'s turn!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
 
-
                 } else {
                     disable_pegs();
                     side = PLAYER2;
-
                     setText(player2.getName() + "'s turn!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
                 }
             }
@@ -108,8 +103,7 @@ public class ReversiModel extends Model {
                 checkAndSet(peg.getXPosition(),peg.getZPosition());
                 this.side = PLAYER1;
                 updateAmountPegsBoard();
-                setText("Black's turn!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
-
+                setText(player1.getName() + "'s turn!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
             } else {
                 if(!validMoves.contains(move))
                     System.out.println("NEE ZIT ER NIET IN");
@@ -117,7 +111,7 @@ public class ReversiModel extends Model {
                 checkAndSet(peg.getXPosition(),peg.getZPosition());
                 this.side = PLAYER2;
                 updateAmountPegsBoard();
-                setText("White's turn!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
+                setText(player2.getName() + "'s turn!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
             }
     }
 
@@ -550,9 +544,23 @@ public class ReversiModel extends Model {
         }
     }
 
+    //If no available moves are present, other player gets the turn.
+    public boolean checkIfValidMoves() {
+        if (getValidMoves().isEmpty()) {
+            setSide(StrictMath.abs(getSide() - 1));
+            addToValidMoves();
+            setValidMoves();
+            if (getSide() == 0)
+                setText("White has no moves, Black's turn!");
+            else
+                setText("Black has no moves, White's turn!");
+            return false;
+        }
+        return true;
+    }
+
     public void update(Event event) {
         if (mode == Model.HUMAN_VS_SERVER || mode == Model.AI_VS_SERVER) {
-
 
             if (event instanceof Move) {
                 Move move = (Move) event;
@@ -564,6 +572,9 @@ public class ReversiModel extends Model {
 
                             if (moveOk(opponentmove)) {
                                 playMove(opponentmove);
+                                    addToValidMoves();
+                                if(checkIfValidMoves())
+                                    setValidMoves();
                             }
                         } catch (NumberFormatException e) {
                         }
@@ -614,7 +625,7 @@ public class ReversiModel extends Model {
                     });
                 } else {
                     Platform.runLater(() -> {
-                        setText(player2.getName() + " wins! ");
+                        setText(player2.getName() + " wins!");
                     });
                 }
                 Platform.runLater(() -> {

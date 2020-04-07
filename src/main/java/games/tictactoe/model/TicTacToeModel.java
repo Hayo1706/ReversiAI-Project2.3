@@ -282,7 +282,7 @@ public class TicTacToeModel extends Model
                     });
                 } else {
                     Platform.runLater(() -> {
-                        setText(player2.getName() + " wins! ");
+                        setText(player2.getName() + " wins!");
                     });
                 }
                 Platform.runLater(() -> {

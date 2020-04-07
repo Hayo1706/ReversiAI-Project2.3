@@ -7,8 +7,6 @@ import games.reversi.view.Animation;
 import model.Model;
 import model.Peg;
 
-import static java.lang.StrictMath.abs;
-
 
 public class ReversiController extends Controller {
 
@@ -26,10 +24,10 @@ public class ReversiController extends Controller {
     }
 
     public void setupBoard() {
-        model.get_pegs()[3][3].setTile(1);
-        model.get_pegs()[4][4].setTile(1);
-        model.get_pegs()[3][4].setTile(0);
-        model.get_pegs()[4][3].setTile(0);
+        model.get_pegs()[3][3].setTile(0);
+        model.get_pegs()[4][4].setTile(0);
+        model.get_pegs()[3][4].setTile(1);
+        model.get_pegs()[4][3].setTile(1);
 
     }
 
@@ -53,8 +51,11 @@ public class ReversiController extends Controller {
 
         } else if (model.is_mode(Model.HUMAN_VS_SERVER)) {
                 int move=peg.getXPosition()*8+peg.getZPosition();
-                model.playMove(move);
-                StrategicGameClient.getInstance().doMove(move);
+                if(model.getSide() == Model.PLAYER1) {
+                    StrategicGameClient.getInstance().doMove(move);
+                    model.playMove(move);
+                }
+
         }
 
         ((ReversiModel)model).addToValidMoves();
@@ -67,18 +68,7 @@ public class ReversiController extends Controller {
     }
 
     public boolean checkIfValidMoves(){
-        //If no available moves are present, other player gets the turn.
-        if(((ReversiModel)model).getValidMoves().isEmpty()){
-            model.setSide(abs(model.getSide()-1));
-            ((ReversiModel)model).addToValidMoves();
-            ((ReversiModel)model).setValidMoves();
-            if (model.getSide() == 0)
-                model.setText("White has no moves, Black's turn!");
-            else
-                model.setText("Black has no moves, White's turn!");
-            return false;
-        }
-        return true;
+        return ((ReversiModel)model).checkIfValidMoves();
     }
 
 

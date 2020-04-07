@@ -3,8 +3,6 @@ package games.tictactoe.controller;
 import communication.StrategicGameClient;
 import controller.Controller;
 import model.Model;
-import model.Peg;
-import player.Player;
 
 
 /**
@@ -52,7 +50,6 @@ public class TicTacToeController extends Controller {
                 model.playMove(move);
                 StrategicGameClient.getInstance().doMove(move);
                 disable_pegs();
-
             }
 
 

@@ -3,10 +3,9 @@ package model;
 import ai.AI;
 import communication.Observer;
 import communication.StrategicGameClient;
-import communication.events.*;
-import javafx.application.Platform;
+import communication.events.Event;
+import communication.events.MatchStarted;
 import player.Player;
-import view.BoardView;
 import view.View;
 
 import java.util.Random;
@@ -75,7 +74,6 @@ public abstract class Model implements Observer<Event>{
     //check if move ok
     public boolean moveOk(int move) {
         return (move >= 0 && move <= boardsize*boardsize-1 && pegs[move / boardsize][move % boardsize].pegState == EMPTY);
-
     }
 
     //initialize the beginning position
