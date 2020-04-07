@@ -3,7 +3,6 @@ package games.reversi.model;
 import communication.StrategicGameClient;
 import communication.events.*;
 import javafx.application.Platform;
-import javafx.scene.image.Image;
 import model.Model;
 import model.Peg;
 import player.ExternalPlayer;
@@ -83,14 +82,11 @@ public class ReversiModel extends Model {
                 player2 = new ExternalPlayer(matchStarted.getOpponent());
 
                 if (matchStarted.getPlayerToMove().equals(Model.username)) {
-                    side=PLAYER1;
                     setText(player1.getName() + "'s turn!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
-
                 } else {
                     disable_pegs();
-                    side=PLAYER2;
-                    setText(player2.getName() + "'s turn!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
 
+                    setText(player2.getName() + "'s turn!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
                 }
             }
         }
@@ -654,5 +650,4 @@ public class ReversiModel extends Model {
             }
         }
     }
-
 }
