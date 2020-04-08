@@ -11,7 +11,11 @@ public class ReversiAI implements ai.AI, Serializable {
     ReversiModel model;
     private int[][] boardAI = new int[8][8];
     private ArrayList<String[]> allMoves = new ArrayList<>();
+    int side = 1;
 
+    public void setSide(int side) {
+        this.side = side;
+    }
 
     public void setModel(ReversiModel model){
         this.model = model;
@@ -113,7 +117,7 @@ public class ReversiAI implements ai.AI, Serializable {
     public AIMove miniMaxMaximumTrue(AIMove position,int depth,boolean finalMoves,int alpha, int beta){
         AIMove maxEval = null;
         int maxValue = -1000;
-        for (AIMove var: getAllValidMoves(1,position.getBoard())) {
+        for (AIMove var: getAllValidMoves(side,position.getBoard())) {
             AIMove eval = miniMax(var,depth-1,false,finalMoves, alpha, beta);
             if(finalMoves ? evaluateBoardPegs(true,eval) > maxValue: evaluateBoardPegs(false,eval) > maxValue){
                 maxEval = var;
@@ -130,7 +134,7 @@ public class ReversiAI implements ai.AI, Serializable {
     public AIMove miniMaxMaximumFalse(AIMove position,int depth,boolean finalMoves,int alpha, int beta){
         AIMove minEval = null;
         int minValue = 1000;
-        for (AIMove var: getAllValidMoves(0,position.getBoard())) {
+        for (AIMove var: getAllValidMoves(abs(side-1),position.getBoard())) {
             AIMove eval = miniMax(var, depth - 1, true, finalMoves, alpha,  beta);
             if (finalMoves ? evaluateBoardPegs(true, eval) < minValue : evaluateBoardPegs(false, eval) < minValue) {
                 minEval = var;
@@ -183,7 +187,7 @@ public class ReversiAI implements ai.AI, Serializable {
             int amWhite = 0;
             for (int row = 0; row < 8; row++) {
                 for (int col = 0; col < 8; col++) {
-                    if(toCount[row][col] == 0)
+                    if(toCount[row][col] == abs(side-1))
                         amWhite++;
                 }
             }
@@ -248,7 +252,7 @@ public class ReversiAI implements ai.AI, Serializable {
             int amPointsWhite = 0;
             for (int row = 0; row < 8; row++) {
                 for (int col = 0; col < 8; col++) {
-                    if(toCount[row][col] == 0){
+                    if(toCount[row][col] == abs(side-1)){
                         amPointsWhite += values[row][col];
                     }
                 }
