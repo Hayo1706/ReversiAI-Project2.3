@@ -39,21 +39,28 @@ public class ReversiController extends Controller {
 
             model.playMove(peg.getXPosition() * 8 + peg.getZPosition());
             ((ReversiModel)model).addToValidMoves();
-            if(checkIfValidMoves())
-                ((ReversiModel)model).playMove(model.calculateBest());
+            if (!model.gameOver()) {
+                if(checkIfValidMoves())
+                    ((ReversiModel)model).playMove(model.calculateBest());
+                    model.gameOver();
+            }
+
 
 
 
         } else if (model.is_mode(Model.HUMAN_VS_HUMAN)) {
             model.playMove(peg.getXPosition() * 8 + peg.getZPosition());
-
+            if (model.gameOver()) {
+                disable_pegs();
+            }
 
 
         } else if (model.is_mode(Model.HUMAN_VS_SERVER)) {
                 int move=peg.getXPosition()*8+peg.getZPosition();
-                if(model.getSide() == Model.PLAYER1) {
+                if(((ReversiModel)model ).yourturn) {
                     StrategicGameClient.getInstance().doMove(move);
                     model.playMove(move);
+                    ((ReversiModel)model ).yourturn=false;
                 }
 
         }
@@ -62,9 +69,7 @@ public class ReversiController extends Controller {
         if(checkIfValidMoves())
             ((ReversiModel)model).setValidMoves();
 
-        if (model.gameOver()) {
-            disable_pegs();
-        }
+
     }
 
     public boolean checkIfValidMoves(){
