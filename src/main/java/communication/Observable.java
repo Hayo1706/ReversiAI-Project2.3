@@ -1,10 +1,11 @@
 package communication;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class Observable<E> {
-    private List<Observer<E>> observers = new ArrayList<>();
+    private HashSet<Observer<E>> observers = new HashSet<>();
 
     public void addObserver(Observer<E> observer) {
         observers.add(observer);
@@ -23,7 +24,7 @@ public class Observable<E> {
             observer.update(obj);
         }
     }
-    public List<Observer<E>> getObservers(){
+    public HashSet<Observer<E>> getObservers(){
         return observers;
     }
 }
