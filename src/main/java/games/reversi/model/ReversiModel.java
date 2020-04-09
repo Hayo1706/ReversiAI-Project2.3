@@ -23,7 +23,7 @@ public class ReversiModel extends Model {
     Player you;
     Player opponent;
     ReversiAI AI;
-    public boolean yourturn=false;
+    private boolean yourturn=false;
 
     //Model
     public ReversiModel(int boardsize, View view, ReversiAI AI, MatchStarted matchStarted) {
@@ -575,7 +575,12 @@ public class ReversiModel extends Model {
         }
         return true;
     }
-
+    public boolean getYourTurn(){
+        return yourturn;
+    }
+    public void setYourTurn(boolean condition){
+        yourturn=condition;
+    }
     public void update(Event event) {
         if (mode == Model.HUMAN_VS_SERVER || mode == Model.AI_VS_SERVER) {
 
