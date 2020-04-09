@@ -663,7 +663,6 @@ public class ReversiModel extends Model {
                 disable_pegs();
 
             } else if (event instanceof YourTurn) {
-                System.out.println("Your turn");
                 yourturn=true;
 
                 if (mode == AI_VS_SERVER && firstmove ) {
