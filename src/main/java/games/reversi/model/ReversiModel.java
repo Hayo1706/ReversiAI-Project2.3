@@ -43,7 +43,7 @@ public class ReversiModel extends Model {
         for (int i = 0; i < boardsize; i++) {
             for (int o = 0; o < boardsize; o++) {
                 Peg peg = new ReversiPeg(i, o);
-                peg.setText(String.valueOf(i*8+o));
+                //for testing: peg.setText(String.valueOf(i*8+o));
                 peg.setMinSize(60, 60);
                 pegs[i][o] = peg;
                 //i = row
@@ -635,7 +635,7 @@ public class ReversiModel extends Model {
                     });
                 } else {
                     Platform.runLater(() -> {
-                        setText(you.getName() + " wins!");
+                        setText(you.getName() + " wins! "+"Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
                     });
                 }
                 Platform.runLater(() -> {
@@ -654,21 +654,14 @@ public class ReversiModel extends Model {
                     });
                 } else {
                     Platform.runLater(() -> {
-                        setText(opponent.getName() + " wins!");
+                        setText(opponent.getName() + " wins! "+"Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
                     });
                 }
                 Platform.runLater(() -> {
                     ((BoardView) view).SetBackToMainMenu();
                 });
                 disable_pegs();
-            } else if (event instanceof Draw) {
-                Platform.runLater(() -> {
-                    setText("Nobody" + " wins! It's a draw!");
-                });
-                Platform.runLater(() -> {
-                    ((BoardView) view).SetBackToMainMenu();
-                });
-                disable_pegs();
+
             } else if (event instanceof YourTurn) {
                 System.out.println("Your turn");
                 yourturn=true;
