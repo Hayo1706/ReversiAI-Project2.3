@@ -539,9 +539,11 @@ public class ReversiModel extends Model {
             ((BoardView) view).SetBackToMainMenu();
             Platform.runLater(() -> {
                 disable_pegs();
-
-                    setText(" Match over, " + winner() + " wins!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
-
+                    if(position==DRAW){
+                        setText(" Match over, it's a draw!" + "  Black - " + this.amountBlack + " | " + "White - " + this.amountWhite);
+                    } else {
+                        setText(" Match over, " + winner() + " wins!" + "  Black - " + this.amountBlack + " | " + "White - " + this.amountWhite);
+                    }
             });
         }
         return this.position != UNCLEAR;
