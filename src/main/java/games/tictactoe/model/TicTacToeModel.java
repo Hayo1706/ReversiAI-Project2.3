@@ -19,6 +19,7 @@ import view.View;
 public class TicTacToeModel extends Model
         //The games.tictactoe logic
 {
+    private boolean firstmove=false;
 
     public TicTacToeModel(int boardsize, View view, AI ai, MatchStarted matchStarted) {
         super(boardsize, view, ai, matchStarted);
@@ -81,6 +82,17 @@ public class TicTacToeModel extends Model
                     player2.setSymbol(getSecondSymbol());
                     setText(player1.getName() + "'s turn!");
 
+                    if (mode == AI_VS_SERVER  ) {
+
+                        Platform.runLater(() -> {
+
+                            int best=calculateBest();
+                            StrategicGameClient.getInstance().doMove(best);
+                            playMove(best);
+                            firstmove=true;
+
+                        });
+                    }
 
                 } else {
                     disable_pegs();
@@ -235,12 +247,13 @@ public class TicTacToeModel extends Model
                             }
                         } catch (NumberFormatException e) {
                         }
-
+                        firstmove=true;
                     });
 
                     if (mode != AI_VS_SERVER) {
                         enable_pegs();
                     }
+
                 }
             } else if (event instanceof Win) {
 
@@ -298,7 +311,7 @@ public class TicTacToeModel extends Model
                 });
                 disable_pegs();
             } else if (event instanceof YourTurn) {
-                if (mode == AI_VS_SERVER) {
+                if (mode == AI_VS_SERVER && firstmove) {
 
                     Platform.runLater(() -> {
                         int best = calculateBest();
