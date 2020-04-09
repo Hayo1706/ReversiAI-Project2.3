@@ -81,8 +81,25 @@ public class ReversiModel extends Model {
                     player2 = new ExternalPlayer(matchStarted.getOpponent());
                     you=player1;
                     opponent=player2;
+                    AI.setSide(PLAYER1);
+                    if (mode == AI_VS_SERVER ) {
+
+                        Platform.runLater(() -> {
+
+
+                            int best = calculateBest();
+                            playMove(best);
+                            addToValidMoves();
+                            if (checkIfValidMoves())
+                                setValidMoves();
+                            StrategicGameClient.getInstance().doMove(best);
+
+                        });
+                    }
+
 
                 } else {
+                    AI.setSide(PLAYER2);
                     yourturn=false;
                     player1 = new ExternalPlayer(matchStarted.getOpponent());
                     player2 = new LocalPlayer(Model.username);
@@ -91,12 +108,14 @@ public class ReversiModel extends Model {
 
 
                 }
+
                 setText(player1.getName() + "'s turn!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
             }
         }
     }
 
     public void playMove(int move) {
+
         Peg peg = pegs[move / boardsize][move % boardsize];
             if (side == PLAYER2) {
                 if(!validMoves.contains(move))
@@ -515,11 +534,9 @@ public class ReversiModel extends Model {
             ((BoardView) view).SetBackToMainMenu();
             Platform.runLater(() -> {
                 disable_pegs();
-                if (position == DRAW) {
-                    setText(" It's a draw, " + winner() + " wins!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
-                } else {
+
                     setText(" Match over, " + winner() + " wins!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
-                }
+
             });
         }
         return this.position != UNCLEAR;
@@ -574,15 +591,31 @@ public class ReversiModel extends Model {
                             int opponentmove = Integer.parseInt(move.getMove());
 
                             if (moveOk(opponentmove)) {
+
                                 playMove(opponentmove);
                                 addToValidMoves();
-                                if (checkIfValidMoves())
-                                    setValidMoves();
+                                if (checkIfValidMoves()){
+                                    if (mode == AI_VS_SERVER && validMoves.size()!=0) {
+
+
+                                            int best = calculateBest();
+                                            playMove(best);
+                                            StrategicGameClient.getInstance().doMove(best);
+                                            addToValidMoves();
+                                            if (checkIfValidMoves())
+                                                setValidMoves();
+
+
+                                    }
+                                }
+
                             }
                         } catch (NumberFormatException e) {
                         }
 
                     });
+
+
 
                     if (mode != AI_VS_SERVER) {
                         enable_pegs();
@@ -646,17 +679,7 @@ public class ReversiModel extends Model {
             } else if (event instanceof YourTurn) {
 
                 yourturn=true;
-                if (mode == AI_VS_SERVER) {
 
-                    Platform.runLater(() -> {
-
-
-                            int best = calculateBest();
-                            playMove(best);
-                            StrategicGameClient.getInstance().doMove(best);
-
-                    });
-                }
             }
         }
     }

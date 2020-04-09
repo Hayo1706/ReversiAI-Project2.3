@@ -17,7 +17,7 @@ public class ReversiController extends Controller {
 
         setupBoard();
         Animation animation = new Animation(model.get_pegs());
-        animation.start();
+        //animation.start();
         model.switch_gamemode(model.getMode());
         model.addToValidMoves();
         model.setValidMoves();
@@ -56,8 +56,9 @@ public class ReversiController extends Controller {
 
 
         } else if (model.is_mode(Model.HUMAN_VS_SERVER)) {
-                int move=peg.getXPosition()*8+peg.getZPosition();
+
                 if(((ReversiModel)model ).yourturn) {
+                    int move=peg.getXPosition()*8+peg.getZPosition();
                     StrategicGameClient.getInstance().doMove(move);
                     model.playMove(move);
                     ((ReversiModel)model ).yourturn=false;
