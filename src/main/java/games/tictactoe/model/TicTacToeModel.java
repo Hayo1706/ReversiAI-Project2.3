@@ -247,7 +247,7 @@ public class TicTacToeModel extends Model
                             }
                         } catch (NumberFormatException e) {
                         }
-                        firstmove=true;
+
                     });
 
                     if (mode != AI_VS_SERVER) {
@@ -255,6 +255,7 @@ public class TicTacToeModel extends Model
                     }
 
                 }
+                firstmove=true;
             } else if (event instanceof Win) {
 
                 Win win = (Win) event;
