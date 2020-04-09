@@ -21,7 +21,7 @@ public class OnlineGamesView extends SceneView {
 
     ObservableList<String> gamesList = FXCollections.observableArrayList();
     ObservableList<String> playerGameList = FXCollections.observableArrayList("mark", "peter", "balk");
-
+    CheckBox aICheckbox;
     @Override
     public void CreateScene() {
         super.CreateScene();
@@ -29,7 +29,7 @@ public class OnlineGamesView extends SceneView {
         title.setText("available Games");
 
         Label aILabel = CreateLabel("Let the ai play?");
-        CheckBox aICheckbox = new CheckBox();
+         aICheckbox = new CheckBox();
         aICheckbox.selectedProperty().addListener((observableValue, oldValue, newValue) -> {
             if (newValue) {
                 Model.mode = Model.AI_VS_SERVER;
@@ -111,5 +111,8 @@ public class OnlineGamesView extends SceneView {
         UpdateListView();
 
         return super.getScene();
+    }
+    public CheckBox getCheckBox(){
+        return aICheckbox;
     }
 }

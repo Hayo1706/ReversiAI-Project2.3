@@ -108,7 +108,11 @@ public class GameClient extends Application {
 
             case GAMESONLINE:
                 //switch to human vs server
-                Model.mode=Model.HUMAN_VS_SERVER;
+                if(((OnlineGamesView ) OnlineGamesView).getCheckBox().isSelected()) {
+                    Model.mode = Model.AI_VS_SERVER;
+                } else{
+                    Model.mode = Model.HUMAN_VS_SERVER;
+                }
                 //unregister model as observer
                 Iterator iterator = StrategicGameClient.getInstance().getEventBus().getObservers().iterator();
                 while (iterator.hasNext()) {
