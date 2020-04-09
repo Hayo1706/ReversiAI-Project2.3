@@ -2,6 +2,7 @@ package games.reversi.model;
 
 import communication.StrategicGameClient;
 import communication.events.*;
+import games.reversi.view.Animation;
 import javafx.application.Platform;
 import model.Model;
 import model.Peg;
@@ -23,6 +24,8 @@ public class ReversiModel extends Model {
     Player you;
     Player opponent;
     ReversiAI AI;
+    //ensures that the first move is always in initSide because YourTurn is unreliable
+    private boolean firstmove=false;
     private boolean yourturn=false;
 
     //Model
@@ -57,7 +60,8 @@ public class ReversiModel extends Model {
 
                 setText(player1.getName() + "'s turn!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
 
-
+            Animation animation = new Animation(get_pegs());
+            animation.start();
         } else if (is_mode(HUMAN_VS_HUMAN)) {
             side = PLAYER1;
 
@@ -67,7 +71,8 @@ public class ReversiModel extends Model {
 
 
             setText(player1.getName() + "'s turn!" + "  Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
-
+            Animation animation = new Animation(get_pegs());
+            animation.start();
         }
         //online multiplayer
         else {
@@ -93,6 +98,7 @@ public class ReversiModel extends Model {
                             addToValidMoves();
                             if(checkIfValidMoves())
                                 setValidMoves();
+                            firstmove=true;
                         });
                     }
 
@@ -606,6 +612,7 @@ public class ReversiModel extends Model {
                     if (mode != AI_VS_SERVER) {
                         enable_pegs();
                     }
+                    firstmove=true;
                 }
             } else if (event instanceof Win) {
 
@@ -666,7 +673,7 @@ public class ReversiModel extends Model {
                 System.out.println("Your turn");
                 yourturn=true;
 
-                if (mode == AI_VS_SERVER ) {
+                if (mode == AI_VS_SERVER && firstmove ) {
 
                     Platform.runLater(() -> {
 
