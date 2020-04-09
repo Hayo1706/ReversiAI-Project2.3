@@ -82,18 +82,19 @@ public class ReversiModel extends Model {
                     you=player1;
                     opponent=player2;
                     AI.setSide(PLAYER1);
-                    if (mode == AI_VS_SERVER) {
+                    if (mode == AI_VS_SERVER ) {
 
+                        Platform.runLater(() -> {
 
-                            int best = calculateBest();
-                            playMove(best);
-                            StrategicGameClient.getInstance().doMove(best);
+                            int move=calculateBest();
+                            StrategicGameClient.getInstance().doMove(move);
+                            playMove(move);
+                            yourturn=false;
                             addToValidMoves();
                             if(checkIfValidMoves())
                                 setValidMoves();
-
+                        });
                     }
-
 
                 } else {
                     AI.setSide(PLAYER2);
@@ -665,7 +666,7 @@ public class ReversiModel extends Model {
                 System.out.println("Your turn");
                 yourturn=true;
 
-                if (mode == AI_VS_SERVER && validMoves.size()!=0) {
+                if (mode == AI_VS_SERVER ) {
 
                     Platform.runLater(() -> {
 

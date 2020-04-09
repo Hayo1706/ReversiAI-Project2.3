@@ -20,7 +20,7 @@ public class ReversiController extends Controller {
         Animation animation = new Animation(model.get_pegs());
         model.switch_gamemode(model.getMode());
         if(Model.mode!= Model.AI_VS_SERVER || Model.mode!=Model.HUMAN_VS_SERVER) {
-            animation.start();
+            //animation.start();
         }
         model.addToValidMoves();
         model.setValidMoves();
