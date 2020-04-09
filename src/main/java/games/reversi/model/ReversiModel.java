@@ -10,6 +10,7 @@ import player.ExternalPlayer;
 import player.LocalPlayer;
 import player.Player;
 import view.BoardView;
+import view.GameClient;
 import view.View;
 
 import java.util.ArrayList;
@@ -642,6 +643,11 @@ public class ReversiModel extends Model {
                     ((BoardView) view).SetBackToMainMenu();
                 });
                 disable_pegs();
+                if(Model.mode==AI_VS_SERVER) {
+                    Platform.runLater(()-> {
+                        ((BoardView) view).goBackToList();
+                    });
+                }
             } else if (event instanceof Loss) {
                 Loss loss = (Loss) event;
                 if (loss.getComment().equals("Turn timelimit reached")) {
@@ -661,8 +667,28 @@ public class ReversiModel extends Model {
                     ((BoardView) view).SetBackToMainMenu();
                 });
                 disable_pegs();
+                if(Model.mode==AI_VS_SERVER) {
+                    Platform.runLater(()-> {
+                        ((BoardView) view).goBackToList();
+                    });
+                }
 
-            } else if (event instanceof YourTurn) {
+
+            }  else if (event instanceof Draw) {
+                Platform.runLater(() -> {
+                    setText("Nobody" + " wins! It's a draw!");
+                });
+                Platform.runLater(() -> {
+                    ((BoardView) view).SetBackToMainMenu();
+                });
+                disable_pegs();
+
+                if(Model.mode==AI_VS_SERVER) {
+                    Platform.runLater(()-> {
+                        ((BoardView) view).goBackToList();
+                    });
+                }
+            }else if (event instanceof YourTurn) {
                 yourturn=true;
 
                 if (mode == AI_VS_SERVER && firstmove ) {

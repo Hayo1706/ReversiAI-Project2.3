@@ -99,4 +99,8 @@ public class BoardView extends SceneView {
     public void setText(String s) {
         GameLabel.setText(s);
     }
+
+    public void goBackToList(){
+        client.SwitchScene(GameClient.Scenes.GAMESONLINE);
+    }
 }
