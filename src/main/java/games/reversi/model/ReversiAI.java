@@ -10,7 +10,6 @@ import static java.lang.Math.*;
 public class ReversiAI implements ai.AI, Serializable {
     ReversiModel model;
     private int[][] boardAI = new int[8][8];
-    private ArrayList<String[]> allMoves = new ArrayList<>();
     int side = 1;
 
     public void setSide(int side) {
@@ -21,63 +20,11 @@ public class ReversiAI implements ai.AI, Serializable {
         this.model = model;
     }
 
-    public void notifyLoss() {
-        BufferedWriter bw = null;
-        try {
-            File file = new File("src/main/resources/AI.txt");
-            FileWriter fw = new FileWriter(file,true);
-            bw = new BufferedWriter(fw);
-            int i = 2;
-            String[] boardString = allMoves.get(allMoves.size() - 1);
-            while (checkFile(String.join("",boardString))) {
-                boardString = allMoves.get(allMoves.size() - i);
-                i++;
-            }
-            bw.write(String.join("",boardString));
-            bw.newLine();
-            boardString = rotate90(boardString);
-            bw.write(String.join("",boardString));
-            bw.newLine();
-            boardString = rotate90(boardString);
-            bw.write(String.join("",boardString));
-            bw.newLine();
-            boardString = rotate90(boardString);
-            bw.write(String.join("",boardString));
-            bw.newLine();
-
-            System.out.println("File written Successfully");
-
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
-        finally
-        {
-            try{
-                if(bw!=null)
-                    bw.close();
-            }catch(Exception ex){
-                System.out.println("Error in closing the BufferedWriter"+ex);
-            }
-        }
-
-    }
-
     public int chooseMove() {
-        pegs_to_board(model.get_pegs());
 
-        AIMove o = miniMax(new AIMove(boardAI),4,true, evaluateBoardPegsEmpty(boardAI) <= 5,-1000,1000);
-        allMoves.add(o.getStringValue());
-        //String.join("",o.getStringValue())
-//        tempBoard = Arrays.stream(board).map(int[]::clone).toArray(int[][]::new);
-//        int temp = -100;
-//        int move = 0;
-//        for (Integer var:model.getValidMoves()) {
-//            if(values[var/8][var%8] > temp){
-//                temp = values[var/8][var%8];
-//                move = var;
-//
-//            }
-//        }
+        pegs_to_board(model.get_pegs());
+        AIMove o = miniMax(new AIMove(boardAI),7,true, evaluateBoardPegsEmpty(boardAI) <= 7,-1000,1000);
+
         return o.getPos();
 
     }
@@ -88,21 +35,8 @@ public class ReversiAI implements ai.AI, Serializable {
             for (int col = 0; col < 8; col++) {
 
                 boardAI[row][col] = pegs[row][col].pegState;
-                //boardString[row*8+col] = String.valueOf(board[row][col]);
             }
         }
-    }
-    public String[] rotate90(String[] boardString)
-    {
-        String[] temp = new String[65];
-        for (int i = 0; i < 8; i++) {
-
-            for (int j = 0; j < 8; j++) {
-                temp[j*8+7-i] = boardString[i*8+j];
-            }
-        }
-        temp[64] = boardString[64];
-        return temp;
     }
     public AIMove miniMax(AIMove position,int depth,boolean maximize,boolean finalMoves,int alpha, int beta){
         if(depth == 0)
@@ -148,40 +82,9 @@ public class ReversiAI implements ai.AI, Serializable {
             return miniMax(position, depth - 1, true, finalMoves, alpha,  beta);
         return minEval;
     }
-    public boolean checkFile(String stringValue){
-        BufferedReader objReader = null;
-        boolean found = false;
-        try {
-            String strCurrentLine;
-            objReader = new BufferedReader(new FileReader("src/main/resources/AI.txt"));
-            while ((strCurrentLine = objReader.readLine()) != null) {
-                if(strCurrentLine.equals(stringValue)) {
-                    found = true;
-                    break;
-                }
-            }
-        } catch (IOException e) {
-
-            e.printStackTrace();
-
-        } finally {
-
-            try {
-                objReader.close();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-        return found;
-    }
-
 
     public int evaluateBoardPegs(boolean countAmountOfPegs,AIMove eval){
         int[][] toCount = eval.getBoard();
-        if (checkFile(String.join("",eval.getStringValue()))) {
-            System.out.println("I learned that!");
-            return -1000;
-        }
         if(countAmountOfPegs){
 
             int amWhite = 0;
@@ -195,14 +98,14 @@ public class ReversiAI implements ai.AI, Serializable {
         }
         else{
             int[][] values = {
-                    {99,-15,14,6,6,14,-15,99},
-                    {-15,-24,-4,-3,-3,-4,-24,-15},
-                    {14,-4,10,4,4,10,-4,14},
+                    {99,-25,24,6,6,24,-25,99},
+                    {-25,-50,-14,-3,-3,-14,-50,-25},
+                    {24,-14,14,4,4,14,-14,24},
                     {6,-3,4,0,0,4,-3,6},
                     {6,-3,4,0,0,4,-3,6},
-                    {14,-4,10,4,4,10,-4,14},
-                    {-15,-24,-4,-3,-3,-4,-24,-15},
-                    {99,-15,14,6,6,14,-15,99}
+                    {24,-14,14,4,4,14,-14,24},
+                    {-25,-50,-14,-3,-3,-14,-50,-25},
+                    {99,-25,24,6,6,24,-25,99}
             };
             if(toCount[0][7] != 2){
                 values[0][6] = 8;

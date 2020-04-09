@@ -33,16 +33,16 @@ public class TicTacToeController extends Controller {
 
 
                 model.playMove(peg.getXPosition()*3+peg.getZPosition());
-                model.gameOver();
+                model.gameOver(false);
 
             } else if (model.getMode()==Model.HUMAN_VS_AI) {
 
                 model.playMove(peg.getXPosition()*3+peg.getZPosition());
                 int best = model.calculateBest();
 
-                    if (!model.gameOver()) {
+                    if (!model.gameOver(false)) {
                         model.playMove(best);
-                        model.gameOver();
+                        model.gameOver(false);
                     }
 
             } else if (model.getMode()==Model.HUMAN_VS_SERVER) {

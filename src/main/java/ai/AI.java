@@ -15,7 +15,6 @@ public interface AI {
     int DRAW = 1;
     int UNCLEAR = 2;
     int AI_WIN = 3;
-    void notifyLoss();
     //choose the best move in the current position
     int chooseMove();
     //Method to convert the GUI pegs to a board array

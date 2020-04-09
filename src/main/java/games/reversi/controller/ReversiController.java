@@ -38,18 +38,15 @@ public class ReversiController extends Controller {
 
             model.playMove(peg.getXPosition() * 8 + peg.getZPosition());
             ((ReversiModel)model).addToValidMoves();
-            if (!model.gameOver()) {
+            if (!model.gameOver(false)) {
                 if(checkIfValidMoves())
-                    ((ReversiModel)model).playMove(model.calculateBest());
-                    model.gameOver();
+                    model.playMove(model.calculateBest());
+                model.gameOver(false);
             }
-
-
-
 
         } else if (model.is_mode(Model.HUMAN_VS_HUMAN)) {
             model.playMove(peg.getXPosition() * 8 + peg.getZPosition());
-            if (model.gameOver()) {
+            if (model.gameOver(false)) {
                 disable_pegs();
             }
 
@@ -68,6 +65,7 @@ public class ReversiController extends Controller {
         ((ReversiModel)model).addToValidMoves();
         if(checkIfValidMoves())
             ((ReversiModel)model).setValidMoves();
+
 
 
     }

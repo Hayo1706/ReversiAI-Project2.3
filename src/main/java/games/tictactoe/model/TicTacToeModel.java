@@ -202,7 +202,7 @@ public class TicTacToeModel extends Model
 
     //check if gameover, if so update the text above the board and disables it
     @Override
-    public boolean gameOver() {
+    public boolean gameOver(boolean force) {
         this.position = positionValue();
         if (position != UNCLEAR) {
             ((BoardView) view).SetBackToMainMenu();

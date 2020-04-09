@@ -5,7 +5,6 @@ import java.util.Arrays;
 public class AIMove {
     int[][] boardAfterMove;
     int pos = 0;
-    String[] stringValue = new String[65];
     public AIMove(int[][] board,int pos){
         int[][] toCount = new int[8][];
 
@@ -19,13 +18,6 @@ public class AIMove {
         this.boardAfterMove = toCount;
         this.pos = pos;
 
-        for (int row = 0; row < 8; row++) {
-            for (int col = 0; col < 8; col++) {
-                stringValue[row*8+col] = String.valueOf(boardAfterMove[row][col]);
-            }
-        }
-        stringValue[64] = String.valueOf(pos);
-
     }
 
     public AIMove(int[][] board){
@@ -38,9 +30,5 @@ public class AIMove {
 
     public int[][] getBoard() {
         return boardAfterMove;
-    }
-
-    public String[] getStringValue() {
-        return stringValue;
     }
 }

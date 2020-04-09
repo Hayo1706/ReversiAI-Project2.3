@@ -519,13 +519,8 @@ public class ReversiModel extends Model {
         }
 
         if(side == 0 && amountWhite < amountBlack){
-            AI.notifyLoss();
             return true;
-        } else if (side == 1 && amountBlack < amountWhite){
-            return true;
-        } else {
-            return false;
-        }
+        } else return side == 1 && amountBlack < amountWhite;
 
     }
 
@@ -533,9 +528,9 @@ public class ReversiModel extends Model {
 
     //check if gameover, if so update the text above the board and disables it
     @Override
-    public boolean gameOver() {
+    public boolean gameOver(boolean force) {
         this.position = positionValue();
-        if (position != UNCLEAR) {
+        if (position != UNCLEAR || force) {
             ((BoardView) view).SetBackToMainMenu();
             Platform.runLater(() -> {
                 disable_pegs();
@@ -576,6 +571,8 @@ public class ReversiModel extends Model {
         if (getValidMoves().isEmpty()) {
             setSide(StrictMath.abs(getSide() - 1));
             addToValidMoves();
+            if(validMoves.isEmpty())
+                gameOver(true);
             setValidMoves();
             if (getSide() == 0)
                 setText("White has no moves, Black's turn!");
@@ -620,26 +617,32 @@ public class ReversiModel extends Model {
             } else if (event instanceof Win) {
 
                 Win win = (Win) event;
-                if (win.getComment().equals("Player forfeited match")) {
-                    Platform.runLater(() -> {
-                        setText(you.getName() + " wins! " + opponent.getName() + " gave up!");
-                    });
-                } else if (win.getComment().equals("Client disconnected")) {
-                    Platform.runLater(() -> {
-                        setText(you.getName() + " wins! " + opponent.getName() + " lost connection!");
-                    });
-                } else if (win.getComment().equals("Turn timelimit reached")) {
-                    Platform.runLater(() -> {
-                        setText(you.getName() + " wins! " + opponent.getName() + " took too long!");
-                    });
-                } else if (win.getComment().equals("Illegal move")) {
-                    Platform.runLater(() -> {
-                        setText(you.getName() + " wins! " + opponent.getName() + " played an illegal move!");
-                    });
-                } else {
-                    Platform.runLater(() -> {
-                        setText(you.getName() + " wins! "+"Black - " + this.amountBlack + " | " + "White - "+ this.amountWhite);
-                    });
+                switch (win.getComment()) {
+                    case "Player forfeited match":
+                        Platform.runLater(() -> {
+                            setText(you.getName() + " wins! " + opponent.getName() + " gave up!");
+                        });
+                        break;
+                    case "Client disconnected":
+                        Platform.runLater(() -> {
+                            setText(you.getName() + " wins! " + opponent.getName() + " lost connection!");
+                        });
+                        break;
+                    case "Turn timelimit reached":
+                        Platform.runLater(() -> {
+                            setText(you.getName() + " wins! " + opponent.getName() + " took too long!");
+                        });
+                        break;
+                    case "Illegal move":
+                        Platform.runLater(() -> {
+                            setText(you.getName() + " wins! " + opponent.getName() + " played an illegal move!");
+                        });
+                        break;
+                    default:
+                        Platform.runLater(() -> {
+                            setText(you.getName() + " wins! " + "Black - " + this.amountBlack + " | " + "White - " + this.amountWhite);
+                        });
+                        break;
                 }
                 Platform.runLater(() -> {
                     ((BoardView) view).SetBackToMainMenu();

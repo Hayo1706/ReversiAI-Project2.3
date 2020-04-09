@@ -183,7 +183,7 @@ public abstract class Model implements Observer<Event>{
     }
 
     //check if gameover, if so update the text above the board and disables it
-    public abstract boolean gameOver();
+    public abstract boolean gameOver(boolean force);
 
     //get the winner in the endgame
     protected String winner() {
