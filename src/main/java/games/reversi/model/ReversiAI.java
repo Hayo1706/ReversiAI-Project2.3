@@ -11,6 +11,7 @@ public class ReversiAI implements ai.AI, Serializable {
     ReversiModel model;
     private int[][] boardAI = new int[8][8];
     int side = 1;
+    int depth = 7;
 
     public void setSide(int side) {
         this.side = side;
@@ -21,9 +22,10 @@ public class ReversiAI implements ai.AI, Serializable {
     }
 
     public int chooseMove() {
-
         pegs_to_board(model.get_pegs());
-        AIMove o = miniMax(new AIMove(boardAI),7,true, evaluateBoardPegsEmpty(boardAI) <= 7,-1000,1000);
+        if(evaluateBoardPegsEmpty(boardAI) <= 12)
+            depth = 12;
+        AIMove o = miniMax(new AIMove(boardAI),depth,true, evaluateBoardPegsEmpty(boardAI) <= depth,-1000,1000);
 
         return o.getPos();
 
@@ -107,49 +109,49 @@ public class ReversiAI implements ai.AI, Serializable {
                     {-25,-50,-14,-3,-3,-14,-50,-25},
                     {99,-25,24,6,6,24,-25,99}
             };
-            if(toCount[0][7] != 2){
+            if(boardAI[0][7] != 2){
                 values[0][6] = 8;
                 values[1][7] = 8;
                 values[1][6] = 10;
             }
-            if(toCount[0][0] != 2){
+            if(boardAI[0][0] != 2){
                 values[0][1] = 8;
                 values[1][0] = 8;
                 values[1][1] = 10;
             }
-            if(toCount[7][0] != 2){
+            if(boardAI[7][0] != 2){
                 values[7][1] = 8;
                 values[6][0] = 8;
                 values[6][1] = 10;
             }
-            if(toCount[7][7] != 2){
+            if(boardAI[7][7] != 2){
                 values[7][6] = 8;
                 values[6][7] = 8;
                 values[6][6] = 10;
             }
 
-            if(toCount[2][0] != 2){
+            if(boardAI[2][0] != 2){
                 values[2][1] = 4;
             }
-            if(toCount[0][2] != 2){
+            if(boardAI[0][2] != 2){
                 values[1][2] = 4;
             }
-            if(toCount[5][0] != 2){
+            if(boardAI[5][0] != 2){
                 values[5][1] = 4;
             }
-            if(toCount[7][2] != 2){
+            if(boardAI[7][2] != 2){
                 values[6][2] = 4;
             }
-            if(toCount[5][7] != 2){
+            if(boardAI[5][7] != 2){
                 values[5][6] = 4;
             }
-            if(toCount[7][5] != 2){
+            if(boardAI[7][5] != 2){
                 values[6][5] = 4;
             }
-            if(toCount[0][5] != 2){
+            if(boardAI[0][5] != 2){
                 values[1][5] = 4;
             }
-            if(toCount[2][7] != 2){
+            if(boardAI[2][7] != 2){
                 values[2][6] = 4;
             }
             int amPointsWhite = 0;
