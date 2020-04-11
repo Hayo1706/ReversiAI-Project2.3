@@ -1,5 +1,6 @@
 package games.reversi.model;
 
+import ai.AI;
 import model.Peg;
 
 import java.io.*;
@@ -11,7 +12,7 @@ public class ReversiAI implements ai.AI, Serializable {
     ReversiModel model;
     private int[][] boardAI = new int[8][8];
     int side = 1;
-    int depth = 7;
+    int depth = 6;
 
     public void setSide(int side) {
         this.side = side;
@@ -23,10 +24,10 @@ public class ReversiAI implements ai.AI, Serializable {
 
     public int chooseMove() {
         pegs_to_board(model.get_pegs());
-        if(evaluateBoardPegsEmpty(boardAI) <= 12)
-            depth = 12;
-        AIMove o = miniMax(new AIMove(boardAI),depth,true, evaluateBoardPegsEmpty(boardAI) <= depth,-1000,1000);
-
+        int temp = evaluateBoardPegsEmpty(boardAI);
+        if(temp <= 9)
+            depth = temp;
+        AIMove o = negaMax(new AIMove(boardAI),depth,side, temp <= depth);
         return o.getPos();
 
     }
@@ -40,59 +41,40 @@ public class ReversiAI implements ai.AI, Serializable {
             }
         }
     }
-    public AIMove miniMax(AIMove position,int depth,boolean maximize,boolean finalMoves,int alpha, int beta){
-        if(depth == 0)
+    public AIMove negaMax(AIMove position,int depth, int color,boolean lastPegs){
+        if(depth == 0){
             return position;
-        if(maximize)
-            return miniMaxMaximumTrue(position,depth,finalMoves, alpha,  beta);
-        else
-            return miniMaxMaximumFalse(position,depth,finalMoves, alpha,  beta);
-
-
-    }
-    public AIMove miniMaxMaximumTrue(AIMove position,int depth,boolean finalMoves,int alpha, int beta){
-        AIMove maxEval = null;
+        }
+        AIMove maxAIMove = null;
         int maxValue = -1000;
-        for (AIMove var: getAllValidMoves(side,position.getBoard())) {
-            AIMove eval = miniMax(var,depth-1,false,finalMoves, alpha, beta);
-            if(finalMoves ? evaluateBoardPegs(true,eval) > maxValue: evaluateBoardPegs(false,eval) > maxValue){
-                maxEval = var;
-                maxValue = finalMoves ? evaluateBoardPegs(true,eval): evaluateBoardPegs(false,eval);
+        int eval;
+        int evalOther;
+        AIMove temp;
+        for (AIMove move:getAllValidMoves(color,position.getBoard())) {
+
+            temp =negaMax(move, depth-1 , abs(color-1),lastPegs);
+            eval = evaluateBoardPegs(lastPegs, temp ,color);
+            evalOther = evaluateBoardPegs(lastPegs, temp ,abs(color-1));
+
+            if(maxValue <= eval-evalOther) {
+                maxValue = eval;
+                maxAIMove = move;
             }
-            alpha = max(alpha,finalMoves ? evaluateBoardPegs(true,eval): evaluateBoardPegs(false,eval));
-            if(beta <= alpha)
-                break;
         }
-        if(maxEval == null)
-            return miniMax(position,depth-1,false,finalMoves, alpha,  beta);
-        return maxEval;
-    }
-    public AIMove miniMaxMaximumFalse(AIMove position,int depth,boolean finalMoves,int alpha, int beta){
-        AIMove minEval = null;
-        int minValue = 1000;
-        for (AIMove var: getAllValidMoves(abs(side-1),position.getBoard())) {
-            AIMove eval = miniMax(var, depth - 1, true, finalMoves, alpha,  beta);
-            if (finalMoves ? evaluateBoardPegs(true, eval) < minValue : evaluateBoardPegs(false, eval) < minValue) {
-                minEval = var;
-                minValue = finalMoves ? evaluateBoardPegs(true, eval) : evaluateBoardPegs(false, eval);
-            }
-            beta = min(beta,finalMoves ? evaluateBoardPegs(true,eval): evaluateBoardPegs(false,eval));
-            if(beta <= alpha)
-                break;
-        }
-        if(minEval == null)
-            return miniMax(position, depth - 1, true, finalMoves, alpha,  beta);
-        return minEval;
+        if(maxAIMove == null)
+            return negaMax(position,depth-1,abs(color-1),lastPegs);
+        return maxAIMove;
     }
 
-    public int evaluateBoardPegs(boolean countAmountOfPegs,AIMove eval){
+
+    public int evaluateBoardPegs(boolean countAmountOfPegs,AIMove eval,int whichSide){
         int[][] toCount = eval.getBoard();
         if(countAmountOfPegs){
 
             int amWhite = 0;
             for (int row = 0; row < 8; row++) {
                 for (int col = 0; col < 8; col++) {
-                    if(toCount[row][col] == abs(side-1))
+                    if(toCount[row][col] == abs(whichSide-1))
                         amWhite++;
                 }
             }
@@ -109,55 +91,10 @@ public class ReversiAI implements ai.AI, Serializable {
                     {-25,-50,-14,-3,-3,-14,-50,-25},
                     {99,-25,24,6,6,24,-25,99}
             };
-            if(boardAI[0][7] != 2){
-                values[0][6] = 8;
-                values[1][7] = 8;
-                values[1][6] = 10;
-            }
-            if(boardAI[0][0] != 2){
-                values[0][1] = 8;
-                values[1][0] = 8;
-                values[1][1] = 10;
-            }
-            if(boardAI[7][0] != 2){
-                values[7][1] = 8;
-                values[6][0] = 8;
-                values[6][1] = 10;
-            }
-            if(boardAI[7][7] != 2){
-                values[7][6] = 8;
-                values[6][7] = 8;
-                values[6][6] = 10;
-            }
-
-            if(boardAI[2][0] != 2){
-                values[2][1] = 4;
-            }
-            if(boardAI[0][2] != 2){
-                values[1][2] = 4;
-            }
-            if(boardAI[5][0] != 2){
-                values[5][1] = 4;
-            }
-            if(boardAI[7][2] != 2){
-                values[6][2] = 4;
-            }
-            if(boardAI[5][7] != 2){
-                values[5][6] = 4;
-            }
-            if(boardAI[7][5] != 2){
-                values[6][5] = 4;
-            }
-            if(boardAI[0][5] != 2){
-                values[1][5] = 4;
-            }
-            if(boardAI[2][7] != 2){
-                values[2][6] = 4;
-            }
             int amPointsWhite = 0;
             for (int row = 0; row < 8; row++) {
                 for (int col = 0; col < 8; col++) {
-                    if(toCount[row][col] == abs(side-1)){
+                    if(toCount[row][col] == abs(whichSide-1) && boardAI[row][col] == 2){
                         amPointsWhite += values[row][col];
                     }
                 }
