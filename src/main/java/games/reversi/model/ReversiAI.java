@@ -11,6 +11,7 @@ public class ReversiAI implements ai.AI, Serializable {
     ReversiModel model;
     private int[][] boardAI = new int[8][8];
     int side = 1;
+    int minMaxAmount = 6;
 
     public void setSide(int side) {
         this.side = side;
@@ -21,9 +22,11 @@ public class ReversiAI implements ai.AI, Serializable {
     }
 
     public int chooseMove() {
-
         pegs_to_board(model.get_pegs());
-        AIMove o = miniMax(new AIMove(boardAI),7,true, evaluateBoardPegsEmpty(boardAI) <= 7,-1000,1000);
+        if(evaluateBoardPegsEmpty(boardAI) <= 10){
+            minMaxAmount = 10;
+        }
+        AIMove o = miniMax(new AIMove(boardAI),minMaxAmount,true, evaluateBoardPegsEmpty(boardAI) <= minMaxAmount,-1000,1000);
 
         return o.getPos();
 
@@ -48,49 +51,72 @@ public class ReversiAI implements ai.AI, Serializable {
 
 
     }
+    //ai
     public AIMove miniMaxMaximumTrue(AIMove position,int depth,boolean finalMoves,int alpha, int beta){
         AIMove maxEval = null;
-        int maxValue = -1000;
+        int maxValueWhite = -1000;
+        int maxValueBlack = 1000;
+
+        int evaluationSide;
+        int evaluationNotSide;
+
         for (AIMove var: getAllValidMoves(side,position.getBoard())) {
             AIMove eval = miniMax(var,depth-1,false,finalMoves, alpha, beta);
-            if(finalMoves ? evaluateBoardPegs(true,eval) > maxValue: evaluateBoardPegs(false,eval) > maxValue){
+
+            evaluationSide = finalMoves ? evaluateBoardPegs(true,eval,side):evaluateBoardPegs(false,eval,side);
+            evaluationNotSide = finalMoves ? evaluateBoardPegs(true,eval,abs(side-1)): evaluateBoardPegs(false,eval,abs(side-1));
+
+            if(evaluationSide >= maxValueWhite && evaluationNotSide <= maxValueBlack){
                 maxEval = var;
-                maxValue = finalMoves ? evaluateBoardPegs(true,eval): evaluateBoardPegs(false,eval);
+                maxValueWhite = evaluationSide;
+                maxValueBlack = evaluationNotSide;
             }
-            alpha = max(alpha,finalMoves ? evaluateBoardPegs(true,eval): evaluateBoardPegs(false,eval));
-            if(beta <= alpha)
-                break;
+//            alpha = max(alpha,evaluationSide);
+//            if(beta >= alpha)
+//                break;
         }
         if(maxEval == null)
             return miniMax(position,depth-1,false,finalMoves, alpha,  beta);
         return maxEval;
     }
+    //opponent
     public AIMove miniMaxMaximumFalse(AIMove position,int depth,boolean finalMoves,int alpha, int beta){
         AIMove minEval = null;
-        int minValue = 1000;
+
+        int maxValueWhite = -1000;
+        int maxValueBlack = 1000;
+
+        int evaluationSide;
+        int evaluationNotSide;
+
         for (AIMove var: getAllValidMoves(abs(side-1),position.getBoard())) {
             AIMove eval = miniMax(var, depth - 1, true, finalMoves, alpha,  beta);
-            if (finalMoves ? evaluateBoardPegs(true, eval) < minValue : evaluateBoardPegs(false, eval) < minValue) {
+
+            evaluationSide = finalMoves ? evaluateBoardPegs(true,eval,side):evaluateBoardPegs(false,eval,side) ;
+            evaluationNotSide = finalMoves ? evaluateBoardPegs(true,eval,abs(side-1)): evaluateBoardPegs(false,eval,abs(side-1));
+
+            if(evaluationNotSide >= maxValueBlack && evaluationSide <= maxValueWhite){
                 minEval = var;
-                minValue = finalMoves ? evaluateBoardPegs(true, eval) : evaluateBoardPegs(false, eval);
+                maxValueWhite = evaluationSide;
+                maxValueBlack = evaluationNotSide;
             }
-            beta = min(beta,finalMoves ? evaluateBoardPegs(true,eval): evaluateBoardPegs(false,eval));
-            if(beta <= alpha)
-                break;
+//            beta = max(beta,evaluationNotSide);
+//            if(beta <= alpha)
+//                break;
         }
         if(minEval == null)
             return miniMax(position, depth - 1, true, finalMoves, alpha,  beta);
         return minEval;
     }
 
-    public int evaluateBoardPegs(boolean countAmountOfPegs,AIMove eval){
+    public int evaluateBoardPegs(boolean countAmountOfPegs,AIMove eval, int whichSide){
         int[][] toCount = eval.getBoard();
         if(countAmountOfPegs){
 
             int amWhite = 0;
             for (int row = 0; row < 8; row++) {
                 for (int col = 0; col < 8; col++) {
-                    if(toCount[row][col] == abs(side-1))
+                    if(toCount[row][col] == abs(whichSide-1))
                         amWhite++;
                 }
             }
@@ -98,64 +124,88 @@ public class ReversiAI implements ai.AI, Serializable {
         }
         else{
             int[][] values = {
-                    {99,-25,24,6,6,24,-25,99},
-                    {-25,-50,-14,-3,-3,-14,-50,-25},
-                    {24,-14,14,4,4,14,-14,24},
-                    {6,-3,4,0,0,4,-3,6},
-                    {6,-3,4,0,0,4,-3,6},
-                    {24,-14,14,4,4,14,-14,24},
-                    {-25,-50,-14,-3,-3,-14,-50,-25},
-                    {99,-25,24,6,6,24,-25,99}
+                    {99, -8, 8, 6, 6, 8, -8,99},
+                    {-8,-24,-4,-3,-3,-4,-24,-8},
+                    { 8, -4, 100, 4, 4, 100, -4, 8},
+                    { 6, -3, 4, 0, 0, 4, -3, 6},
+                    { 6, -3, 4, 0, 0, 4, -3, 6},
+                    { 8, -4, 100, 4, 4, 100, -4, 8},
+                    {-8,-24,-4,-3,-3,-4,-24,-8},
+                    {99, -8, 8, 6, 6, 8, -8,99}
             };
-            if(toCount[0][7] != 2){
-                values[0][6] = 8;
-                values[1][7] = 8;
-                values[1][6] = 10;
-            }
-            if(toCount[0][0] != 2){
-                values[0][1] = 8;
-                values[1][0] = 8;
-                values[1][1] = 10;
-            }
-            if(toCount[7][0] != 2){
-                values[7][1] = 8;
-                values[6][0] = 8;
-                values[6][1] = 10;
-            }
-            if(toCount[7][7] != 2){
-                values[7][6] = 8;
-                values[6][7] = 8;
-                values[6][6] = 10;
-            }
 
-            if(toCount[2][0] != 2){
-                values[2][1] = 4;
-            }
-            if(toCount[0][2] != 2){
-                values[1][2] = 4;
-            }
-            if(toCount[5][0] != 2){
-                values[5][1] = 4;
-            }
-            if(toCount[7][2] != 2){
-                values[6][2] = 4;
-            }
-            if(toCount[5][7] != 2){
-                values[5][6] = 4;
-            }
-            if(toCount[7][5] != 2){
-                values[6][5] = 4;
-            }
-            if(toCount[0][5] != 2){
-                values[1][5] = 4;
-            }
-            if(toCount[2][7] != 2){
-                values[2][6] = 4;
-            }
+//            if(toCount[2][1] != 2 || toCount[1][2] != 2){
+//                values[2][2] = 0;
+//            }
+//            if(toCount[5][1] != 2|| toCount[6][2] != 2){
+//                values[5][2] = 0;
+//            }
+//            if(toCount[1][5] != 2 || toCount[2][6] != 2){
+//                values[2][5] = 0;
+//            }
+//            if(toCount[6][5] != 2 || toCount[5][6] != 2){
+//                values[5][5] = 0;
+//            }
+//
+//            if(toCount[0][2] != 2){
+//                values[0][2] = 0;
+//                values[1][2] = 4;
+//            }
+//            if(toCount[0][5] != 2){
+//                values[0][5] = 0;
+//                values[1][5] = 4;
+//            }
+//            if(toCount[2][0] != 2){
+//                values[2][0] = 0;
+//                values[2][1] = 4;
+//            }
+//            if(toCount[2][7] != 2){
+//                values[2][7] = 0;
+//                values[2][6] = 4;
+//            }
+//
+//            if(toCount[5][0] != 2){
+//                values[5][0] = 0;
+//                values[5][1] = 4;
+//            }
+//            if(toCount[5][7] != 2){
+//                values[5][7] = 0;
+//                values[5][6] = 4;
+//            }
+//            if(toCount[7][2] != 2){
+//                values[7][2] = 0;
+//                values[6][2] = 4;
+//            }
+//            if(toCount[7][5] != 2){
+//                values[7][5] = 0;
+//                values[6][5] = 4;
+//            }
+//
+//            if(toCount[0][7] != 2){
+//                values[0][6] = 8;
+//                values[1][7] = 8;
+//                values[1][6] = 10;
+//            }
+//            if(toCount[0][0] != 2){
+//                values[0][1] = 8;
+//                values[1][0] = 8;
+//                values[1][1] = 10;
+//            }
+//            if(toCount[7][0] != 2){
+//                values[7][1] = 8;
+//                values[6][0] = 8;
+//                values[6][1] = 10;
+//            }
+//            if(toCount[7][7] != 2){
+//                values[7][6] = 8;
+//                values[6][7] = 8;
+//                values[6][6] = 10;
+//            }
+
             int amPointsWhite = 0;
             for (int row = 0; row < 8; row++) {
                 for (int col = 0; col < 8; col++) {
-                    if(toCount[row][col] == abs(side-1)){
+                    if(toCount[row][col] == abs(whichSide-1) && (boardAI[row][col] == 2)){
                         amPointsWhite += values[row][col];
                     }
                 }
