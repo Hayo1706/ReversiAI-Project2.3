@@ -10,7 +10,6 @@ import player.ExternalPlayer;
 import player.LocalPlayer;
 import player.Player;
 import view.BoardView;
-import view.GameClient;
 import view.View;
 
 import java.util.ArrayList;
@@ -152,10 +151,10 @@ public class ReversiModel extends Model {
             setHorizontalL(x, z);
         if(checkHorizontalR(x,z)>0)
             setHorizontalR(x,z);
-        if (checkVerticalL(x,z)>0)
-            setVerticalL(x,z);
-        if (checkVerticalR(x,z)>0)
-            setVerticalR(x,z);
+        if (checkVerticalU(x,z)>0)
+            setVerticalU(x,z);
+        if (checkVerticalD(x,z)>0)
+            setVerticalD(x,z);
         if (checkDiagonalUR(x,z)>0)
             setDiagonalUR(x,z);
         if (checkDiagonalUL(x,z)>0)
@@ -177,9 +176,9 @@ public class ReversiModel extends Model {
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
                 if ((pegs[abs(row)][abs(col)].getPegState() == 2) && (checkHorizontalL(row,col)>0 || checkHorizontalR(row,col)>0||
-                        checkVerticalL(row,col)>0||checkVerticalR(row,col) > 0||checkDiagonalDL(row,col)>0||checkDiagonalDR(row,col)>0||checkDiagonalUL(row,col)>0||checkDiagonalUR(row,col)>0)) {
-                    if(!validMoves.contains(row*8+col))
-                        validMoves.add(row*8 + col);
+                        checkVerticalU(row,col)>0||checkVerticalD(row,col) > 0||checkDiagonalDL(row,col)>0||checkDiagonalDR(row,col)>0||checkDiagonalUL(row,col)>0||checkDiagonalUR(row,col)>0)) {
+                        if(!validMoves.contains(row*8+col))
+                            validMoves.add(row*8 + col);
                 }
             }
         }
@@ -195,6 +194,7 @@ public class ReversiModel extends Model {
      * @author Maurice Wijker
      * @param posX init row
      * @param posZ init col
+     * @method Checks to the west whether a colour of the opponent occurs
      */
 
     private int checkHorizontalL(int posX, int posZ) {
@@ -216,6 +216,7 @@ public class ReversiModel extends Model {
      * @author Maurice Wijker
      * @param posX init row
      * @param posZ init col
+     * @method sets pegs to the west to current players pegs if a colour of the opponent occurs
      */
     private void setHorizontalL(int posX, int posZ) {
         int side = getSide();
@@ -232,6 +233,7 @@ public class ReversiModel extends Model {
      * @author Maurice Wijker
      * @param posX init row
      * @param posZ init col
+     * @method Checks to the east whether a colour of the opponent occurs
      */
     private int checkHorizontalR(int posX, int posZ) {
         int side = getSide();
@@ -252,6 +254,7 @@ public class ReversiModel extends Model {
      * @author Maurice Wijker
      * @param posX init row
      * @param posZ init col
+     * @method sets pegs to the east to current players pegs if a colour of the opponent occurs
      */
     private void setHorizontalR(int posX, int posZ) {
         int side = getSide();
@@ -267,8 +270,9 @@ public class ReversiModel extends Model {
      * @author Maurice Wijker
      * @param posX init row
      * @param posZ init col
+     * @method Checks to the north whether a colour of the opponent occurs
      */
-    private int checkVerticalL(int posX, int posZ) {
+    private int checkVerticalU(int posX, int posZ) {
         int side = getSide();
         int temp = 0;
         if (posX - 1 >= 0 && get_pegs()[posX - 1][posZ].getPegState() == side) {
@@ -288,8 +292,9 @@ public class ReversiModel extends Model {
      * @author Maurice Wijker
      * @param posX init row
      * @param posZ init col
+     * @method sets pegs to the north to current players pegs if a colour of the opponent occurs
      */
-    private void setVerticalL(int posX, int posZ) {
+    private void setVerticalU(int posX, int posZ) {
         int side = getSide();
         for (int row = posX - 1; row >= -0; row--) {
             if (get_pegs()[row][posZ].getPegState() == side)
@@ -303,8 +308,9 @@ public class ReversiModel extends Model {
      * @author Maurice Wijker
      * @param posX init row
      * @param posZ init col
+     * @method sets pegs to the  to current players pegs if a colour of the opponent occurs
      */
-    private int checkVerticalR(int posX, int posZ) {
+    private int checkVerticalD(int posX, int posZ) {
         int side = getSide();
         int temp = 0;
         if (posX + 1 < 8 && get_pegs()[posX + 1][posZ].getPegState() == side) {
@@ -323,8 +329,9 @@ public class ReversiModel extends Model {
      * @author Maurice Wijker
      * @param posX init row
      * @param posZ init col
+     * @method Checks to the south whether a colour of the opponent occurs
      */
-    private void setVerticalR(int posX, int posZ) {
+    private void setVerticalD(int posX, int posZ) {
         int side = getSide();
         for (int row = posX + 1; row < 8; row++) {
             if (get_pegs()[row][posZ].getPegState() == side)
@@ -338,6 +345,7 @@ public class ReversiModel extends Model {
      * @author Maurice Wijker
      * @param posX init row
      * @param posZ init col
+     * @method Checks to the south-east whether a colour of the opponent occurs
      */
     private int checkDiagonalDR(int posX, int posZ) {
         int side = getSide();
@@ -358,6 +366,7 @@ public class ReversiModel extends Model {
      * @author Maurice Wijker
      * @param posX init row
      * @param posZ init col
+     * @method sets pegs to the south-east to current players pegs if a colour of the opponent occurs
      */
     private void setDiagonalDR(int posX, int posZ) {
         int side = getSide();
@@ -374,6 +383,7 @@ public class ReversiModel extends Model {
      * @author Maurice Wijker
      * @param posX init row
      * @param posZ init col
+     * @method Checks to the north-west whether a colour of the opponent occurs
      */
     private int checkDiagonalUL(int posX, int posZ) {
         int side = getSide();
@@ -394,6 +404,7 @@ public class ReversiModel extends Model {
      * @author Maurice Wijker
      * @param posX init row
      * @param posZ init col
+     * @method sets pegs to the north-west to current players pegs if a colour of the opponent occurs
      */
     private void setDiagonalUL(int posX, int posZ) {
         int side = getSide();
@@ -409,6 +420,7 @@ public class ReversiModel extends Model {
      * @author Maurice Wijker
      * @param posX init row
      * @param posZ init col
+     * @method Checks to the north-east whether a colour of the opponent occurs
      */
     private int checkDiagonalUR(int posX, int posZ) {
         int side = getSide();
@@ -429,6 +441,7 @@ public class ReversiModel extends Model {
      * @author Maurice Wijker
      * @param posX init row
      * @param posZ init col
+     * @method sets pegs to the north-east to current players pegs if a colour of the opponent occurs
      */
     private void setDiagonalUR(int posX, int posZ) {
         int side = getSide();
@@ -445,6 +458,7 @@ public class ReversiModel extends Model {
      * @author Maurice Wijker
      * @param posX init row
      * @param posZ init col
+     * @method Checks to the south-west whether a colour of the opponent occurs
      */
     private int checkDiagonalDL(int posX,int posZ){
         int side = getSide();
@@ -465,6 +479,7 @@ public class ReversiModel extends Model {
      * @author Maurice Wijker
      * @param posX init row
      * @param posZ init col
+     * @method sets pegs to the south-west to current players pegs if a colour of the opponent occurs
      */
     private void setDiagonalDL(int posX,int posZ){
         int side = getSide();
