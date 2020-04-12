@@ -178,7 +178,8 @@ public class ReversiModel extends Model {
             for (int col = 0; col < 8; col++) {
                 if ((pegs[abs(row)][abs(col)].getPegState() == 2) && (checkHorizontalL(row,col)>0 || checkHorizontalR(row,col)>0||
                         checkVerticalL(row,col)>0||checkVerticalR(row,col) > 0||checkDiagonalDL(row,col)>0||checkDiagonalDR(row,col)>0||checkDiagonalUL(row,col)>0||checkDiagonalUR(row,col)>0)) {
-                    validMoves.add(row*8 + col);
+                    if(!validMoves.contains(row*8+col))
+                        validMoves.add(row*8 + col);
                 }
             }
         }
@@ -573,7 +574,6 @@ public class ReversiModel extends Model {
             addToValidMoves();
             if(validMoves.isEmpty())
                 gameOver(true);
-            setValidMoves();
             if (getSide() == 0)
                 setText("White has no moves, Black's turn!");
             else

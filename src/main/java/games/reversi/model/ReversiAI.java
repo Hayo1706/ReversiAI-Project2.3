@@ -12,7 +12,8 @@ public class ReversiAI implements ai.AI, Serializable {
     ReversiModel model;
     private int[][] boardAI = new int[8][8];
     int side = 1;
-    int depth = 6;
+    int depth = 2;
+    int moveNumber = 0;
 
     public void setSide(int side) {
         this.side = side;
@@ -23,11 +24,18 @@ public class ReversiAI implements ai.AI, Serializable {
     }
 
     public int chooseMove() {
+        moveNumber++;
         pegs_to_board(model.get_pegs());
-        int temp = evaluateBoardPegsEmpty(boardAI);
-        if(temp <= 9)
-            depth = temp;
-        AIMove o = negaMax(new AIMove(boardAI),depth,side, temp <= depth);
+        int amountEmptyNodes = evaluateBoardPegsEmpty(boardAI);
+        int amountMoves = model.getValidMoves().size();
+        if(amountMoves > 7){
+            depth = 6;
+        } else {
+            depth = 7;
+        }
+        if(amountEmptyNodes <= 12)
+            depth = 12;
+        AIMove o = negaMax(new AIMove(boardAI),depth,side, false);
         return o.getPos();
 
     }
@@ -51,15 +59,15 @@ public class ReversiAI implements ai.AI, Serializable {
         int evalOther;
         AIMove temp;
         for (AIMove move:getAllValidMoves(color,position.getBoard())) {
-
             temp =negaMax(move, depth-1 , abs(color-1),lastPegs);
             eval = evaluateBoardPegs(lastPegs, temp ,color);
             evalOther = evaluateBoardPegs(lastPegs, temp ,abs(color-1));
 
             if(maxValue <= eval-evalOther) {
-                maxValue = eval;
+                maxValue = eval-evalOther;
                 maxAIMove = move;
             }
+
         }
         if(maxAIMove == null)
             return negaMax(position,depth-1,abs(color-1),lastPegs);
@@ -82,14 +90,14 @@ public class ReversiAI implements ai.AI, Serializable {
         }
         else{
             int[][] values = {
-                    {99,-25,24,6,6,24,-25,99},
-                    {-25,-50,-14,-3,-3,-14,-50,-25},
+                    {119,-35,24,6,6,24,-35,119},
+                    {-35,-50,-14,-3,-3,-14,-50,-35},
                     {24,-14,14,4,4,14,-14,24},
                     {6,-3,4,0,0,4,-3,6},
                     {6,-3,4,0,0,4,-3,6},
                     {24,-14,14,4,4,14,-14,24},
-                    {-25,-50,-14,-3,-3,-14,-50,-25},
-                    {99,-25,24,6,6,24,-25,99}
+                    {-35,-50,-14,-3,-3,-14,-50,-35},
+                    {119,-35,24,6,6,24,-35,119}
             };
             int amPointsWhite = 0;
             for (int row = 0; row < 8; row++) {
