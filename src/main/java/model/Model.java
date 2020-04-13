@@ -173,7 +173,7 @@ public abstract class Model implements Observer<Event>{
             }
         }
     }
-    //disable all the pegs so that they are clickable
+    //enable all the pegs so that they are clickable
     public void enable_pegs() {
         for (int row = 0; row < boardsize; row++) {
             for (int col = 0; col < boardsize; col++) {
