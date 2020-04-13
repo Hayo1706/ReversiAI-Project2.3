@@ -31,7 +31,7 @@ public class ReversiAI implements ai.AI, Serializable {
         if(amountMoves > 7){
             depth = 6;
         } else {
-            depth = 7;
+            depth = 6;
         }
         if(amountEmptyNodes <= 12)
             depth = 12;
