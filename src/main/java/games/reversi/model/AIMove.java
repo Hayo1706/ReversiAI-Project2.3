@@ -1,5 +1,7 @@
 package games.reversi.model;
-
+/**
+ * Created by Hayo Riem
+ */
 import java.util.Arrays;
 
 public class AIMove {

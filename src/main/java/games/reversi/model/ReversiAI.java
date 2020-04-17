@@ -7,13 +7,15 @@ import java.io.*;
 import java.util.ArrayList;
 
 import static java.lang.Math.*;
-
+/**
+ * Created by Hayo Riem
+ */
 public class ReversiAI implements ai.AI, Serializable {
     ReversiModel model;
     private int[][] boardAI = new int[8][8];
     int side = 1;
     int depth = 2;
-    int moveNumber = 0;
+
 
     public void setSide(int side) {
         this.side = side;
@@ -24,17 +26,16 @@ public class ReversiAI implements ai.AI, Serializable {
     }
 
     public int chooseMove() {
-        moveNumber++;
         pegs_to_board(model.get_pegs());
         int amountEmptyNodes = evaluateBoardPegsEmpty(boardAI);
         int amountMoves = model.getValidMoves().size();
         if(amountMoves > 7){
-            depth = 6;
+            depth = 5;
         } else {
             depth = 6;
         }
-        if(amountEmptyNodes <= 12)
-            depth = 12;
+        if(amountEmptyNodes <= 11)
+            depth = 11;
         AIMove o = negaMax(new AIMove(boardAI),depth,side, false);
         return o.getPos();
 
